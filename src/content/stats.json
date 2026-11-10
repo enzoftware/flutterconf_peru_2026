@@ -1,0 +1,26 @@
+[
+  {
+    "id": "01",
+    "value": 6,
+    "suffix": "",
+    "label": "horas de puro Flutter"
+  },
+  {
+    "id": "02",
+    "value": 2,
+    "suffix": "",
+    "label": "salas en paralelo"
+  },
+  {
+    "id": "03",
+    "value": 16,
+    "suffix": "",
+    "label": "charlas, talleres y lightning"
+  },
+  {
+    "id": "04",
+    "value": 300,
+    "suffix": "+",
+    "label": "devs de la comunidad"
+  }
+]

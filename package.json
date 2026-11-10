@@ -1,0 +1,24 @@
+{
+  "name": "flutterconf-peru-2026",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Landing de FlutterConf Perú 2026 (Astro) y sistema de diseño Chicha Dash.",
+  "engines": {
+    "node": ">=22.23.4"
+  },
+  "scripts": {
+    "tokens": "node brand/tools/tokens/build-tokens.mjs",
+    "dev": "npm run tokens && astro dev",
+    "build": "npm run tokens && astro check && astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "astro": "7.4.2"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.12",
+    "typescript": "6.0.3"
+  }
+}

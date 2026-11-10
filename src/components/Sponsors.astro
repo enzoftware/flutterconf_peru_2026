@@ -1,0 +1,27 @@
+---
+import Chicha from './Chicha.astro';
+import { list } from '../lib/content';
+const tiers = await list('sponsorTiers');
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<section class="z" style="--a:#FFF275;--b:#F25D50;--fg:#021C3F">
+  <div class="wrap">
+    <span class="kick" data-r="up" style="--kc:#021C3F">Sponsors</span>
+    <h2 data-r="pop"><Chicha text={'Con el apoyo\nde'} /></h2>
+    <div class="tiers">
+      {tiers.map((t, i) => (
+        <div class="tier" data-r="up" style={`--d:${i * 0.05}s`}>
+          <h3>{t.name}</h3>
+          {t.sponsors.length
+            ? t.sponsors.map((s) => <a class="logo-ph" href={s.url} style={`--h:${t.logoHeight}px;--w:${t.logoHeight * 2.4}px`}><img src={`${base}/${s.logo}`} alt={s.name} loading="lazy" /></a>)
+            : Array.from({ length: t.slots }, () => <div class="logo-ph" style={`--h:${t.logoHeight}px;--w:${t.logoHeight * 2.4}px`}>Tu logo aquí</div>)}
+        </div>
+      ))}
+    </div>
+    <div class="cfp" id="cfp">
+      <h2 data-r="pop"><Chicha text={'¿Tienes algo\nque contar?'} /></h2>
+      <p data-r="up">La convocatoria para ponentes está abierta. Buscamos charlas de 30 minutos, talleres y lightning talks de 7 minutos.</p>
+      <div data-r="up"><a class="bt dk" href="#">Postula tu charla</a></div>
+    </div>
+  </div>
+</section>

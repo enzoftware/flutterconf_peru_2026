@@ -1,0 +1,24 @@
+---
+import Chicha from './Chicha.astro';
+import Floater from './Floater.astro';
+import { sparkle, diamond, flower } from '../lib/art';
+import { accent, tilt } from '../lib/palette';
+import { list } from '../lib/content';
+const topics = await list('topics');
+---
+<section class="z" style="--a:#042B59;--b:#3A0B91">
+  <Floater svg={sparkle('#FFF275')} x="90%" y="40px" w={38} spd={-240} rot={120} />
+  <Floater svg={diamond('#1CDAC5', '#021C3F')} x="5%" y="300px" w={34} spd={-300} rot={-40} />
+  <Floater svg={flower('#8FC2FF', '#1CDAC5', '#021C3F')} x="86%" y="700px" w={64} spd={-200} rot={-160} />
+  <div class="wrap">
+    <span class="kick" data-r="up">Temas</span>
+    <h2 data-r="pop"><Chicha text={'¿Qué vas a\naprender?'} /></h2>
+    <div class="tms">
+      {topics.map((t, i) => (
+        <article class="tm" data-r={i % 2 ? 'right' : 'left'} style={`--k:${accent(i)};--rt:${tilt(i)};--d:${(i % 4) * 0.06}s`}>
+          <span class="n" aria-hidden="true">{i + 1}</span><h3>{t.title}</h3><p>{t.text}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

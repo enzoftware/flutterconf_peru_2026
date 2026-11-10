@@ -1,0 +1,36 @@
+---
+import Chicha from './Chicha.astro';
+import Dash from './Dash.astro';
+import Floater from './Floater.astro';
+import { sparkle, diamond, flower } from '../lib/art';
+import { accent, tilt } from '../lib/palette';
+import { list } from '../lib/content';
+import event from '../data/event.json';
+const social = await list('social');
+const posts = (await list('posts')).slice(0, 4);
+---
+<section class="z" id="comunidad" style="--a:#042B59;--b:#FFF275;--fg:#021C3F">
+  <Floater svg={flower('#F25D50', '#1CDAC5', '#021C3F')} x="86%" y="470px" w={76} spd={-260} rot={200} />
+  <Floater svg={sparkle('#F25D50')} x="6%" y="520px" w={44} spd={-220} rot={90} />
+  <Floater svg={diamond('#1CDAC5', '#021C3F')} x="10%" y="1100px" w={36} spd={-240} rot={-60} />
+  <div class="wrap" style="padding-top:240px">
+    <span class="kick" data-r="up" style="--kc:#F25D50">Comunidad</span>
+    <h2 class="hash" data-r="zoom"><Chicha text={event.hashtag} /></h2>
+    <p class="soc-l" data-r="up">Síguenos para enterarte primero de ponentes, sorteos y la transmisión en vivo. El día del evento, tus posts con el hashtag salen en la pantalla grande.</p>
+    <div class="nets">
+      {social.map((s, i) => (
+        <a class="net" href={s.url} data-r="pop" style={`--k:${accent(i)};--ad:${(i * 0.4).toFixed(1)}s;--d:${i * 0.06}s`}>
+          <i aria-hidden="true">{s.short}</i><span><b>{s.handle}</b><small>{s.network} · {s.description}</small></span>
+        </a>
+      ))}
+    </div>
+    <div class="posts">
+      {posts.map((p, i) => (
+        <figure class="po" data-r="drop" style={`--k:${accent(i + 1)};--rt:${tilt(i + 1)};--d:${i * 0.08}s;margin:0`}>
+          <div class="im"><em>{p.kicker}</em><Dash flag={false} /></div><p>{p.text}</p>
+        </figure>
+      ))}
+    </div>
+    <div class="soc-cta" data-r="up"><a class="bt dk" href={social[0]?.url ?? '#'}>Sigue a {event.socialHandle}</a></div>
+  </div>
+</section>

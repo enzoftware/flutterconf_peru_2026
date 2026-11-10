@@ -1,0 +1,27 @@
+---
+/** Agenda: pinned horizontal track from 9:00 to 15:00 on desktop, a column on phones. */
+import Chicha from './Chicha.astro';
+import Floater from './Floater.astro';
+import { sparkle } from '../lib/art';
+import { accent } from '../lib/palette';
+import { list } from '../lib/content';
+const slots = await list('agenda');
+---
+<section class="z" id="agenda" style="--a:#3A0B91;--b:#0553B1">
+  <Floater svg={sparkle('#FFF275')} x="8%" y="60px" w={40} spd={-200} rot={90} />
+  <div class="wrap"><span class="kick" data-r="up" style="--kc:#FFF275">Agenda · un solo día</span><h2 data-r="pop"><Chicha text={'De 9 a 15,\nsin parar'} /></h2></div>
+  <div class="pin ag">
+    <div class="stick">
+      <div class="rlab" aria-hidden="true"><span>9:00</span><span>12:00</span><span>15:00</span></div>
+      <div class="rule" aria-hidden="true"><i></i></div>
+      <div class="track">
+        {slots.map((s, i) => (
+          <article class="slot" data-r={i % 2 ? 'right' : 'left'} style={`--k:${accent(i)};--rt:${i % 2 ? 1.5 : -1.5}deg`}>
+            <time>{s.time}</time>
+            {s.items.map((x) => <div class="ss"><b>{x.title}</b><span>{x.meta}</span></div>)}
+          </article>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

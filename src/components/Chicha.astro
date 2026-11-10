@@ -1,0 +1,18 @@
+---
+/**
+ * Chicha lettering: the FlutterChicha font stacked in 6 layers
+ * (shadow, ink outline, white base, yellow band, orange band, highlights).
+ * `text` may contain "\n" for line breaks. The real text is read once by screen readers.
+ */
+interface Props { text: string; count?: { value: number; suffix?: string }; style?: string }
+const { text, count, style } = Astro.props;
+const lines = text.split('\n');
+const LAYERS = ['sh', 'k', 'b', 'y', 'n', 'h'];
+const shown = count ? `${count.value}${count.suffix ?? ''}` : null;
+---
+<span class="ch" style={style} data-count={count?.value} data-suf={count?.suffix}>
+  <span class="vh">{shown ?? lines.join(' ')}</span>
+  {LAYERS.map((c) => (
+    <span class={c} aria-hidden="true">{shown ?? lines.map((l, i) => <>{i > 0 && <br />}{l}</>)}</span>
+  ))}
+</span>

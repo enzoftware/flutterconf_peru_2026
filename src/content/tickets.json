@@ -1,0 +1,46 @@
+[
+  {
+    "id": "01",
+    "name": "Estudiante",
+    "price": 40,
+    "note": "Con carné universitario vigente",
+    "includes": [
+      "Todas las charlas",
+      "Coffee break y almuerzo",
+      "Stickers de Dash"
+    ],
+    "featured": false,
+    "badge": null,
+    "url": "#"
+  },
+  {
+    "id": "02",
+    "name": "Early Bird",
+    "price": 80,
+    "note": "Solo los primeros 100 cupos",
+    "includes": [
+      "Todas las charlas",
+      "Cupo en un taller",
+      "Coffee break y almuerzo",
+      "Kit y polo del evento"
+    ],
+    "featured": true,
+    "badge": "¡La más pedida!",
+    "url": "#"
+  },
+  {
+    "id": "03",
+    "name": "General",
+    "price": 120,
+    "note": "Precio regular",
+    "includes": [
+      "Todas las charlas",
+      "Cupo en un taller",
+      "Coffee break y almuerzo",
+      "Kit del evento"
+    ],
+    "featured": false,
+    "badge": null,
+    "url": "#"
+  }
+]

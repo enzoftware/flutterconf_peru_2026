@@ -1,0 +1,32 @@
+[
+  {
+    "id": "01",
+    "question": "¿Dónde es?",
+    "answer": "En Bloom Tower, San Isidro (Lima). Te enviamos cómo llegar junto con tu entrada."
+  },
+  {
+    "id": "02",
+    "question": "¿Las charlas son en español?",
+    "answer": "La mayoría sí. La keynote puede ser en inglés y lo indicamos en la agenda."
+  },
+  {
+    "id": "03",
+    "question": "¿Cómo reservo un taller?",
+    "answer": "Con Early Bird o General eliges tu taller al comprar. Los cupos son limitados por sala."
+  },
+  {
+    "id": "04",
+    "question": "¿Las charlas se graban?",
+    "answer": "Sí. Transmitimos en vivo por YouTube y subimos las grabaciones la semana siguiente."
+  },
+  {
+    "id": "05",
+    "question": "¿Emiten boleta o factura?",
+    "answer": "Sí. Al comprar eliges boleta o factura electrónica. Para factura necesitas el RUC de tu empresa."
+  },
+  {
+    "id": "06",
+    "question": "¿Hay código de conducta?",
+    "answer": "Sí. Asistentes, ponentes, sponsors y voluntariado lo aceptan al registrarse."
+  }
+]

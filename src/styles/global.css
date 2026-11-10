@@ -1,0 +1,16 @@
+/* Brand tokens (generated from brand/tokens/tokens.json) and the FlutterChicha @font-face rules. */
+@import '../../brand/tokens/tokens.css';
+@import './landing.css';
+
+*, *::before, *::after { box-sizing: border-box }
+html { scroll-behavior: smooth; scroll-padding-top: 72px; -webkit-text-size-adjust: 100% }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto } }
+body { margin: 0; background: #021C3F; color: #F3F8FF; font-family: Rubik, system-ui, sans-serif; overflow-x: clip }
+img { max-width: 100% }
+a:focus-visible, summary:focus-visible { outline: 3px solid #1CDAC5; outline-offset: 3px; border-radius: 8px }
+
+/* Additions on top of the prototype styles */
+.t-m .fc .pp img.photo { width: 100%; height: 100%; object-fit: cover; translate: none }
+.t-m .logo-ph img { max-height: 70%; max-width: 85%; object-fit: contain }
+.skip { position: absolute; left: 12px; top: -60px; z-index: 100; background: #FFF275; color: #021C3F; padding: 10px 14px; border-radius: 999px; font-weight: 800 }
+.skip:focus { top: 12px }

@@ -1,0 +1,22 @@
+---
+/**
+ * Animation kit "Forma viva + Dash asoma":
+ *  - .fv-layer: a large M3 shape (and its dotted outline) behind the page, morphing per section.
+ *  - .pk-layer: Dash peeking in from the left, right and bottom edges with a speech bubble.
+ * Both are driven by src/scripts/engine.ts.
+ */
+import { SP, ptsD, dash } from '../lib/art';
+---
+<div class="fv-layer" aria-hidden="true">
+  <div class="fv-stick">
+    <svg class="fv fa" viewBox="0 0 100 100"><path d={ptsD(SP.cookie)} /></svg>
+    <svg class="fv fb" viewBox="0 0 100 100"><path d={ptsD(SP.flower)} vector-effect="non-scaling-stroke" /></svg>
+  </div>
+</div>
+<div class="pk-layer" aria-hidden="true">
+  <div class="pk-stick">
+    {['l', 'r', 'b'].map((e) => (
+      <div class={`pk pk-${e}`}><div class="pkd"><Fragment set:html={dash()} /></div><span class="bub"></span></div>
+    ))}
+  </div>
+</div>

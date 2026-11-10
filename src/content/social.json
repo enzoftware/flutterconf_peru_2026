@@ -1,0 +1,50 @@
+[
+  {
+    "id": "01",
+    "short": "IG",
+    "network": "Instagram",
+    "handle": "@flutterconfpe",
+    "description": "Ponentes, stories y sorteos",
+    "url": "#"
+  },
+  {
+    "id": "02",
+    "short": "TT",
+    "network": "TikTok",
+    "handle": "@flutterconfpe",
+    "description": "Clips y detrás de cámaras",
+    "url": "#"
+  },
+  {
+    "id": "03",
+    "short": "IN",
+    "network": "LinkedIn",
+    "handle": "FlutterConf Perú",
+    "description": "Novedades para equipos",
+    "url": "#"
+  },
+  {
+    "id": "04",
+    "short": "X",
+    "network": "X",
+    "handle": "@flutterconfpe",
+    "description": "Hilo en vivo el día del evento",
+    "url": "#"
+  },
+  {
+    "id": "05",
+    "short": "YT",
+    "network": "YouTube",
+    "handle": "@flutterconfperu",
+    "description": "Transmisión y grabaciones",
+    "url": "#"
+  },
+  {
+    "id": "06",
+    "short": "DC",
+    "network": "Discord",
+    "handle": "Comunidad Flutter Perú",
+    "description": "Dudas, empleos y networking",
+    "url": "#"
+  }
+]
