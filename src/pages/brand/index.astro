@@ -6,16 +6,16 @@
 import Base from '../../layouts/Base.astro';
 import Chicha from '../../components/Chicha.astro';
 import Dash from '../../components/Dash.astro';
-import AssetCard from '../../components/marca/AssetCard.astro';
+import AssetCard from '../../components/brand/AssetCard.astro';
 import tokens from '../../../brand/tokens/tokens.json';
 import { dashIcon } from '../../lib/art';
 import { brandFiles, guideIntro, inDir, kb } from '../../lib/brand';
 import { DEMOS, TEMPLATES } from '../../data/brand-demos';
 import { REPO, gh, url } from '../../data/site';
 import '../../../brand/css/components.css';
-import '../../styles/marca.css';
+import '../../styles/brand.css';
 
-const files = (dir: string) => url(`marca/archivos/${dir}`);
+const files = (dir: string) => url(`brand/files/${dir}`);
 const A = files('assets/');
 const all = brandFiles();
 const kitSize = all.reduce((s, f) => s + f.size, 0);
@@ -66,7 +66,7 @@ const ghIcon = '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><p
 >
   <div class="mk">
     <header class="mk-bar">
-      <a class="mk-logo" href={url()} aria-label="FlutterConf Perú, volver a la landing"><Fragment set:html={dashIcon()} /><b>FlutterConf Perú</b><span>/ Marca</span></a>
+      <a class="mk-logo" href={url()} title="Volver a la landing"><Fragment set:html={dashIcon()} /><b>FlutterConf Perú</b><span>/ Marca</span></a>
       <nav class="mk-nav" aria-label="Secciones">{SECTIONS.map(([id, label]) => <a href={`#${id}`}>{label}</a>)}</nav>
       <a class="mk-gh" href={gh('brand', 'tree')} target="_blank" rel="noopener"><Fragment set:html={ghIcon} /><span>GitHub</span></a>
     </header>
@@ -78,7 +78,7 @@ const ghIcon = '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><p
           <h1><Chicha text={'Chicha\nDash'} /></h1>
           <p class="mk-lead">Todo lo que necesitas para hacer piezas de FlutterConf Perú 2026: la paleta oficial de Flutter, nuestra fuente <strong>FlutterChicha</strong>, componentes listos, Dash con su banderita y plantillas para redes y diapositivas.</p>
           <div class="mk-cta">
-            <a class="fcp-btn" href={url('marca/descargas/chicha-dash-kit.zip')} download>Descargar kit (.zip · {kb(kitSize)})</a>
+            <a class="fcp-btn" href={url('brand/downloads/chicha-dash-kit.zip')} download>Descargar kit (.zip · {kb(kitSize)})</a>
             <a class="fcp-btn is-alt" href={gh('brand', 'tree')} target="_blank" rel="noopener">Ver en GitHub</a>
           </div>
           <p class="mk-small">Lee las reglas completas en el <a href={gh('brand/brand-book.md')} target="_blank" rel="noopener">brand book</a>. ¿Algo falta o está mal? <a href={`${REPO}/issues/new`} target="_blank" rel="noopener">Abre un issue</a>.</p>
@@ -104,8 +104,9 @@ const ghIcon = '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><p
                 const v = c.value.startsWith('{') ? hex(c.value.slice(1, -1)).value : c.value;
                 return (
                   <li>
-                    <button class="mk-sw" type="button" data-copy={v.toUpperCase()} style={`--c:${v}`} aria-label={`Copiar ${c.name}, ${v.toUpperCase()}`}>
-                      <span class={`mk-sw-chip${onDark(v) ? ' is-dark' : ''}`}>Aa</span>
+                    <button class="mk-sw" type="button" data-copy={v.toUpperCase()} style={`--c:${v}`}>
+                      <span class={`mk-sw-chip${onDark(v) ? ' is-dark' : ''}`} data-g="Aa" aria-hidden="true"></span>
+                      <span class="vh">Copiar</span>
                       <span class="mk-sw-name">{c.name}</span>
                       <code>{v.toUpperCase()}</code>
                     </button>
@@ -148,7 +149,7 @@ const ghIcon = '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><p
         <ol class="mk-layers" role="list">
           {FONT_LAYERS.map((l) => (
             <li class="mk-layer">
-              <div class="mk-layer-art" aria-hidden="true"><span class="ghost">Aa</span><span style={`font-family:'${l.family}';color:${l.color}${l.n === 5 ? ';opacity:.8' : ''}`}>Aa</span></div>
+              <div class="mk-layer-art" aria-hidden="true"><span class="ghost" data-g="Aa"></span><span style={`font-family:'${l.family}';color:${l.color}${l.n === 5 ? ';opacity:.8' : ''}`}>Aa</span></div>
               <div class="mk-layer-info">
                 <h4><span>{l.n}</span> {l.name}</h4>
                 <p>{l.note} · <code>{l.color}</code></p>
@@ -161,7 +162,7 @@ const ghIcon = '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><p
           ))}
         </ol>
         <div class="mk-cta">
-          <a class="fcp-btn" href={url('marca/descargas/flutterchicha.zip')} download>Descargar FlutterChicha (.zip)</a>
+          <a class="fcp-btn" href={url('brand/downloads/flutterchicha.zip')} download>Descargar FlutterChicha (.zip)</a>
           <a class="fcp-btn is-dark" href={gh('brand/fonts/README.md')} target="_blank" rel="noopener">Cómo usarla</a>
         </div>
 
@@ -303,8 +304,8 @@ const ghIcon = '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><p
           <p>El kit es una copia de la carpeta <code>brand/</code> del repositorio, generada en cada despliegue. La fuente de verdad es GitHub.</p>
         </div>
         <ul class="mk-downloads" role="list">
-          <li><a href={url('marca/descargas/chicha-dash-kit.zip')} download><b>Kit completo</b><span>Fuentes, SVG, plantillas, tokens, CSS y guías · {kb(kitSize)}</span></a></li>
-          <li><a href={url('marca/descargas/flutterchicha.zip')} download><b>FlutterChicha</b><span>Las 5 capas en TTF y WOFF2</span></a></li>
+          <li><a href={url('brand/downloads/chicha-dash-kit.zip')} download><b>Kit completo</b><span>Fuentes, SVG, plantillas, tokens, CSS y guías · {kb(kitSize)}</span></a></li>
+          <li><a href={url('brand/downloads/flutterchicha.zip')} download><b>FlutterChicha</b><span>Las 5 capas en TTF y WOFF2</span></a></li>
           <li><a href={files('tokens/tokens.json')} download><b>tokens.json</b><span>Colores, tipografía, espacios, radios y sombras · {size('tokens/tokens.json')}</span></a></li>
           <li><a href={files('css/components.css')} download><b>components.css</b><span>Clases <code>.fcp-*</code> de los componentes · {size('css/components.css')}</span></a></li>
           <li><a href={files('reference/alfabeto-chicha-referencia.png')} download><b>Alfabeto de referencia</b><span>El original pintado a mano · {size('reference/alfabeto-chicha-referencia.png')}</span></a></li>

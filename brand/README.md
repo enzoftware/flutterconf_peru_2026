@@ -46,6 +46,6 @@ Stack five text boxes with the same text, size and position, in this order from 
 
 Group them before you move them. On colored backgrounds, add an ink (`#050507`) stroke to the base layer.
 
-The website publishes this folder at [`/marca/`](https://enzoftware.github.io/flutterconf_peru_2026/marca/): colors, a FlutterChicha playground, live components with their HTML, every SVG, template previews, and ZIP downloads (the whole kit, or just the font). It is generated from these files on every deploy, so it never needs a manual update.
+The website publishes this folder at [`/brand/`](https://enzoftware.github.io/flutterconf_peru_2026/brand/): colors, a FlutterChicha playground, live components with their HTML, every SVG, template previews, and ZIP downloads (the whole kit, or just the font). It is generated from these files on every deploy, so it never needs a manual update.
 
 The design system is also published as an interactive claude.ai Design System artifact ("FlutterConf Perú Chicha"). Keep both in sync when anything here changes.

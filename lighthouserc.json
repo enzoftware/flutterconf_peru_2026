@@ -5,7 +5,7 @@
       "numberOfRuns": 2,
       "url": [
         "http://localhost/index.html",
-        "http://localhost/marca/index.html"
+        "http://localhost/brand/index.html"
       ]
     },
     "assert": {

@@ -5,7 +5,7 @@ Guide for AI coding agents (Claude Code, Codex, Cursor, …) working on this rep
 ## What this is
 
 - **FlutterConf Perú 2026** landing page: one day of Flutter and Dart. Saturday 19 December 2026, 9:00–15:00, at Bloom Tower, San Isidro, Lima.
-- **The Chicha Dash design system** in `brand/`: tokens, the FlutterChicha font, Dash and ornament SVGs, component guidelines and social media templates. It is also published as a page at `/marca/`, with live fonts, components and downloads.
+- **The Chicha Dash design system** in `brand/`: tokens, the FlutterChicha font, Dash and ornament SVGs, component guidelines and social media templates. It is also published as a page at `/brand/`, with live fonts, components and downloads.
 - Site copy is in **Spanish (Peru)** and uses "tú". Code, comments and these docs are in English.
 
 ## Stack
@@ -48,11 +48,11 @@ src/
   content.config.ts         Collection schemas (Zod)
   data/event.json           Event facts: date, hours, venue, links
   components/*.astro        One component per landing section + Chicha, Dash, Floater, Ribbon, KitLayers
-  components/marca/         Pieces of the brand page
+  components/brand/         Pieces of the brand page
   pages/index.astro         The landing
-  pages/marca/index.astro   Brand page: renders brand/ live (tokens, FlutterChicha, components, SVGs, templates)
-  pages/marca/archivos/     Serves brand/ files at build time (no copies in public/)
-  pages/marca/descargas/    ZIP downloads built from brand/ at build time (src/lib/zip.ts)
+  pages/brand/index.astro   Brand page: renders brand/ live (tokens, FlutterChicha, components, SVGs, templates)
+  pages/brand/files/     Serves brand/ files at build time (no copies in public/)
+  pages/brand/downloads/    ZIP downloads built from brand/ at build time (src/lib/zip.ts)
   data/brand-demos.ts       HTML examples of the .fcp-* components shown on the brand page
   data/site.ts              Repo URL, GitHub link helper, base-path-aware url()
   lib/brand.ts              Which brand/ files are published, guide intros, sizes
@@ -77,7 +77,7 @@ src/
   - Contrast targets WCAG AA.
 - **Base path:** links to files under `public/` must use `import.meta.env.BASE_URL`, because the site is served from `/flutterconf_peru_2026/` on GitHub Pages. In-page anchors (`#agenda`) need nothing.
 - **Fonts:** FlutterChicha is generated, never edited in a font editor. Change `brand/tools/flutterchicha/build.py`, rebuild, and commit the TTF and WOFF2 outputs together.
-- **Brand page:** `/marca/` reads `brand/` at build time, so a change in `brand/` shows up there on the next build with no extra step. To publish a new folder or file type, add it to `PUBLISHED` in `src/lib/brand.ts`. A new component in `brand/css/components.css` also needs a demo in `src/data/brand-demos.ts`.
+- **Brand page:** `/brand/` reads `brand/` at build time, so a change in `brand/` shows up there on the next build with no extra step. To publish a new folder or file type, add it to `PUBLISHED` in `src/lib/brand.ts`. A new component in `brand/css/components.css` also needs a demo in `src/data/brand-demos.ts`.
 - **Commits:** small and descriptive (`feat:`, `fix:`, `docs:`, `chore:`, `brand:`). Open a PR to `main`; never push directly to `main`.
 
 ## Brand guardrails (from flutter.dev/brand)

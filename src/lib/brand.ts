@@ -7,7 +7,7 @@ import { join, posix } from 'node:path';
 
 const ROOT = join(process.cwd(), 'brand');
 
-/** Folders (and their file extensions) published under /marca/archivos/. */
+/** Folders (and their file extensions) published under /brand/files/. */
 const PUBLISHED: [dir: string, exts: string[]][] = [
   ['', ['.md']],
   ['assets/dash', ['.svg', '.md']],

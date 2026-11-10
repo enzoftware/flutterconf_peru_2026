@@ -1,4 +1,4 @@
-/** Serves the published files of `brand/` at /marca/archivos/<path> (static, generated at build time). */
+/** Serves the published files of `brand/` at /brand/files/<path> (static, generated at build time). */
 import type { APIRoute, GetStaticPaths } from 'astro';
 import { brandFiles, contentType, readBrand } from '../../../lib/brand';
 

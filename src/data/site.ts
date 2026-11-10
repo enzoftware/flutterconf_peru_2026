@@ -1,4 +1,4 @@
-/** Repository links used by the brand page (`/marca/`). */
+/** Repository links used by the brand page (`/brand/`). */
 export const REPO = 'https://github.com/enzoftware/flutterconf_peru_2026';
 export const BRANCH = 'main';
 

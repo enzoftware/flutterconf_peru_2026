@@ -3,7 +3,7 @@
 Landing page and design system for **FlutterConf Perú 2026**: a full day of Flutter and Dart on **Saturday 19 December 2026, 9:00–15:00, at Bloom Tower, San Isidro (Lima)**.
 
 - **Site:** https://enzoftware.github.io/flutterconf_peru_2026/ (GitHub Pages, deployed from `main`)
-- **Design system:** [`brand/`](brand/README.md). The brand book, the FlutterChicha font, Dash, tokens and social templates all live there. Browse it and download the kit at https://enzoftware.github.io/flutterconf_peru_2026/marca/.
+- **Design system:** [`brand/`](brand/README.md). The brand book, the FlutterChicha font, Dash, tokens and social templates all live there. Browse it and download the kit at https://enzoftware.github.io/flutterconf_peru_2026/brand/.
 - **Design decisions:** [`DESIGN.md`](DESIGN.md) · **Guide for agents and contributors:** [`AGENTS.md`](AGENTS.md)
 
 ## Getting started

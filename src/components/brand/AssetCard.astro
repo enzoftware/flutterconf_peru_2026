@@ -10,8 +10,8 @@ const label = file.name.replace(/\.svg$/, '').replace(/-/g, ' ');
   <figcaption>
     <code>{file.name}</code>
     <span class="mk-dl">
-      <a href={src} download aria-label={`Descargar ${file.name}`}>SVG <small>{kb(file.size)}</small></a>
-      <a href={github} target="_blank" rel="noopener" aria-label={`${file.name} en GitHub`}>GitHub</a>
+      <a href={src} download>SVG <small>{kb(file.size)}</small><span class="vh"> · {file.name}</span></a>
+      <a href={github} target="_blank" rel="noopener">GitHub<span class="vh"> · {file.name}</span></a>
     </span>
   </figcaption>
 </figure>

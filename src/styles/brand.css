@@ -1,4 +1,4 @@
-/* Brand page (/marca/). Values come from brand/tokens/tokens.css; component demos use brand/css/components.css. */
+/* Brand page (/brand/). Values come from brand/tokens/tokens.css; component demos use brand/css/components.css. */
 .mk{ --line:rgb(243 248 255 / .14); --soft:rgb(243 248 255 / .76); min-height:100vh; overflow-x:clip; color:var(--paper); font-variant-ligatures:no-common-ligatures;
   background:radial-gradient(1200px 700px at 85% -10%, rgb(98 0 238 / .35), transparent 60%), radial-gradient(900px 600px at -10% 30%, rgb(5 83 177 / .35), transparent 60%), var(--navy-deep) }
 .mk a:not([class]){ color:var(--green) }
@@ -25,13 +25,15 @@
 @media (max-width: 420px){ .mk-logo b{ display:none } }
 
 /* Hero */
-.mk-hero{ display:grid; grid-template-columns:1.25fr .75fr; gap:24px; align-items:center; padding:72px 0 56px }
+/* Copy is top-aligned and every line box has a fixed line-height, so web fonts loading can't move it (CLS). */
+.mk-hero{ display:grid; grid-template-columns:1.25fr .75fr; gap:24px; align-items:start; padding:72px 0 56px }
+.mk .fcp-kicker{ line-height:1.2 }
 .mk-hero h1{ margin:12px 0 18px; font-size:clamp(76px, 15vw, 168px); font-weight:400; line-height:.95 }
 .mk-lead{ font-size:19px; line-height:1.55; max-width:56ch; color:var(--soft); margin:0 0 26px }
 .mk-lead strong{ color:var(--yellow) }
 .mk-cta{ display:flex; flex-wrap:wrap; gap:14px 18px; align-items:center; margin:22px 0 }
 .mk-small{ color:var(--soft); font-size:14px }
-.mk-hero-dash{ max-width:420px; justify-self:center; filter:drop-shadow(10px 12px 0 rgb(0 0 0 / .25)) }
+.mk-hero-dash{ max-width:420px; justify-self:center; align-self:center; filter:drop-shadow(10px 12px 0 rgb(0 0 0 / .25)) }
 .mk-hero-dash svg{ display:block; width:100%; height:auto }
 @media (max-width: 760px){
   .mk-hero{ grid-template-columns:1fr; padding:40px 0 32px }
@@ -57,6 +59,7 @@
 .mk-sw{ display:grid; width:100%; padding:0; text-align:left; cursor:pointer; font:inherit; color:var(--ink); background:var(--paper); border:var(--stroke-card) solid var(--ink); border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--hard-md); transition:translate .15s }
 .mk-sw:hover{ translate:-2px -2px }
 .mk-sw-chip{ display:grid; place-items:end start; height:110px; padding:10px 14px; background:var(--c); color:var(--ink); font-family:var(--font-display); font-size:28px; border-bottom:var(--stroke-chip) solid var(--ink) }
+.mk-sw-chip::before, .mk-layer-art .ghost::before{ content:attr(data-g) }
 .mk-sw-chip.is-dark{ color:var(--paper) }
 .mk-sw-name{ font-family:var(--font-display); font-size:15px; padding:10px 14px 0 }
 .mk-sw code{ padding:2px 14px 12px; font-size:14px; color:var(--ink-soft) }
