@@ -1,0 +1,72 @@
+/* FlutterConf Perú Chicha — component styles. Every value comes from tokens.css (fallbacks only for safety). */
+.fcp{ font-family:var(--font-body, "Rubik", system-ui, sans-serif); color:var(--paper, #f3f8ff); font-variant-ligatures:no-common-ligatures }
+.fcp-ground{ background:var(--navy-deep, #021c3f); color:var(--paper, #f3f8ff) }
+/* Chicha lettering: shadow + outline + banded fill + highlight */
+.fcp-chicha{ display:inline-grid; font-family:var(--font-chicha, "FlutterChicha", serif); font-weight:400; line-height:1.02; letter-spacing:.01em; isolation:isolate; font-variant-ligatures:no-common-ligatures }
+.fcp-chicha > span{ grid-area:1/1; white-space:nowrap }
+.fcp-chicha .sh{ font-family:var(--font-chicha-sombra, "FlutterChicha Sombra", serif); color:var(--fc-azul, #1467c4); -webkit-text-stroke:.05em var(--fc-negro, #050507); paint-order:stroke fill; z-index:0 }
+.fcp-chicha .k{ color:var(--fc-negro, #050507); -webkit-text-stroke:.07em var(--fc-negro, #050507); z-index:1 }
+.fcp-chicha .b{ color:var(--fc-blanco, #f7f7f2); z-index:2 }
+.fcp-chicha .y{ font-family:var(--font-chicha-amarillo, "FlutterChicha Amarillo", serif); color:var(--fc-amarillo, #e6ff2b); z-index:3 }
+.fcp-chicha .n{ font-family:var(--font-chicha-naranja, "FlutterChicha Naranja", serif); color:var(--fc-naranja, #ff4d12); z-index:4 }
+.fcp-chicha .h{ font-family:var(--font-chicha-brillo, "FlutterChicha Brillo", serif); color:#fff; opacity:.8; z-index:5 }
+.fcp-chicha.is-original .k{ display:none }
+.fcp-chicha.is-original .sh{ -webkit-text-stroke:0 }
+.fcp-numeral{ font-family:var(--font-shade, "Bungee Shade", sans-serif); line-height:1 }
+/* Buttons */
+.fcp-btn{ display:inline-flex; align-items:center; gap:8px; font-family:var(--font-display, "Bungee", sans-serif); font-size:16px; line-height:1; text-decoration:none; cursor:pointer;
+  color:var(--ink, #021c3f); background:var(--yellow, #fff275); border:var(--stroke-chip, 3px) solid var(--ink, #021c3f); border-radius:var(--radius-pill, 999px); padding:14px 22px; box-shadow:var(--hard-red, 5px 5px 0 #f25d50); transition:translate .15s, box-shadow .15s }
+.fcp-btn:hover{ translate:-2px -2px; box-shadow:7px 7px 0 var(--red, #f25d50) }
+.fcp-btn:focus-visible{ outline:3px solid var(--green, #1cdac5); outline-offset:4px }
+.fcp-btn.is-alt{ background:var(--green, #1cdac5) }
+.fcp-btn.is-dark{ background:var(--navy-deep, #021c3f); color:var(--yellow, #fff275); border-color:var(--yellow, #fff275); box-shadow:var(--hard-yellow, 5px 5px 0 #fff275) }
+.fcp-btn.is-sm{ font-size:13px; padding:9px 14px; box-shadow:3px 3px 0 var(--red, #f25d50) }
+/* Tags, chips, kicker */
+.fcp-kicker{ display:block; font-family:var(--font-display, "Bungee", sans-serif); font-size:14px; letter-spacing:.12em; text-transform:uppercase; color:var(--green, #1cdac5) }
+.fcp-chip{ display:inline-block; font-family:var(--font-display, "Bungee", sans-serif); font-size:13px; letter-spacing:.14em; background:var(--red, #f25d50); color:var(--paper, #f3f8ff); border:var(--stroke-chip, 3px) solid var(--ink, #021c3f); padding:7px 14px; border-radius:var(--radius-pill, 999px); box-shadow:var(--hard-yellow, 4px 4px 0 #fff275) }
+.fcp-tag{ display:inline-block; font-family:var(--font-display, "Bungee", sans-serif); font-size:26px; line-height:1.1; color:var(--ink, #021c3f); background:var(--green, #1cdac5); border:var(--stroke-chip, 3px) solid var(--ink, #021c3f); border-radius:var(--radius-md, 16px); padding:12px 14px; box-shadow:var(--hard-red, 5px 5px 0 #f25d50); rotate:-4deg; text-align:center }
+.fcp-tag small{ display:block; font-family:var(--font-body, "Rubik", sans-serif); font-weight:800; font-size:.5em; letter-spacing:.08em }
+.fcp-tag.is-sky{ background:var(--sky-light, #8fc2ff); rotate:4deg }
+.fcp-tag.is-yellow{ background:var(--yellow, #fff275) }
+/* Ribbon */
+.fcp-ribbon{ display:block; white-space:nowrap; overflow:hidden; font-family:var(--font-display, "Bungee", sans-serif); font-size:24px; color:var(--ink, #021c3f); background:var(--yellow, #fff275); border-block:var(--stroke-card, 4px) solid var(--ink, #021c3f); padding:12px 0; rotate:-3deg; box-shadow:0 8px 0 var(--red, #f25d50) }
+.fcp-ribbon i{ font-style:normal; color:var(--red, #f25d50); margin:0 .5em }
+.fcp-ribbon.is-green{ background:var(--green, #1cdac5); rotate:2.2deg; box-shadow:0 8px 0 var(--ink, #021c3f) }
+/* Speaker card (fan card) */
+.fcp-speaker{ --k:var(--yellow, #fff275); width:236px; background:var(--paper, #f3f8ff); color:var(--ink, #021c3f); border:var(--stroke-card, 4px) solid var(--ink, #021c3f); border-radius:var(--radius-lg, 22px); padding:10px 10px 14px; box-shadow:var(--hard-md, 7px 7px 0 #021c3f) }
+.fcp-speaker .pp{ position:relative; aspect-ratio:4/4.3; border-radius:14px; border:var(--stroke-chip, 3px) solid var(--ink, #021c3f); overflow:hidden; display:grid; place-items:end center;
+  background:radial-gradient(circle at 50% 38%, #fff6 0 18%, transparent 46%), repeating-conic-gradient(from 0deg at 50% 110%, var(--k) 0 7.5deg, color-mix(in srgb, var(--k) 70%, #021c3f) 7.5deg 15deg) }
+.fcp-speaker .pp img{ width:72%; translate:0 14% }
+.fcp-speaker .pp img.photo{ width:100%; height:100%; object-fit:cover; translate:none }
+.fcp-speaker .pl{ position:absolute; left:8px; top:8px; z-index:1; background:var(--ink, #021c3f); color:var(--yellow, #fff275); font:400 11px/1 var(--font-display, "Bungee", sans-serif); padding:6px 8px 5px; border-radius:var(--radius-pill, 999px) }
+.fcp-speaker h3{ margin:10px 2px 3px; font-family:var(--font-display, "Bungee", sans-serif); font-weight:400; font-size:15px; line-height:1.1 }
+.fcp-speaker p{ margin:0 2px; font-size:13px; font-weight:600; line-height:1.3; color:var(--ink-soft, #2a3550) }
+/* Topic card */
+.fcp-topic{ --k:var(--yellow, #fff275); width:268px; padding:18px 20px 20px; border:var(--stroke-card, 4px) solid var(--ink, #021c3f); border-radius:20px; background:var(--k); color:var(--ink, #021c3f); box-shadow:var(--hard-md, 7px 7px 0 #021c3f); rotate:var(--rt, 0deg) }
+.fcp-topic h3{ font-family:var(--font-display, "Bungee", sans-serif); font-weight:400; font-size:19px; line-height:1.1; margin:0 0 8px }
+.fcp-topic p{ margin:0; font-weight:500 }
+.fcp-topic .n{ float:right; font-family:var(--font-shade, "Bungee Shade", sans-serif); font-size:28px; line-height:1; margin:-4px -4px 0 6px }
+/* Ticket */
+.fcp-ticket-wrap{ --k:var(--green, #1cdac5); display:inline-block; filter:drop-shadow(8px 8px 0 var(--k)) }
+.fcp-ticket{ position:relative; width:290px; background:var(--paper, #f3f8ff); color:var(--ink, #021c3f); border-radius:24px; padding:26px 24px 24px;
+  -webkit-mask:radial-gradient(circle 16px at 0 58%, #0000 98%, #000) left / 51% 100% no-repeat, radial-gradient(circle 16px at 100% 58%, #0000 98%, #000) right / 51% 100% no-repeat;
+  mask:radial-gradient(circle 16px at 0 58%, #0000 98%, #000) left / 51% 100% no-repeat, radial-gradient(circle 16px at 100% 58%, #0000 98%, #000) right / 51% 100% no-repeat }
+.fcp-ticket.is-featured{ background:var(--yellow, #fff275) }
+.fcp-ticket h3{ font-family:var(--font-display, "Bungee", sans-serif); font-weight:400; font-size:22px; margin:0 }
+.fcp-ticket .pr{ font-family:var(--font-display, "Bungee", sans-serif); font-size:58px; line-height:1; margin:10px 0 2px; color:var(--blue, #0553b1) }
+.fcp-ticket.is-featured .pr{ color:var(--red, #f25d50) }
+.fcp-ticket .pr small{ font-size:.4em }
+.fcp-ticket .nt{ margin:0; font-weight:600; font-size:14px }
+.fcp-ticket ul{ list-style:none; padding:16px 0 0; margin:14px 0 18px; border-top:3px dashed var(--ink, #021c3f) }
+.fcp-ticket li{ padding:4px 0 4px 26px; position:relative; font-weight:500 }
+.fcp-ticket li::before{ content:"★"; position:absolute; left:0; color:var(--red, #f25d50) }
+/* Dash speech bubble */
+.fcp-bubble{ display:inline-block; background:#fff; color:var(--ink, #021c3f); font:800 15px/1.1 var(--font-body, "Rubik", sans-serif); padding:10px 14px; border-radius:18px; border:2.5px solid var(--ink, #021c3f); box-shadow:var(--hard-sm, 4px 4px 0 #021c3f) }
+/* Social templates (1080 / 1920 canvases) */
+.fcp-canvas{ position:relative; overflow:hidden; background:var(--navy-deep, #021c3f); color:var(--paper, #f3f8ff); font-family:var(--font-body, "Rubik", sans-serif) }
+.fcp-canvas .shape{ position:absolute; opacity:.22 }
+.fcp-canvas .stamp{ position:absolute; display:grid; place-items:center; text-align:center; font-family:var(--font-display, "Bungee", sans-serif); color:var(--ink, #021c3f) }
+.fcp-canvas .stamp img{ position:absolute; inset:0; width:100%; height:100% }
+.fcp-canvas .stamp span{ position:relative; line-height:1.05 }
+.fcp-canvas .foot{ position:absolute; display:flex; align-items:center; gap:14px; font-family:var(--font-display, "Bungee", sans-serif) }
+.fcp-canvas .foot .mark{ display:grid; place-items:center; border-radius:50%; background:var(--green, #1cdac5); border:4px solid var(--ink, #021c3f) }

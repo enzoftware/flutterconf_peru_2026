@@ -1,0 +1,61 @@
+/* FlutterConf Perú Chicha — generated from tokens.json. Do not edit by hand. */
+@font-face { font-family: "FlutterChicha"; src: url("../fonts/flutterchicha/FlutterChicha-Regular.woff2") format("woff2"); font-weight: 400; font-display: block; }
+@font-face { font-family: "FlutterChicha Amarillo"; src: url("../fonts/flutterchicha/FlutterChichaAmarillo-Regular.woff2") format("woff2"); font-weight: 400; font-display: block; }
+@font-face { font-family: "FlutterChicha Naranja"; src: url("../fonts/flutterchicha/FlutterChichaNaranja-Regular.woff2") format("woff2"); font-weight: 400; font-display: block; }
+@font-face { font-family: "FlutterChicha Brillo"; src: url("../fonts/flutterchicha/FlutterChichaBrillo-Regular.woff2") format("woff2"); font-weight: 400; font-display: block; }
+@font-face { font-family: "FlutterChicha Sombra"; src: url("../fonts/flutterchicha/FlutterChichaSombra-Regular.woff2") format("woff2"); font-weight: 400; font-display: block; }
+:root {
+  --navy-deep: #021c3f;
+  --navy: #042b59;
+  --blue: #0553b1;
+  --sky: #027dfd;
+  --sky-light: #8fc2ff;
+  --yellow: #fff275;
+  --red: #f25d50;
+  --purple: #6200ee;
+  --purple-deep: #3a0b91;
+  --green: #1cdac5;
+  --paper: #f3f8ff;
+  --ink: var(--navy-deep);
+  --fc-blanco: #f7f7f2;
+  --fc-amarillo: #e6ff2b;
+  --fc-naranja: #ff4d12;
+  --fc-azul: #1467c4;
+  --fc-negro: #050507;
+  --ink-soft: #2a3550;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 40px;
+  --space-6: 64px;
+  --space-7: 96px;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-pill: 999px;
+  --hard-sm: 4px 4px 0 #021c3f;
+  --hard-md: 7px 7px 0 #021c3f;
+  --hard-red: 5px 5px 0 #f25d50;
+  --hard-yellow: 5px 5px 0 #fff275;
+  --stroke-card: 4px;
+  --stroke-chip: 3px;
+  --font-chicha: "FlutterChicha", "Bungee", serif;
+  --font-chicha-amarillo: "FlutterChicha Amarillo", serif;
+  --font-chicha-naranja: "FlutterChicha Naranja", serif;
+  --font-chicha-brillo: "FlutterChicha Brillo", serif;
+  --font-chicha-sombra: "FlutterChicha Sombra", serif;
+  --font-display: "Bungee", "Arial Black", sans-serif;
+  --font-shade: "Bungee Shade", "Bungee", sans-serif;
+  --font-body: "Rubik", system-ui, sans-serif;
+}
+.display-xl { font-family: var(--font-chicha); font-size: 96px; line-height: 0.95; font-weight: 400; }
+.display-l { font-family: var(--font-chicha); font-size: 62px; line-height: 1.02; font-weight: 400; }
+.display-m { font-family: var(--font-chicha); font-size: 36px; line-height: 1.05; font-weight: 400; }
+.chicha-texto { font-family: var(--font-chicha); font-size: 28px; line-height: 1.1; font-weight: 400; }
+.title { font-family: var(--font-display); font-size: 20px; line-height: 1.15; font-weight: 400; }
+.kicker { font-family: var(--font-display); font-size: 14px; line-height: 1.2; font-weight: 400; letter-spacing: 0.12em; }
+.numeral { font-family: var(--font-shade); font-size: 72px; line-height: 1; font-weight: 400; }
+.body-l { font-family: var(--font-body); font-size: 18px; line-height: 28px; font-weight: 500; }
+.body { font-family: var(--font-body); font-size: 16px; line-height: 24px; font-weight: 400; }
+.caption { font-family: var(--font-body); font-size: 13px; line-height: 18px; font-weight: 600; }
