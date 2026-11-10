@@ -6,6 +6,7 @@ import { LINKS } from '../data/nav';
 import { accent } from '../lib/palette';
 import { list } from '../lib/content';
 import event from '../data/event.json';
+import { url } from '../data/site';
 const faq = await list('faq');
 ---
 <section class="z" style="--a:#F25D50;--b:#021C3F">
@@ -23,6 +24,7 @@ const faq = await list('faq');
     <footer>
       <span>{event.name} · Hecho por la comunidad</span>
       <nav aria-label="Pie de página">{LINKS.map((l) => <a href={l.href}>{l.label}</a>)}</nav>
+      <a href={url('marca/')}>Kit de marca</a>
       <a href={event.codeOfConductUrl}>Código de conducta</a>
     </footer>
   </div>

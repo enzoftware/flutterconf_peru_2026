@@ -1,0 +1,360 @@
+---
+/**
+ * Brand page: the Chicha Dash design system rendered live from `brand/`
+ * (tokens, FlutterChicha, components, Dash and ornaments, templates) with downloads and GitHub links.
+ */
+import Base from '../../layouts/Base.astro';
+import Chicha from '../../components/Chicha.astro';
+import Dash from '../../components/Dash.astro';
+import AssetCard from '../../components/marca/AssetCard.astro';
+import tokens from '../../../brand/tokens/tokens.json';
+import { dashIcon } from '../../lib/art';
+import { brandFiles, guideIntro, inDir, kb } from '../../lib/brand';
+import { DEMOS, TEMPLATES } from '../../data/brand-demos';
+import { REPO, gh, url } from '../../data/site';
+import '../../../brand/css/components.css';
+import '../../styles/marca.css';
+
+const files = (dir: string) => url(`marca/archivos/${dir}`);
+const A = files('assets/');
+const all = brandFiles();
+const kitSize = all.reduce((s, f) => s + f.size, 0);
+const size = (path: string) => kb(all.find((f) => f.path === path)?.size ?? 0);
+
+// Color: the official Flutter palette first, then derived tones, then the lettering colors.
+const hex = (name: string) => tokens.color.tokens.find((t) => t.name === name)!;
+const COLOR_GROUPS = [
+  { title: 'Flutter oficial', note: 'De flutter.dev/brand. Son la base de todo.', names: ['navy', 'blue', 'sky', 'yellow', 'red', 'purple', 'green'] },
+  { title: 'Tonos derivados', note: 'Los únicos tonos extra permitidos: fondos, tinta y tarjetas.', names: ['navy-deep', 'purple-deep', 'sky-light', 'paper', 'ink-soft'] },
+  { title: 'Lettering FlutterChicha', note: 'Del alfabeto pintado a mano. Solo para el lettering, nunca para fondos ni texto.', names: ['fc-blanco', 'fc-amarillo', 'fc-naranja', 'fc-azul', 'fc-negro'] },
+].map((g) => ({ ...g, colors: g.names.map(hex) }));
+const onDark = (v: string) => ['#021c3f', '#042b59', '#0553b1', '#6200ee', '#3a0b91', '#2a3550', '#1467c4', '#050507', '#027dfd', '#ff4d12'].includes(v);
+
+// FlutterChicha: the five font layers, bottom to top, as they are stacked in the lettering.
+const FONT_LAYERS = [
+  { n: 1, name: 'Sombra', file: 'FlutterChichaSombra-Regular', family: 'FlutterChicha Sombra', color: '#1467C4', note: 'Extrusión hacia abajo e izquierda' },
+  { n: 2, name: 'Base', file: 'FlutterChicha-Regular', family: 'FlutterChicha', color: '#F7F7F2', note: 'La letra completa, en blanco' },
+  { n: 3, name: 'Amarillo', file: 'FlutterChichaAmarillo-Regular', family: 'FlutterChicha Amarillo', color: '#E6FF2B', note: 'Franja fosforescente del medio' },
+  { n: 4, name: 'Naranja', file: 'FlutterChichaNaranja-Regular', family: 'FlutterChicha Naranja', color: '#FF4D12', note: 'Franja de abajo' },
+  { n: 5, name: 'Brillo', file: 'FlutterChichaBrillo-Regular', family: 'FlutterChicha Brillo', color: '#FFFFFF', note: 'Destellos, en blanco al 80 %' },
+];
+const GLYPHS = [
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz', '0123456789',
+  'ÁÉÍÓÚÑÜáéíóúñü', '¡!¿?.,:;-–\'"&@#$%*+/()→★⚡✺',
+];
+const TYPE_GROUPS = tokens.type.groups;
+const FAMILY: Record<string, string> = { display: 'Bungee', shade: 'Bungee Shade', body: 'Rubik' };
+
+const ASSET_GROUPS = [
+  { dir: 'assets/dash', title: 'Dash', note: 'Dibujado en SVG sobre el render 3D oficial. Las versiones con bandera ondean en el navegador.', big: true },
+  { dir: 'assets/formas', title: 'Formas M3', note: 'Las ocho formas de Material 3 que se transforman detrás de la web (Forma viva).' },
+  { dir: 'assets/ornamentos', title: 'Ornamentos chicha', note: 'Destellos, rombos, flores y sellos para llenar el afiche.' },
+].map((g) => ({ ...g, files: inDir(g.dir).filter((f) => f.name.endsWith('.svg')) }));
+
+const SECTIONS = [
+  ['color', 'Color'], ['tipografia', 'Tipografía'], ['componentes', 'Componentes'], ['dash', 'Dash y formas'],
+  ['medidas', 'Medidas'], ['plantillas', 'Plantillas'], ['descargas', 'Descargas'],
+] as const;
+
+const escape = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const ghIcon = '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>';
+---
+<Base
+  title="Sistema de diseño Chicha Dash · FlutterConf Perú 2026"
+  description="La marca de FlutterConf Perú 2026: colores, la fuente FlutterChicha, componentes, Dash, plantillas y descargas."
+  jsonLd={false}
+>
+  <div class="mk">
+    <header class="mk-bar">
+      <a class="mk-logo" href={url()} aria-label="FlutterConf Perú, volver a la landing"><Fragment set:html={dashIcon()} /><b>FlutterConf Perú</b><span>/ Marca</span></a>
+      <nav class="mk-nav" aria-label="Secciones">{SECTIONS.map(([id, label]) => <a href={`#${id}`}>{label}</a>)}</nav>
+      <a class="mk-gh" href={gh('brand', 'tree')} target="_blank" rel="noopener"><Fragment set:html={ghIcon} /><span>GitHub</span></a>
+    </header>
+
+    <main id="top">
+      <section class="mk-hero">
+        <div class="mk-hero-copy">
+          <span class="fcp-kicker">Sistema de diseño · v{tokens.version}</span>
+          <h1><Chicha text={'Chicha\nDash'} /></h1>
+          <p class="mk-lead">Todo lo que necesitas para hacer piezas de FlutterConf Perú 2026: la paleta oficial de Flutter, nuestra fuente <strong>FlutterChicha</strong>, componentes listos, Dash con su banderita y plantillas para redes y diapositivas.</p>
+          <div class="mk-cta">
+            <a class="fcp-btn" href={url('marca/descargas/chicha-dash-kit.zip')} download>Descargar kit (.zip · {kb(kitSize)})</a>
+            <a class="fcp-btn is-alt" href={gh('brand', 'tree')} target="_blank" rel="noopener">Ver en GitHub</a>
+          </div>
+          <p class="mk-small">Lee las reglas completas en el <a href={gh('brand/brand-book.md')} target="_blank" rel="noopener">brand book</a>. ¿Algo falta o está mal? <a href={`${REPO}/issues/new`} target="_blank" rel="noopener">Abre un issue</a>.</p>
+        </div>
+        <div class="mk-hero-dash" aria-hidden="true"><Dash /></div>
+      </section>
+
+      <span class="fcp-ribbon mk-ribbon" aria-hidden="true">COLOR<i>★</i>FLUTTERCHICHA<i>★</i>COMPONENTES<i>★</i>DASH<i>★</i>PLANTILLAS<i>★</i>COLOR<i>★</i>FLUTTERCHICHA<i>★</i>COMPONENTES</span>
+
+      <!-- Color -->
+      <section class="mk-sec" id="color" aria-labelledby="h-color">
+        <div class="mk-head">
+          <span class="fcp-kicker">01 · Color</span>
+          <h2 id="h-color">Paleta</h2>
+          <p>Solo los colores oficiales de Flutter más sus tonos listados. Toca un color para copiar su código.</p>
+        </div>
+        {COLOR_GROUPS.map((g) => (
+          <div class="mk-group">
+            <h3>{g.title}</h3>
+            <p class="mk-note">{g.note}</p>
+            <ul class="mk-swatches" role="list">
+              {g.colors.map((c) => {
+                const v = c.value.startsWith('{') ? hex(c.value.slice(1, -1)).value : c.value;
+                return (
+                  <li>
+                    <button class="mk-sw" type="button" data-copy={v.toUpperCase()} style={`--c:${v}`} aria-label={`Copiar ${c.name}, ${v.toUpperCase()}`}>
+                      <span class={`mk-sw-chip${onDark(v) ? ' is-dark' : ''}`}>Aa</span>
+                      <span class="mk-sw-name">{c.name}</span>
+                      <code>{v.toUpperCase()}</code>
+                    </button>
+                    <p>{c.usage}</p>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))}
+        <p class="mk-src">Fuente: <a href={gh('brand/tokens/tokens.json')} target="_blank" rel="noopener"><code>brand/tokens/tokens.json</code></a> · <a href={files('tokens/tokens.css')} download>tokens.css</a> · <a href={files('tokens/tokens.json')} download>tokens.json</a></p>
+      </section>
+
+      <!-- Typography -->
+      <section class="mk-sec" id="tipografia" aria-labelledby="h-tipo">
+        <div class="mk-head">
+          <span class="fcp-kicker">02 · Tipografía</span>
+          <h2 id="h-tipo">FlutterChicha</h2>
+          <p>Nuestra fuente propia, dibujada desde un alfabeto chicha pintado a mano. Son cinco fuentes que se apilan una encima de otra, cada una de un color. Mayúsculas, minúsculas, números, tildes y ñ.</p>
+        </div>
+
+        <div class="mk-play">
+          <label class="mk-play-ctl">
+            <span>Escribe algo</span>
+            <input id="fc-text" type="text" value="¡Hola, causa!" maxlength="40" autocomplete="off" spellcheck="false" />
+          </label>
+          <label class="mk-play-ctl mk-play-size">
+            <span>Tamaño</span>
+            <input id="fc-size" type="range" min="32" max="160" value="96" />
+          </label>
+          <label class="mk-play-ctl mk-play-chk">
+            <input id="fc-outline" type="checkbox" checked />
+            <span>Contorno de tinta (web)</span>
+          </label>
+          <div class="mk-play-out" id="fc-out" style="--fs:96px"><Chicha text="¡Hola, causa!" /></div>
+        </div>
+
+        <h3 class="mk-h3">Las cinco capas</h3>
+        <p class="mk-note">Apílalas de abajo hacia arriba, con el mismo texto, tamaño y posición. Instala los TTF para Canva, Figma o Keynote; los WOFF2 son para la web.</p>
+        <ol class="mk-layers" role="list">
+          {FONT_LAYERS.map((l) => (
+            <li class="mk-layer">
+              <div class="mk-layer-art" aria-hidden="true"><span class="ghost">Aa</span><span style={`font-family:'${l.family}';color:${l.color}${l.n === 5 ? ';opacity:.8' : ''}`}>Aa</span></div>
+              <div class="mk-layer-info">
+                <h4><span>{l.n}</span> {l.name}</h4>
+                <p>{l.note} · <code>{l.color}</code></p>
+                <div class="mk-dl">
+                  <a href={files(`fonts/flutterchicha/${l.file}.ttf`)} download>TTF <small>{size(`fonts/flutterchicha/${l.file}.ttf`)}</small></a>
+                  <a href={files(`fonts/flutterchicha/${l.file}.woff2`)} download>WOFF2 <small>{size(`fonts/flutterchicha/${l.file}.woff2`)}</small></a>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ol>
+        <div class="mk-cta">
+          <a class="fcp-btn" href={url('marca/descargas/flutterchicha.zip')} download>Descargar FlutterChicha (.zip)</a>
+          <a class="fcp-btn is-dark" href={gh('brand/fonts/README.md')} target="_blank" rel="noopener">Cómo usarla</a>
+        </div>
+
+        <h3 class="mk-h3">Caracteres</h3>
+        <div class="mk-glyphs">
+          {GLYPHS.map((row) => (
+            <ul class="mk-glyph-row" role="list">
+              {[...row].map((g) => <li><Chicha text={g} /></li>)}
+            </ul>
+          ))}
+        </div>
+
+        <h3 class="mk-h3">Escala tipográfica</h3>
+        <p class="mk-note">FlutterChicha para titulares (28 px o más, una frase chicha por vista), <a href="https://fonts.google.com/specimen/Bungee" target="_blank" rel="noopener">Bungee</a> para etiquetas y botones, <a href="https://fonts.google.com/specimen/Bungee+Shade" target="_blank" rel="noopener">Bungee Shade</a> para el año y números, y <a href="https://fonts.google.com/specimen/Rubik" target="_blank" rel="noopener">Rubik</a> para el texto.</p>
+        <div class="mk-scale">
+          {TYPE_GROUPS.map((g) => g.styles.map((s) => (
+            <div class="mk-scale-row">
+              <div class="mk-scale-meta">
+                <code>{s.name}</code>
+                <span>{g.family === 'chicha' ? 'FlutterChicha' : FAMILY[g.family]} · {s.fontSize} / {s.lineHeight}</span>
+              </div>
+              <div class="mk-scale-sample">
+                {g.family === 'chicha'
+                  ? (s.name === 'chicha-texto'
+                    ? <span style={`font-family:var(--font-chicha);color:var(--yellow);font-size:${s.fontSize}`}>{s.sample}</span>
+                    : <Chicha text={s.sample} style={`font-size:min(${s.fontSize}, 6.4cqw)`} />)
+                  : <span class={`mk-t-${g.family}`} style={`font-size:${s.fontSize};line-height:${s.lineHeight};font-weight:${s.fontWeight}${'letterSpacing' in s ? `;letter-spacing:${s.letterSpacing};text-transform:uppercase` : ''}`}>{s.sample}</span>}
+              </div>
+              <p class="mk-scale-use">{s.usage}</p>
+            </div>
+          )))}
+        </div>
+      </section>
+
+      <!-- Components -->
+      <section class="mk-sec" id="componentes" aria-labelledby="h-comp">
+        <div class="mk-head">
+          <span class="fcp-kicker">03 · Componentes</span>
+          <h2 id="h-comp">Componentes</h2>
+          <p>Clases <code>.fcp-*</code> listas para páginas de marketing y plantillas. Incluye <a href={files('tokens/tokens.css')} download>tokens.css</a> y <a href={files('css/components.css')} download>components.css</a>, y copia el HTML de cada ejemplo.</p>
+        </div>
+        <div class="mk-demos">
+          {DEMOS.map((d) => (
+            <article class="mk-demo" id={`c-${d.id}`}>
+              <header>
+                <h3>{d.name}</h3>
+                {d.guide && <a href={gh(`brand/components/${d.guide}.md`)} target="_blank" rel="noopener">Guía en GitHub <span aria-hidden="true">↗</span></a>}
+              </header>
+              {d.guide && <p class="mk-note">{guideIntro(d.guide)}</p>}
+              <div class="mk-stage fcp"><Fragment set:html={d.html(A)} /></div>
+              <details class="mk-code">
+                <summary>Ver HTML</summary>
+                <button class="mk-copy" type="button" data-copy-code>Copiar</button>
+                <pre><code set:html={escape(d.html('../assets/'))} /></pre>
+              </details>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <!-- Dash, shapes, ornaments -->
+      <section class="mk-sec" id="dash" aria-labelledby="h-dash">
+        <div class="mk-head">
+          <span class="fcp-kicker">04 · Ilustración</span>
+          <h2 id="h-dash">Dash y formas</h2>
+          <p>Dash es la mascota de Flutter y Dart: no lo deformes, recortes ni recolorees, y no lo vistas. Deja libre alrededor al menos el 10 % de su ancho. La bandera nunca va sola como logo.</p>
+        </div>
+        {ASSET_GROUPS.map((g) => (
+          <div class="mk-group">
+            <h3>{g.title}</h3>
+            <p class="mk-note">{g.note} <a href={gh(g.dir, 'tree')} target="_blank" rel="noopener">Ver carpeta en GitHub ↗</a></p>
+            <ul class={`mk-assets${g.big ? ' is-big' : ''}`} role="list">
+              {g.files.map((f) => <li><AssetCard file={f} src={files(f.path)} github={gh(`brand/${f.path}`)} /></li>)}
+            </ul>
+          </div>
+        ))}
+      </section>
+
+      <!-- Spacing, radius, shadows -->
+      <section class="mk-sec" id="medidas" aria-labelledby="h-med">
+        <div class="mk-head">
+          <span class="fcp-kicker">05 · Medidas</span>
+          <h2 id="h-med">Espacio, radios y sombras</h2>
+          <p>{tokens.shadow.note}</p>
+        </div>
+        <div class="mk-measures">
+          <div class="mk-group">
+            <h3>Espaciado</h3>
+            <ul class="mk-space" role="list">
+              {tokens.spacing.tokens.map((t) => <li><span class="bar" style={`width:${t.value}`} /><code>{t.name}</code><b>{t.value}</b><p>{t.usage}</p></li>)}
+            </ul>
+          </div>
+          <div class="mk-group">
+            <h3>Radios</h3>
+            <ul class="mk-radius" role="list">
+              {tokens.radius.tokens.map((t) => <li><span class="box" style={`border-radius:${t.value}`} /><code>{t.name}</code><b>{t.value}</b><p>{t.usage}</p></li>)}
+            </ul>
+          </div>
+          <div class="mk-group">
+            <h3>Sombras duras y contornos</h3>
+            <ul class="mk-radius" role="list">
+              {tokens.shadow.tokens.map((t) => <li><span class="box is-paper" style={`box-shadow:${t.value}`} /><code>{t.name}</code><b>{t.value}</b><p>{t.usage}</p></li>)}
+              {tokens.stroke.tokens.map((t) => <li><span class="box is-paper" style={`border:${t.value} solid var(--ink)`} /><code>{t.name}</code><b>{t.value}</b><p>{t.usage}</p></li>)}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Templates -->
+      <section class="mk-sec" id="plantillas" aria-labelledby="h-tpl">
+        <div class="mk-head">
+          <span class="fcp-kicker">06 · Plantillas</span>
+          <h2 id="h-tpl">Post, historia y diapositiva</h2>
+          <p>Ábrelas en el navegador, edita el texto y expórtalas a 1× desde el modo dispositivo. También vienen en el kit para editarlas con tus archivos.</p>
+        </div>
+        <ul class="mk-tpls" role="list">
+          {TEMPLATES.map((t) => (
+            <li class="mk-tpl">
+              <div class="mk-tpl-frame" style={`--w:${t.w};--h:${t.h}`}>
+                <iframe src={files(`templates/${t.file}.html`)} title={`Vista previa: plantilla ${t.name}`} loading="lazy" tabindex="-1" width={t.w} height={t.h}></iframe>
+              </div>
+              <h3>{t.name} <small>{t.size}</small></h3>
+              <p class="mk-note">{guideIntro(t.guide)}</p>
+              <div class="mk-dl">
+                <a href={files(`templates/${t.file}.html`)} target="_blank" rel="noopener">Abrir</a>
+                <a href={gh(`brand/templates/${t.file}.html`)} target="_blank" rel="noopener">GitHub</a>
+                <a href={gh(`brand/components/${t.guide}.md`)} target="_blank" rel="noopener">Guía</a>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <!-- Downloads -->
+      <section class="mk-sec" id="descargas" aria-labelledby="h-dl">
+        <div class="mk-head">
+          <span class="fcp-kicker">07 · Descargas</span>
+          <h2 id="h-dl">Llévatelo todo</h2>
+          <p>El kit es una copia de la carpeta <code>brand/</code> del repositorio, generada en cada despliegue. La fuente de verdad es GitHub.</p>
+        </div>
+        <ul class="mk-downloads" role="list">
+          <li><a href={url('marca/descargas/chicha-dash-kit.zip')} download><b>Kit completo</b><span>Fuentes, SVG, plantillas, tokens, CSS y guías · {kb(kitSize)}</span></a></li>
+          <li><a href={url('marca/descargas/flutterchicha.zip')} download><b>FlutterChicha</b><span>Las 5 capas en TTF y WOFF2</span></a></li>
+          <li><a href={files('tokens/tokens.json')} download><b>tokens.json</b><span>Colores, tipografía, espacios, radios y sombras · {size('tokens/tokens.json')}</span></a></li>
+          <li><a href={files('css/components.css')} download><b>components.css</b><span>Clases <code>.fcp-*</code> de los componentes · {size('css/components.css')}</span></a></li>
+          <li><a href={files('reference/alfabeto-chicha-referencia.png')} download><b>Alfabeto de referencia</b><span>El original pintado a mano · {size('reference/alfabeto-chicha-referencia.png')}</span></a></li>
+          <li><a href={gh('brand/brand-book.md')} target="_blank" rel="noopener"><b>Brand book ↗</b><span>Voz, color, tipo, forma, Dash, movimiento y formatos</span></a></li>
+        </ul>
+        <div class="mk-repo">
+          <div>
+            <h3>Código fuente</h3>
+            <p>Los tokens se generan con <code>npm run tokens</code> y la fuente con <code>brand/tools/flutterchicha/build.py</code>. Para proponer un cambio, abre un PR sobre <code>brand/</code>.</p>
+          </div>
+          <pre><code>git clone {REPO}.git</code></pre>
+          <div class="mk-cta">
+            <a class="fcp-btn is-alt" href={gh('brand', 'tree')} target="_blank" rel="noopener">Abrir brand/ en GitHub</a>
+            <a class="fcp-btn is-dark" href={REPO} target="_blank" rel="noopener">Repositorio</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="mk-foot">
+      <a href={url()}>← Volver a FlutterConf Perú 2026</a>
+      <span>Flutter y Dash son marcas de Google LLC. FlutterChicha © FlutterConf Perú.</span>
+    </footer>
+    <p class="vh" role="status" aria-live="polite" id="mk-status"></p>
+  </div>
+</Base>
+
+<script>
+  // Small, page-only behaviour: copy buttons, the FlutterChicha playground, and still SVGs for reduced motion.
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) document.querySelectorAll('.mk animate, .mk animateTransform').forEach((a) => a.remove());
+  const status = document.getElementById('mk-status');
+  const say = (msg: string) => { if (status) status.textContent = msg; };
+  const copy = async (text: string, el: HTMLElement) => {
+    try { await navigator.clipboard.writeText(text); } catch { return; }
+    el.dataset.copied = '';
+    say(`Copiado: ${text.length > 40 ? 'HTML' : text}`);
+    setTimeout(() => delete el.dataset.copied, 1200);
+  };
+  document.querySelectorAll<HTMLElement>('[data-copy]').forEach((b) => b.addEventListener('click', () => copy(b.dataset.copy!, b)));
+  document.querySelectorAll<HTMLElement>('[data-copy-code]').forEach((b) =>
+    b.addEventListener('click', () => copy(b.parentElement?.querySelector('code')?.textContent ?? '', b)));
+
+  const out = document.getElementById('fc-out');
+  const text = document.getElementById('fc-text') as HTMLInputElement | null;
+  const range = document.getElementById('fc-size') as HTMLInputElement | null;
+  const outline = document.getElementById('fc-outline') as HTMLInputElement | null;
+  if (out && text && range && outline) {
+    const spans = out.querySelectorAll('.ch > span');
+    text.addEventListener('input', () => { const v = text.value || ' '; spans.forEach((s) => (s.textContent = v)); });
+    range.addEventListener('input', () => out.style.setProperty('--fs', `${range.value}px`));
+    outline.addEventListener('change', () => out.classList.toggle('no-outline', !outline.checked));
+  }
+</script>
