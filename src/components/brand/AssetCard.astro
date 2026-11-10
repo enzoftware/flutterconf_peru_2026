@@ -1,0 +1,17 @@
+---
+/** One downloadable SVG on the brand page: preview, file name, size, download and GitHub links. */
+import { kb, type BrandFile } from '../../lib/brand';
+interface Props { file: BrandFile; src: string; github: string }
+const { file, src, github } = Astro.props;
+const label = file.name.replace(/\.svg$/, '').replace(/-/g, ' ');
+---
+<figure class="mk-asset">
+  <div class="mk-asset-art"><img src={src} alt={label} loading="lazy" decoding="async" /></div>
+  <figcaption>
+    <code>{file.name}</code>
+    <span class="mk-dl">
+      <a href={src} download>SVG <small>{kb(file.size)}</small><span class="vh"> · {file.name}</span></a>
+      <a href={github} target="_blank" rel="noopener">GitHub<span class="vh"> · {file.name}</span></a>
+    </span>
+  </figcaption>
+</figure>

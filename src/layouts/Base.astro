@@ -6,9 +6,10 @@ import event from '../data/event.json';
 import fcBase from '../../brand/fonts/flutterchicha/FlutterChicha-Regular.woff2?url';
 import fcSombra from '../../brand/fonts/flutterchicha/FlutterChichaSombra-Regular.woff2?url';
 
-interface Props { title?: string; description?: string }
+interface Props { title?: string; description?: string; jsonLd?: boolean }
 const {
   title = `${event.name} · ${event.dateLong.split(' de 2026')[0]} · ${event.venue}`,
+  jsonLd = true,
   description = `Un día entero de Flutter y Dart en Lima: charlas, talleres y comunidad. ${event.dateLong}, ${event.hours}, ${event.venue}.`,
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -41,7 +42,7 @@ const ld = {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Bungee+Shade&family=Rubik:wght@400;500;600;700;800;900&display=swap" />
     <style is:inline set:html={formaClipCss()}></style>
-    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
   </head>
   <body>
     <a class="skip" href="#top">Saltar al contenido</a>
