@@ -1,0 +1,6 @@
+---
+/** Decorative ornament with scroll parallax (--spd px drift, --rot degrees spin). */
+interface Props { svg: string; x: string; y: string; w: number; spd: number; rot: number }
+const { svg, x, y, w, spd, rot } = Astro.props;
+---
+<i class="fl" data-p aria-hidden="true" style={`left:${x};top:${y};width:${w}px;--spd:${spd};--rot:${rot}`}><Fragment set:html={svg} /></i>

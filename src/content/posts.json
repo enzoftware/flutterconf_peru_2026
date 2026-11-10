@@ -1,0 +1,32 @@
+[
+  {
+    "id": "01",
+    "kicker": "Ponente confirmado",
+    "text": "¡GDE en Flutter llega al escenario!"
+  },
+  {
+    "id": "02",
+    "kicker": "Cuenta regresiva",
+    "text": "¡Faltan 28 días!"
+  },
+  {
+    "id": "03",
+    "kicker": "Tip de Dart",
+    "text": "Patrones y records en Dart 3"
+  },
+  {
+    "id": "04",
+    "kicker": "Sorteo",
+    "text": "¡Gana 2 entradas!"
+  },
+  {
+    "id": "05",
+    "kicker": "Detrás de cámaras",
+    "text": "Así armamos los kits"
+  },
+  {
+    "id": "06",
+    "kicker": "Comunidad",
+    "text": "Tu foto con Dash en la pantalla"
+  }
+]

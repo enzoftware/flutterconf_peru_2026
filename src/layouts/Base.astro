@@ -1,0 +1,55 @@
+---
+import '../styles/global.css';
+import { DASH_DEFS } from '../lib/art';
+import { formaClipCss } from '../lib/palette';
+import event from '../data/event.json';
+import fcBase from '../../brand/fonts/flutterchicha/FlutterChicha-Regular.woff2?url';
+import fcSombra from '../../brand/fonts/flutterchicha/FlutterChichaSombra-Regular.woff2?url';
+
+interface Props { title?: string; description?: string }
+const {
+  title = `${event.name} · ${event.dateLong.split(' de 2026')[0]} · ${event.venue}`,
+  description = `Un día entero de Flutter y Dart en Lima: charlas, talleres y comunidad. ${event.dateLong}, ${event.hours}, ${event.venue}.`,
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ld = {
+  '@context': 'https://schema.org', '@type': 'Event', name: event.name, description,
+  startDate: `${event.isoDate}T${event.start}:00-05:00`, endDate: `${event.isoDate}T${event.end}:00-05:00`,
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode', eventStatus: 'https://schema.org/EventScheduled',
+  location: { '@type': 'Place', name: event.venue, address: { '@type': 'PostalAddress', addressLocality: 'San Isidro, Lima', addressCountry: 'PE' } },
+};
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#021C3F" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="es_PE" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.svg`} type="image/svg+xml" />
+    <link rel="preload" href={fcBase} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={fcSombra} as="font" type="font/woff2" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Bungee+Shade&family=Rubik:wght@400;500;600;700;800;900&display=swap" />
+    <style is:inline set:html={formaClipCss()}></style>
+    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  </head>
+  <body>
+    <a class="skip" href="#top">Saltar al contenido</a>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs set:html={DASH_DEFS} /></svg>
+    <slot />
+    <script>
+      import { boot } from '../scripts/engine';
+      boot();
+    </script>
+  </body>
+</html>

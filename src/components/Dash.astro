@@ -1,0 +1,7 @@
+---
+/** Dash, the Flutter mascot, as inline SVG (holding the Peruvian flag unless flag={false}). */
+import { dash } from '../lib/art';
+interface Props { fly?: boolean; flag?: boolean }
+const { fly = false, flag = true } = Astro.props;
+---
+<Fragment set:html={dash({ fly, flag })} />

@@ -1,0 +1,9 @@
+---
+/** Crossed marquee ribbon; slides with scroll in the given direction. */
+interface Props { items: string[]; dir: 1 | -1 }
+const { items, dir } = Astro.props;
+const run = Array.from({ length: 6 }, () => items).flat();
+---
+<div class:list={['rib', { b: dir > 0 }]} data-p style={`--dir:${dir}`} aria-hidden="true">
+  <span class="rt">{run.map((t) => <>{t}<i>★</i></>)}</span>
+</div>

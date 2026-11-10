@@ -1,0 +1,10 @@
+---
+import { dashIcon } from '../lib/art';
+import event from '../data/event.json';
+import { LINKS } from '../data/nav';
+---
+<header class="nav">
+  <a class="logo" href="#top" aria-label="FlutterConf Perú, ir al inicio"><Fragment set:html={dashIcon()} /><b>FlutterConf<span> Perú</span></b></a>
+  <nav class="nl" aria-label="Principal">{LINKS.map((l) => <a href={l.href}>{l.label}</a>)}</nav>
+  <a class="bt sm" href={event.ticketsUrl}>Entradas</a>
+</header>

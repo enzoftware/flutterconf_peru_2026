@@ -1,0 +1,30 @@
+---
+import Chicha from './Chicha.astro';
+import Floater from './Floater.astro';
+import { sparkle, diamond } from '../lib/art';
+import { list } from '../lib/content';
+const tickets = await list('tickets');
+const SIDE = ['left', 'pop', 'right'], SHADOW = ['#1CDAC5', '#F25D50', '#8FC2FF'], TILT = ['-2deg', '0deg', '2deg'];
+---
+<section class="z" id="entradas" style="--a:#0553B1;--b:#042B59">
+  <Floater svg={diamond('#FFF275', '#021C3F')} x="90%" y="120px" w={38} spd={-260} rot={50} />
+  <Floater svg={sparkle('#F25D50')} x="4%" y="380px" w={40} spd={-200} rot={-90} />
+  <div class="wrap">
+    <span class="kick" data-r="up" style="--kc:#8FC2FF">Entradas</span>
+    <h2 data-r="pop"><Chicha text={'Separa tu\ncupo'} /></h2>
+    <div class="tks">
+      {tickets.map((t, i) => (
+        <div class="tkw" data-r={SIDE[i % 3]} style={`--k:${SHADOW[i % 3]};--d:${i * 0.08}s`}>
+          <div class:list={['tk', { f: t.featured }]} style={`--rt:${TILT[i % 3]}`}>
+            {t.badge && <span class="badge">{t.badge}</span>}
+            <h3>{t.name}</h3>
+            <div class="pr"><small>S/</small> {t.price}</div>
+            <p class="nt">{t.note}</p>
+            <ul>{t.includes.map((x) => <li>{x}</li>)}</ul>
+            <a class:list={['bt', { dk: t.featured }]} href={t.url}>Comprar</a>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

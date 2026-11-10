@@ -1,0 +1,29 @@
+---
+/** FAQ, closing call to action (Dash lands here) and footer. */
+import Chicha from './Chicha.astro';
+import Dash from './Dash.astro';
+import { LINKS } from '../data/nav';
+import { accent } from '../lib/palette';
+import { list } from '../lib/content';
+import event from '../data/event.json';
+const faq = await list('faq');
+---
+<section class="z" style="--a:#F25D50;--b:#021C3F">
+  <div class="wrap">
+    <span class="kick" data-r="up" style="--kc:#FFF275">Preguntas</span>
+    <h2 data-r="pop"><Chicha text={'Lo que\nnos preguntan'} /></h2>
+    <div class="faq">
+      {faq.map((f, i) => <details data-r="up" style={`--k:${accent(i)}`}><summary>{f.question}</summary><p>{f.answer}</p></details>)}
+    </div>
+    <div class="fin">
+      <h2 data-r="pop"><Chicha text={'¡Nos vemos\nen Lima!'} /></h2>
+      <div class="spot" data-land data-r="pop"><div class="perched"><Dash /></div></div>
+      <div data-r="up"><a class="bt" href={event.ticketsUrl}>Compra tu entrada</a></div>
+    </div>
+    <footer>
+      <span>{event.name} · Hecho por la comunidad</span>
+      <nav aria-label="Pie de página">{LINKS.map((l) => <a href={l.href}>{l.label}</a>)}</nav>
+      <a href={event.codeOfConductUrl}>Código de conducta</a>
+    </footer>
+  </div>
+</section>

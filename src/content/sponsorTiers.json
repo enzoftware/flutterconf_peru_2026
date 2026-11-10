@@ -1,0 +1,30 @@
+[
+  {
+    "id": "01",
+    "name": "Platino",
+    "slots": 2,
+    "logoHeight": 110,
+    "sponsors": []
+  },
+  {
+    "id": "02",
+    "name": "Oro",
+    "slots": 3,
+    "logoHeight": 88,
+    "sponsors": []
+  },
+  {
+    "id": "03",
+    "name": "Plata",
+    "slots": 4,
+    "logoHeight": 70,
+    "sponsors": []
+  },
+  {
+    "id": "04",
+    "name": "Comunidad",
+    "slots": 5,
+    "logoHeight": 56,
+    "sponsors": []
+  }
+]

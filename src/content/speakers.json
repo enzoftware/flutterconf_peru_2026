@@ -1,0 +1,58 @@
+[
+  {
+    "id": "01",
+    "name": "Por anunciar",
+    "role": "GDE en Flutter y Dart",
+    "place": "Perú",
+    "talk": "Arquitectura que sobrevive al segundo año",
+    "photo": null
+  },
+  {
+    "id": "02",
+    "name": "Por anunciar",
+    "role": "Tech lead mobile",
+    "place": "Fintech",
+    "talk": "Flutter en una app con 2 millones de usuarios",
+    "photo": null
+  },
+  {
+    "id": "03",
+    "name": "Por anunciar",
+    "role": "GDE en Firebase",
+    "place": "Colombia",
+    "talk": "Firebase y Dart: backend sin servidores",
+    "photo": null
+  },
+  {
+    "id": "04",
+    "name": "Por anunciar",
+    "role": "Ingeniera Flutter",
+    "place": "México",
+    "talk": "Accesibilidad que pasa una auditoría",
+    "photo": null
+  },
+  {
+    "id": "05",
+    "name": "Por anunciar",
+    "role": "Performance engineer",
+    "place": "Chile",
+    "talk": "Impeller y rendimiento en apps reales",
+    "photo": null
+  },
+  {
+    "id": "06",
+    "name": "Por anunciar",
+    "role": "Líder de diseño",
+    "place": "Argentina",
+    "talk": "Del Figma al widget sin perder detalle",
+    "photo": null
+  },
+  {
+    "id": "07",
+    "name": "Por anunciar",
+    "role": "Dev advocate",
+    "place": "Ecuador",
+    "talk": "Flutter + IA: agentes dentro de tu app",
+    "photo": null
+  }
+]

@@ -1,0 +1,42 @@
+---
+import Chicha from './Chicha.astro';
+import Dash from './Dash.astro';
+import Floater from './Floater.astro';
+import Ribbon from './Ribbon.astro';
+import { sparkle, diamond, flower, rays } from '../lib/art';
+import { accent } from '../lib/palette';
+import { list } from '../lib/content';
+import event from '../data/event.json';
+const stats = await list('stats');
+const [day, , month] = event.dateLong.split(' ').slice(1); // "19", "de", "diciembre"
+---
+<section class="z" id="top" style="--a:#021C3F;--b:#042B59">
+  <div class="rays" data-p style="transform:rotate(calc(var(--p,.5) * 40deg))" aria-hidden="true"><Fragment set:html={rays(['#1CDAC5', 'transparent', '#0553B1', 'transparent'])} /></div>
+  <Floater svg={sparkle('#FFF275')} x="6%" y="120px" w={46} spd={-260} rot={90} />
+  <Floater svg={sparkle('#1CDAC5')} x="88%" y="90px" w={34} spd={-180} rot={-120} />
+  <Floater svg={diamond('#F25D50', '#021C3F')} x="82%" y="520px" w={40} spd={-320} rot={30} />
+  <Floater svg={flower('#FFF275', '#F25D50', '#021C3F')} x="4%" y="560px" w={70} spd={-220} rot={180} />
+  <Floater svg={sparkle('#8FC2FF')} x="50%" y="30px" w={22} spd={-120} rot={60} />
+  <div class="wrap hero">
+    <span class="chip" data-r="drop">★ {event.city} · Perú ★</span>
+    <h1 data-r="pop" style="--d:.08s"><Chicha text={'¡Flutter\nConf Perú!'} /></h1>
+    <p class="yr" data-r="up" style="--d:.18s">2026</p>
+    <div class="hrow">
+      <div class="tag" data-r="left" style="--d:.25s">SÁB {day}<small>{month.toUpperCase()}</small></div>
+      <div class="spot" data-spot><div class="perched"><Dash /></div></div>
+      <div class="tag r" data-r="right" style="--d:.3s">9 → 15<small>UN SOLO DÍA</small></div>
+    </div>
+    <p class="lead" data-r="up">Un día entero de Flutter y Dart en {event.venue}: charlas, talleres en dos salas y toda la comunidad en un solo lugar. Dash ya está volando hacia allá.</p>
+    <div class="ctas" data-r="up" style="--d:.1s"><a class="bt" href={event.ticketsUrl}>Compra tu entrada</a><a class="bt alt" href={event.cfpUrl}>Postula tu charla</a></div>
+  </div>
+  <Ribbon dir={-1} items={['¡Flutter!', '¡Dart!', '¡Lima 2026!', 'Widget a widget']} />
+  <Ribbon dir={1} items={['9:00 → 15:00', '2 salas', '16 charlas', event.hashtag]} />
+  <div class="wrap stats">
+    {stats.map((s, i) => (
+      <div class="st" data-r="pop" style={`--d:${i * 0.08}s`}>
+        <Chicha text={`${s.value}${s.suffix}`} count={{ value: s.value, suffix: s.suffix }} style={`--c2:${accent(i + 1)}`} />
+        <p>{s.label}</p>
+      </div>
+    ))}
+  </div>
+</section>

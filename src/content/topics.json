@@ -1,0 +1,42 @@
+[
+  {
+    "id": "01",
+    "title": "Flutter + IA",
+    "text": "Gemini, Genkit y agentes dentro de tus apps."
+  },
+  {
+    "id": "02",
+    "title": "Arquitectura",
+    "text": "Estado, capas y apps que siguen sanas al segundo año."
+  },
+  {
+    "id": "03",
+    "title": "Rendimiento",
+    "text": "Impeller, perfiles en DevTools y 60 fps de verdad."
+  },
+  {
+    "id": "04",
+    "title": "Dart en todos lados",
+    "text": "Del widget a la API con un solo lenguaje."
+  },
+  {
+    "id": "05",
+    "title": "Multiplataforma",
+    "text": "Web, escritorio y embebidos con el mismo código."
+  },
+  {
+    "id": "06",
+    "title": "Testing y CI",
+    "text": "Pruebas que sí corren y releases sin miedo."
+  },
+  {
+    "id": "07",
+    "title": "Diseño y accesibilidad",
+    "text": "Del Figma al widget, para todas las personas."
+  },
+  {
+    "id": "08",
+    "title": "Flutter en producción",
+    "text": "Casos reales de equipos de la región."
+  }
+]

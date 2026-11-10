@@ -1,0 +1,4 @@
+# Python tools for the FlutterChicha font generator (brand/tools/flutterchicha/build.py)
+fonttools==4.68.0
+skia-pathops==0.9.2
+brotli==1.2.1

@@ -1,0 +1,109 @@
+[
+  {
+    "id": "01",
+    "time": "9:00",
+    "items": [
+      {
+        "title": "Registro, café y stickers de Dash",
+        "meta": "Llegada"
+      }
+    ],
+    "plenary": true
+  },
+  {
+    "id": "02",
+    "time": "9:30",
+    "items": [
+      {
+        "title": "Keynote: el estado de Flutter en 2026",
+        "meta": "Keynote · Equipo Flutter"
+      }
+    ],
+    "plenary": true
+  },
+  {
+    "id": "03",
+    "time": "10:15",
+    "items": [
+      {
+        "title": "Arquitectura que sobrevive al segundo año",
+        "meta": "Sala Dash · Charla"
+      },
+      {
+        "title": "Taller: tu primera app con Gemini",
+        "meta": "Sala Dart · Taller 10:15–12:15"
+      }
+    ],
+    "plenary": false
+  },
+  {
+    "id": "04",
+    "time": "11:00",
+    "items": [
+      {
+        "title": "Impeller y rendimiento en apps reales",
+        "meta": "Sala Dash · Charla"
+      }
+    ],
+    "plenary": false
+  },
+  {
+    "id": "05",
+    "time": "11:45",
+    "items": [
+      {
+        "title": "Lightning talks: 4 charlas de 7 minutos",
+        "meta": "Sala Dash · Lightning"
+      }
+    ],
+    "plenary": false
+  },
+  {
+    "id": "06",
+    "time": "12:30",
+    "items": [
+      {
+        "title": "Almuerzo y networking",
+        "meta": "Pausa"
+      }
+    ],
+    "plenary": true
+  },
+  {
+    "id": "07",
+    "time": "13:15",
+    "items": [
+      {
+        "title": "Flutter + IA: agentes dentro de tu app",
+        "meta": "Sala Dash · Charla"
+      },
+      {
+        "title": "Taller: testing y CI para apps Flutter",
+        "meta": "Sala Dart · Taller 13:15–14:30"
+      }
+    ],
+    "plenary": false
+  },
+  {
+    "id": "08",
+    "time": "14:00",
+    "items": [
+      {
+        "title": "Panel: Flutter en producción en Latam",
+        "meta": "Sala Dash · Panel"
+      }
+    ],
+    "plenary": false
+  },
+  {
+    "id": "09",
+    "time": "14:40",
+    "items": [
+      {
+        "title": "Cierre, sorteos y foto con Dash",
+        "meta": "Cierre · 15:00 fin"
+      }
+    ],
+    "plenary": true
+  }
+]
