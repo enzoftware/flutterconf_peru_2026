@@ -42,7 +42,7 @@ if (glyphs.length) console.warn(`[decks] ${deck.title}: Monchila demo has no acc
     </div>
   )}
 
-  <main class="deck-list" id="top">
+  <main class={`deck-list lt-${deck.lettering}`} id="top">
     {deck.slides.map((slide, i) => (
       <figure class="deck-item" id={`s${i + 1}`}>
         <DeckSlide slide={slide} n={i + 1} total={total} sponsor={deck.sponsor} />

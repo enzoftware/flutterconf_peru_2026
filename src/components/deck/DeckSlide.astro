@@ -5,6 +5,7 @@
  */
 import Frame from './Frame.astro';
 import Title from './Title.astro';
+import Lettering from './Lettering.astro';
 import { Image } from 'astro:assets';
 import { dash } from '../../lib/art';
 import { ACCENT, lines, type DeckSlide } from '../../lib/deck';
@@ -62,7 +63,7 @@ const RING = ['yellow', 'green', 'red', 'sky'] as const;
       <div class="s-ribbon is-yellow" aria-hidden="true">{ribbon(s.ribbon).map((t) => <>{t}<i>★</i></>)}</div>
     </Fragment>
     <p class="s-kicker">{s.kicker}</p>
-    <h2 class="s-title is-cover" style="--fs:176">{lines(s.title).map((l, i) => <>{i > 0 && <br />}{l}</>)}</h2>
+    <Lettering text={s.title} size={176} class="is-cover" />
     <p class="s-sub">{s.subtitle}</p>
     <p class="s-meta">{event.dateLong} · {event.hours} · {event.venue}</p>
     {sponsor.logo && <img class="s-logo" src={`${base}/${sponsor.logo.replace(/^\//, '')}`} alt={sponsor.name} />}

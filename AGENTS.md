@@ -106,6 +106,7 @@ Each sponsor gets its own deck at `/decks/<slug>/`, built from `src/content/deck
 - **Privacy:** `publish` defaults to `false`, which keeps the deck out of the production build (`npm run dev` always shows it). Set it to `true` only if the deck may be public on GitHub Pages.
 - **Present and export:** open the deck in `npm run dev`, press `P` to present (arrows to move, Esc to leave), or use "Exportar PDF" and choose "Save as PDF" with no margins and background graphics on.
 - **Style:** option A, "Afiche nocturno", from the deck style exploration. Sizes inside a slide use `--u` (1/1920 of the slide width), so slides scale to any screen and print at 1920×1080.
+- **Lettering:** `lettering: "neon"` (default) stacks a gradient fill, an ink outline and an orange ring (`src/components/deck/Lettering.astro`); `"classic"` is flat yellow with a hard red shadow.
 - **Titles use Monchila**, a licensed font that is never committed. Follow `brand/fonts/monchila/README.md` to install it. The demo has no accents or ñ, so keep Monchila titles free of them; the deck page and the build log list any title that breaks.
 - **New layout:** add a branch to the `deckSlide` union, a label in `SLIDE_LABEL` (`src/lib/deck.ts`), the markup in `src/components/deck/DeckSlide.astro` and its styles in `src/styles/deck.css`.
 

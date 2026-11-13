@@ -113,6 +113,8 @@ export const collections = {
       sponsor: z.object({ name: z.string(), logo: z.string().optional() }),
       title: z.string(),
       publish: z.boolean().default(false),
+      /** Title look: "neon" (gradient + ink outline + orange ring) or "classic" (flat yellow, red shadow). */
+      lettering: z.enum(['neon', 'classic']).default('neon'),
       slides: z.array(deckSlide(image)).min(1),
     }),
   }),
