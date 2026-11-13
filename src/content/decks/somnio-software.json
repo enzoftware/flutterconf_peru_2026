@@ -26,7 +26,8 @@
       "kicker": "El lugar",
       "title": "Bloom Tower",
       "address": ["Piso 16 · Flora Tristán 310", "Magdalena del Mar, Lima"],
-      "badge": "Sábado 19 de diciembre"
+      "badge": "Sábado 19 de diciembre",
+      "photo": "./images/bloom-tower.png"
     },
     {
       "type": "agenda",

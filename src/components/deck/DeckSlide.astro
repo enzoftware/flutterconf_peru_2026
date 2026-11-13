@@ -29,7 +29,7 @@ const RING = ['yellow', 'green', 'red', 'sky'] as const;
       </div>
       <figure class="s-photo">
         {s.photo
-          ? <Image src={s.photo} alt={`${s.title}, ${s.address.join(', ')}`} widths={[960, 1440]} sizes="760px" loading="eager" />
+          ? <Image src={s.photo} alt={`${s.title}, ${s.address.join(', ')}`} widths={[600, 1200]} sizes="580px" loading="eager" />
           : <div class="s-photo-ph"><span>Foto del venue</span><small>Agrega <code>photo</code> en el JSON del deck</small></div>}
         {s.photoCredit && <figcaption>{s.photoCredit}</figcaption>}
       </figure>

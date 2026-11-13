@@ -193,15 +193,15 @@
 
 /* Venue */
 .s-shape.is-venue { width: calc(640 * var(--u)); left: calc(-240 * var(--u)); bottom: calc(-260 * var(--u)); color: var(--purple); opacity: .4 }
-.s-venue { display: grid; grid-template-columns: minmax(0, 1fr) calc(760 * var(--u)); gap: calc(80 * var(--u)); align-items: center; flex: 1; min-height: 0 }
+.s-venue { display: grid; grid-template-columns: minmax(0, 1fr) calc(580 * var(--u)); gap: calc(80 * var(--u)); align-items: center; flex: 1; min-height: 0 }
 .s-address { margin: 0; font: 600 calc(42 * var(--u))/1.35 var(--f-body) }
 .s-badge.is-yellow { background: var(--yellow); box-shadow: calc(6 * var(--u)) calc(6 * var(--u)) 0 var(--red) }
 .s-photo {
-  margin: 0; position: relative; height: calc(760 * var(--u)); transform: rotate(2deg);
+  margin: 0; position: relative; aspect-ratio: 3 / 4; transform: rotate(2deg);
   background: var(--paper); padding: calc(18 * var(--u)); border: calc(5 * var(--u)) solid var(--ink); border-radius: calc(24 * var(--u));
   box-shadow: calc(16 * var(--u)) calc(16 * var(--u)) 0 var(--red);
 }
-.s-photo img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: calc(12 * var(--u)) }
+.s-photo img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 15%; border-radius: calc(12 * var(--u)) }
 .s-photo figcaption { position: absolute; right: calc(30 * var(--u)); bottom: calc(30 * var(--u)); font: 600 calc(18 * var(--u))/1 var(--f-body); color: var(--paper); text-shadow: 0 0 calc(6 * var(--u)) rgba(0, 0, 0, .6) }
 .s-photo-ph {
   height: 100%; display: grid; place-content: center; gap: calc(14 * var(--u)); text-align: center;
