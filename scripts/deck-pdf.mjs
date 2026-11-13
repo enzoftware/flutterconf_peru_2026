@@ -97,9 +97,6 @@ try {
   if (info.brokenImages.length) throw new Error(`Images that did not load: ${info.brokenImages.join(', ')}`);
   if (info.warning) console.warn(`Deck warning: ${info.warning}`);
 
-  // Print media first: the page sizes its title filters for 1920 px slides when it switches.
-  await send('Emulation.setEmulatedMedia', { media: 'print' }, sessionId);
-  await new Promise((r) => setTimeout(r, 300));
   const { data } = await send('Page.printToPDF', {
     printBackground: true, preferCSSPageSize: true, displayHeaderFooter: false,
     marginTop: 0, marginBottom: 0, marginLeft: 0, marginRight: 0,

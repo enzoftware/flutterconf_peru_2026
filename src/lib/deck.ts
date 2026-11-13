@@ -49,7 +49,3 @@ export const lines = (text: string): string[] => text.split('\n');
 
 /** Two-digit slide number. */
 export const pad = (n: number): string => String(n).padStart(2, '0');
-
-/** Unique id for each title's sticker filter (Lettering.astro); one counter per build. */
-let letteringIds = 0;
-export const nextLetteringId = (): string => `lt-ink-${++letteringIds}`;

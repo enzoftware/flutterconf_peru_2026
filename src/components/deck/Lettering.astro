@@ -1,55 +1,22 @@
 ---
 /**
- * Monchila title, stacked in layers so it reads like a chicha sticker:
- *   .lt-k  ink and orange ring · Monchila Silueta (letters grown .085em, no holes) run through the
- *          SVG filter below, which merges the letters into one sticker shape
+ * Monchila title, stacked in three layers so it reads like a chicha sticker:
+ *   .lt-o  outer ring (fc-naranja stroke)            · Monchila Silueta (no holes)
+ *   .lt-k  ink outline (fc-negro fill)                · Monchila Silueta (grown .085em)
  *   .lt-f  fill, plus .lt-g1…4 fading in with masks: fc-verde → fc-amarillo → yellow → fc-naranja → red · Monchila
- * The deck's `lettering` option picks the look ("neon" stacks everything, "classic" shows the fill
+ * The deck's `lettering` option picks the look ("neon" stacks all three, "classic" shows the fill
  * as flat yellow with a hard red shadow). Screen readers get the text once from .vh.
- *
- * Why a filter: each silhouette glyph is clean on its own, but neighbouring letters leave notches
- * and closed gaps between them (E + l, L + i, one line over the next). A per-glyph stroke can't
- * fill those, so the filter works on the whole title: a small morphological closing (blur +
- * threshold twice: grow, then shrink back) seals notches; a wide blur kept only where it is almost
- * opaque fills the gaps the letters enclose without bridging open bays; the result is painted
- * ink and grown a little more for the orange ring.
- * Blur radii are in em (data-k); src/scripts/deck.ts turns them into pixels for the current slide
- * size and for print, where slides are 1920 px wide.
  */
-import { lines, nextLetteringId } from '../../lib/deck';
+import { lines } from '../../lib/deck';
 
 interface Props { text: string; size: number; class?: string }
 const { text, size, class: cls } = Astro.props;
-const LAYERS = ['lt-k', 'lt-f', 'lt-g1', 'lt-g2', 'lt-g3', 'lt-g4'];
+const LAYERS = ['lt-o', 'lt-k', 'lt-f', 'lt-g1', 'lt-g2', 'lt-g3', 'lt-g4'];
 const rows = lines(text);
-const id = nextLetteringId();
-// data-k: blur radius in em · data-t: alpha threshold · data-phi: Gaussian density at that threshold,
-// used to keep the thresholded edge about half a pixel wide at any scale.
-const CLOSE = 0.06;
-const CORE = 0.3;
-const RING = 0.03;
 ---
-<h2 class:list={['s-title', cls]} style={`--fs:${size}`} data-fs={size}>
+<h2 class:list={['s-title', cls]} style={`--fs:${size}`}>
   <span class="vh">{rows.join(' ')}</span>
   {LAYERS.map((c) => (
-    <span class={c} aria-hidden="true" style={c === 'lt-k' ? `--lt-filter:url(#${id})` : undefined}>{rows.map((l, i) => <>{i > 0 && <br />}{l}</>)}</span>
+    <span class={c} aria-hidden="true">{rows.map((l, i) => <>{i > 0 && <br />}{l}</>)}</span>
   ))}
-  <svg class="lt-defs" width="0" height="0" aria-hidden="true" focusable="false">
-    <filter id={id} x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">
-      <feGaussianBlur in="SourceAlpha" data-k={CLOSE} />
-      <feComponentTransfer><feFuncA type="linear" data-k={CLOSE} data-t="0.05" data-phi="0.103" /></feComponentTransfer>
-      <feGaussianBlur data-k={CLOSE} />
-      <feComponentTransfer result="closed"><feFuncA type="linear" data-k={CLOSE} data-t="0.95" data-phi="0.103" /></feComponentTransfer>
-      <feGaussianBlur in="closed" data-k={CORE} />
-      <feComponentTransfer result="core"><feFuncA type="linear" data-k={CORE} data-t="0.65" data-phi="0.370" /></feComponentTransfer>
-      <feComposite in="closed" in2="core" operator="over" result="filled" />
-      <feGaussianBlur in="filled" data-k={RING} />
-      <feComponentTransfer result="grown"><feFuncA type="linear" data-k={RING} data-t="0.15" data-phi="0.233" /></feComponentTransfer>
-      <feFlood class="lt-ring" />
-      <feComposite in2="grown" operator="in" result="ring" />
-      <feFlood class="lt-ink" />
-      <feComposite in2="filled" operator="in" result="ink" />
-      <feMerge><feMergeNode in="ring" /><feMergeNode in="ink" /></feMerge>
-    </filter>
-  </svg>
 </h2>

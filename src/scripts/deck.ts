@@ -4,7 +4,6 @@
  * is kept in the URL hash (#3) so a reload stays on the same slide.
  */
 export function bootDeck(): void {
-  fitLettering();
   const root = document.documentElement;
   const items = Array.from(document.querySelectorAll<HTMLElement>('.deck-item'));
   if (!items.length) return;
@@ -57,41 +56,4 @@ export function bootDeck(): void {
 
   const fromHash = /^#s(\d+)$/.exec(location.hash);
   if (fromHash) { cur = Math.min(items.length, Number(fromHash[1])) - 1; items[cur]?.scrollIntoView({ block: 'center' }); }
-}
-
-/**
- * Size the sticker filters of the neon titles (see Lettering.astro). Filter radii are in pixels, so
- * they are set from each title's font size: on load, whenever a slide changes size (review, present)
- * and for print, where every slide is 1920 px wide and the font size is exactly --fs px.
- */
-function fitLettering(): void {
-  const titles = Array.from(document.querySelectorAll<HTMLElement>('.lt-neon .s-title[data-fs]'));
-  if (!titles.length) return;
-  const EDGE = 0.5; // px over which a thresholded edge goes from transparent to opaque
-
-  const fit = (title: HTMLElement, fontPx: number): void => {
-    title.querySelectorAll<SVGElement>('[data-k]').forEach((el) => {
-      const sigma = Number(el.dataset.k) * fontPx;
-      if (el instanceof SVGFEGaussianBlurElement) { el.setAttribute('stdDeviation', sigma.toFixed(2)); return; }
-      // feFuncA: alpha' = slope · (alpha − t) + 0.5, steep enough for a crisp edge at this blur size.
-      const t = Number(el.dataset.t);
-      const slope = Math.max(4, sigma / (Number(el.dataset.phi) * EDGE));
-      el.setAttribute('slope', slope.toFixed(2));
-      el.setAttribute('intercept', (0.5 - slope * t).toFixed(3));
-    });
-  };
-  const forScreen = (): void => titles.forEach((t) => fit(t, parseFloat(getComputedStyle(t).fontSize)));
-  const forPrint = (): void => titles.forEach((t) => fit(t, Number(t.dataset.fs)));
-
-  forScreen();
-  let queued = false;
-  const ro = new ResizeObserver(() => {
-    if (queued || matchMedia('print').matches) return;
-    queued = true;
-    requestAnimationFrame(() => { queued = false; forScreen(); });
-  });
-  titles.forEach((t) => ro.observe(t));
-  addEventListener('beforeprint', forPrint);
-  addEventListener('afterprint', forScreen);
-  matchMedia('print').addEventListener('change', (e) => (e.matches ? forPrint() : forScreen()));
 }
