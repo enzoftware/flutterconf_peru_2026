@@ -16,10 +16,10 @@ The font file is **never committed**: this repository is public, and committing 
    ```bash
    python3 -m venv .venv && source .venv/bin/activate
    pip install -r brand/tools/requirements.txt
-   python brand/tools/monchila/fix_overlaps.py ~/Downloads/Monchila.otf brand/fonts/monchila/Monchila.otf
+   python brand/tools/monchila/fix_overlaps.py ~/Downloads/Monchila.otf brand/fonts/monchila/Monchila.ttf
    ```
 
-   This writes two files: `Monchila.otf` (titles) and `MonchilaSilueta.otf` (the same letters grown by 0.085 em and without holes, used for the ink outline and orange ring of the neon lettering).
+   This writes two TrueType files: `Monchila.ttf` (titles) and `MonchilaSilueta.ttf` (the same letters grown by 0.085 em and without holes, used for the ink outline and orange ring of the neon lettering).
 
 3. Run `npm run dev` and open `/decks/<slug>/`.
 
@@ -28,6 +28,10 @@ Without the file, the decks still build and the titles fall back to Bungee. The 
 ## Why the fix
 
 The demo's lowercase `s` has a contour that overlaps itself. FreeType fills it correctly, but Chrome and Safari cut triangular holes into the letter. `fix_overlaps.py` merges overlapping contours with skia-pathops (nonzero winding), which keeps the drawing identical and makes it render the same everywhere. Run it on the licensed file too, in case it carries the same defect.
+
+## Why TrueType
+
+Chrome embeds TrueType fonts in exported PDFs as real fonts, but turns CFF fonts (`.otf`) into Type 3 glyphs. macOS Preview draws the gradient of the neon titles wrong over Type 3 text, so the script converts both files to TrueType. If you still have an older `Monchila.otf` here, run the script again and delete the `.otf` files.
 
 ## Missing glyphs
 
