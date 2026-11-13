@@ -212,16 +212,19 @@
 
 /* Team */
 .s-shape.is-team { width: calc(720 * var(--u)); right: calc(-240 * var(--u)); top: calc(-260 * var(--u)); color: var(--purple); opacity: .45 }
-.s-team { list-style: none; margin: auto 0; padding: 0; display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: calc(60 * var(--u)) }
+/* One row for up to 7 people: faces shrink with the column, capped at 340u. */
+.s-team { list-style: none; margin: auto 0; padding: 0; display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: calc(48 * var(--u)) }
 .s-team li { display: grid; justify-items: center; gap: calc(18 * var(--u)); text-align: center }
 .s-face {
-  width: calc(340 * var(--u)); aspect-ratio: 1; border-radius: 50%; overflow: hidden;
+  width: min(calc(340 * var(--u)), calc(100% - 30 * var(--u))); aspect-ratio: 1; border-radius: 50%; overflow: hidden;
   border: calc(7 * var(--u)) solid var(--ink); background: var(--ring);
   box-shadow: 0 0 0 calc(10 * var(--u)) var(--ring), calc(18 * var(--u)) calc(18 * var(--u)) 0 calc(10 * var(--u)) var(--ink);
   margin-bottom: calc(14 * var(--u));
 }
 .s-face img { display: block; width: 100%; height: 100%; object-fit: cover }
-.s-name { font: 400 calc(36 * var(--u))/1.1 var(--f-display) }
+.s-name { font: 400 calc(var(--name, 36) * var(--u))/1.15 var(--f-display); text-wrap: balance }
+.s-team.is-many { --name: 28 }
+.s-team.is-many .s-face { box-shadow: 0 0 0 calc(8 * var(--u)) var(--ring), calc(12 * var(--u)) calc(12 * var(--u)) 0 calc(8 * var(--u)) var(--ink) }
 .s-role { font: 500 calc(26 * var(--u))/1.3 var(--f-body); color: var(--sky-light) }
 
 /* Closing */

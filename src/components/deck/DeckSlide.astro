@@ -41,7 +41,7 @@ const RING = ['yellow', 'green', 'red', 'sky'] as const;
   <Frame {...frame} shape={{ name: 'flower', class: 'is-team' }}>
     <Title kicker={s.kicker} title={s.title} />
     {s.text && <p class="s-text">{s.text}</p>}
-    <ul class="s-team" style={`--n:${organizers.length}`}>
+    <ul class:list={['s-team', { 'is-many': organizers.length > 4 }]} style={`--n:${organizers.length}`}>
       {organizers.map((o, i) => (
         <li>
           <span class="s-face" style={`--ring:${ACCENT[RING[i % RING.length]]}`}>

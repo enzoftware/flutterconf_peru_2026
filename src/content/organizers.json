@@ -1,5 +1,9 @@
 [
-  { "id": "01", "name": "Enzo Lizama", "photo": "../assets/organizers/enzo-lizama.jpg" },
-  { "id": "02", "name": "Juan Leon", "photo": "../assets/organizers/juan-leon.webp" },
-  { "id": "03", "name": "Jhunior Chavez", "photo": "../assets/organizers/jhunior-chavez.jpg" }
+  {"id": "01", "name": "Enzo Lizama", "photo": "../assets/organizers/enzo-lizama.jpg"},
+  {"id": "02", "name": "Juan Leon", "photo": "../assets/organizers/juan-leon.webp"},
+  {"id": "03", "name": "Jhunior Chavez", "photo": "../assets/organizers/jhunior-chavez.jpg"},
+  {"id": "04", "name": "Frank Moreno", "photo": "../assets/organizers/frank-moreno.webp"},
+  {"id": "05", "name": "Brian Salvatarre", "photo": "../assets/organizers/brian-salvatarre.webp"},
+  {"id": "06", "name": "Lesly Samaritano", "photo": "../assets/organizers/lesly-samaritano.webp"},
+  {"id": "07", "name": "Samuel Mauricio", "photo": "../assets/organizers/samuel-mauricio.webp"}
 ]
