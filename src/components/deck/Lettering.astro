@@ -3,7 +3,7 @@
  * Monchila title, stacked in three layers so it reads like a chicha sticker:
  *   .lt-o  outer ring (fc-naranja stroke)            · Monchila Silueta (no holes)
  *   .lt-k  ink outline (fc-negro fill)                · Monchila Silueta (grown .085em)
- *   .lt-f  fill: vertical gradient fc-verde → fc-amarillo → yellow → fc-naranja → red · Monchila
+ *   .lt-f  fill, plus .lt-g1…4 fading in with masks: fc-verde → fc-amarillo → yellow → fc-naranja → red · Monchila
  * The deck's `lettering` option picks the look ("neon" stacks all three, "classic" shows the fill
  * as flat yellow with a hard red shadow). Screen readers get the text once from .vh.
  */
@@ -11,7 +11,7 @@ import { lines } from '../../lib/deck';
 
 interface Props { text: string; size: number; class?: string }
 const { text, size, class: cls } = Astro.props;
-const LAYERS = ['lt-o', 'lt-k', 'lt-f'];
+const LAYERS = ['lt-o', 'lt-k', 'lt-f', 'lt-g1', 'lt-g2', 'lt-g3', 'lt-g4'];
 const rows = lines(text);
 ---
 <h2 class:list={['s-title', cls]} style={`--fs:${size}`}>

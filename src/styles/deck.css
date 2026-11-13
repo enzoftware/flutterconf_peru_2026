@@ -91,11 +91,17 @@
 .lt-neon .lt-o, .lt-neon .lt-k { font-family: "Monchila Silueta", var(--f-title) }
 .lt-neon .lt-o { color: var(--fc-naranja); -webkit-text-stroke: .07em var(--fc-naranja); z-index: 0 }
 .lt-neon .lt-k { color: var(--fc-negro); z-index: 1 }
-.lt-neon .lt-f {
-  z-index: 2; color: transparent; -webkit-text-fill-color: transparent;
-  background: linear-gradient(180deg, var(--fc-verde) 6%, var(--fc-amarillo) 34%, var(--yellow) 48%, var(--fc-naranja) 74%, var(--red) 100%);
-  -webkit-background-clip: text; background-clip: text;
-}
+/* The fill gradient (fc-verde 6% → fc-amarillo 34% → yellow 48% → fc-naranja 74% → red 100%) is built
+   from solid-color copies stacked top to bottom, each fading in with a mask over the previous one.
+   background-clip: text would be simpler, but Chrome's PDF export draws the box edges as hairlines. */
+.lt-neon .lt-f { color: var(--fc-verde); z-index: 2 }
+.lt-neon .lt-g1 { color: var(--fc-amarillo); z-index: 3; --m: linear-gradient(180deg, transparent 6%, #000 34%) }
+.lt-neon .lt-g2 { color: var(--yellow); z-index: 4; --m: linear-gradient(180deg, transparent 34%, #000 48%) }
+.lt-neon .lt-g3 { color: var(--fc-naranja); z-index: 5; --m: linear-gradient(180deg, transparent 48%, #000 74%) }
+.lt-neon .lt-g4 { color: var(--red); z-index: 6; --m: linear-gradient(180deg, transparent 74%, #000 100%) }
+.lt-neon [class^="lt-g"] { -webkit-mask-image: var(--m); mask-image: var(--m) }
+.s-title [class^="lt-g"] { display: none }
+.lt-neon .s-title [class^="lt-g"] { display: block }
 
 /* The outline grows .12em around each glyph: give the kicker room above it. */
 .lt-neon .s-head { gap: calc(64 * var(--u)) }

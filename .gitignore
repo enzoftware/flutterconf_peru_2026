@@ -30,3 +30,6 @@ __pycache__/
 brand/fonts/monchila/*.otf
 brand/fonts/monchila/*.ttf
 brand/fonts/monchila/*.woff2
+
+# Exported sponsor decks (sponsor proposals stay out of the public repo)
+exports/

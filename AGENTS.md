@@ -104,7 +104,8 @@ Each sponsor gets its own deck at `/decks/<slug>/`, built from `src/content/deck
 
 - **New sponsor:** copy an existing JSON file, rename it (the file name is the URL slug), and edit `sponsor`, `title` and the slides. The schema in `src/content.config.ts` (`deckSlide`) lists every field per slide `type`: `cover`, `stats`, `agenda`, `spotlight`, `benefits`, `closing`. Reorder, remove or repeat slides freely.
 - **Privacy:** `publish` defaults to `false`, which keeps the deck out of the production build (`npm run dev` always shows it). Set it to `true` only if the deck may be public on GitHub Pages.
-- **Present and export:** open the deck in `npm run dev`, press `P` to present (arrows to move, Esc to leave), or use "Exportar PDF" and choose "Save as PDF" with no margins and background graphics on.
+- **Present:** open the deck in `npm run dev` and press `P` (arrows to move, Esc to leave).
+- **Export to PDF:** with `npm run dev` running, `npm run deck:pdf -- <slug>` (add `--base http://localhost:<port>/flutterconf_peru_2026` if dev is not on 4321) prints `exports/<slug>.pdf` with the local Chrome: one 1920×1080 page per slide. It fails if Monchila or an image did not load. `exports/` is git-ignored.
 - **Style:** option A, "Afiche nocturno", from the deck style exploration. Sizes inside a slide use `--u` (1/1920 of the slide width), so slides scale to any screen and print at 1920×1080.
 - **Lettering:** `lettering: "neon"` (default) stacks a gradient fill, an ink outline and an orange ring (`src/components/deck/Lettering.astro`); `"classic"` is flat yellow with a hard red shadow.
 - **Titles use Monchila**, a licensed font that is never committed. Follow `brand/fonts/monchila/README.md` to install it. The demo has no accents or ñ, so keep Monchila titles free of them; the deck page and the build log list any title that breaks.
