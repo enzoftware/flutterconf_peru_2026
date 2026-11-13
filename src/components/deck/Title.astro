@@ -1,0 +1,13 @@
+---
+/** Slide heading: kicker in Bungee, title in Monchila ("\n" breaks lines). `tone="paper"` swaps yellow for paper. */
+import { lines } from '../../lib/deck';
+
+interface Props { kicker: string; title: string; tone?: 'yellow' | 'paper'; size?: number }
+const { kicker, title, tone = 'yellow', size = 120 } = Astro.props;
+---
+<header class="s-head">
+  <p class="s-kicker">{kicker}</p>
+  <h2 class:list={['s-title', { 'is-paper': tone === 'paper' }]} style={`--fs:${size}`}>
+    {lines(title).map((l, i) => <>{i > 0 && <br />}{l}</>)}
+  </h2>
+</header>

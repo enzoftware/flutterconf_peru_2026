@@ -1,0 +1,36 @@
+---
+/** Layout for sponsor decks: no landing engine, no SEO. Pages are noindex and meant to be presented or exported to PDF. */
+import '../styles/deck.css';
+import { DASH_DEFS } from '../lib/art';
+import { monchila } from '../lib/deck';
+
+interface Props { title: string }
+const { title } = Astro.props;
+const fontFace = monchila
+  ? `@font-face{font-family:"Monchila";src:url("${monchila.url}") format("${monchila.format}");font-weight:400;font-display:block}`
+  : '';
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{title}</title>
+    <meta name="theme-color" content="#021C3F" />
+    <link rel="icon" href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.svg`} type="image/svg+xml" />
+    {monchila && <link rel="preload" href={monchila.url} as="font" crossorigin />}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Bungee+Shade&family=Rubik:wght@400;500;600;700;800&display=swap" />
+    {fontFace && <style is:inline set:html={fontFace}></style>}
+  </head>
+  <body class="deck-body">
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs set:html={DASH_DEFS} /></svg>
+    <slot />
+    <script>
+      import { bootDeck } from '../scripts/deck';
+      bootDeck();
+    </script>
+  </body>
+</html>

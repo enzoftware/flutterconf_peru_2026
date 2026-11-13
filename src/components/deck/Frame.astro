@@ -1,0 +1,29 @@
+---
+/**
+ * A 1920×1080 slide. Everything inside sizes with --u (1/1920 of the slide width), so the same slide
+ * works as a thumbnail, full screen and a PDF page. `foot={false}` hides the event mark and page number.
+ */
+import { dashIcon, ptsD, SP, type ShapeName } from '../../lib/art';
+import { pad } from '../../lib/deck';
+
+interface Props {
+  type: string; n: number; total: number; sponsor: string; foot?: boolean;
+  shape?: { name: ShapeName; class: string };
+}
+const { type, n, total, sponsor, foot = true, shape } = Astro.props;
+---
+<section class={`slide s-${type}`} aria-label={`Diapositiva ${n} de ${total}`}>
+  {shape && (
+    <svg class={`s-shape ${shape.class}`} viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path fill="currentColor" d={ptsD(SP[shape.name])} /></svg>
+  )}
+  <slot name="art" />
+  <div class="s-in">
+    <slot />
+    {foot && (
+      <footer class="s-foot">
+        <span class="s-brand"><span class="s-mark" set:html={dashIcon()} />FlutterConf Perú <span class="s-for">· para {sponsor}</span></span>
+        <span class="s-pg">{pad(n)} / {pad(total)}</span>
+      </footer>
+    )}
+  </div>
+</section>

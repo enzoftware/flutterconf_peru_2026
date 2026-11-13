@@ -1,0 +1,54 @@
+---
+/**
+ * One sponsor deck per file in src/content/decks/. Review view lists every slide; "Presentar" (or P)
+ * shows one slide full screen; "Exportar PDF" prints 1920×1080 pages.
+ * Decks with `publish: false` only exist in `npm run dev`.
+ */
+import { getCollection } from 'astro:content';
+import Deck from '../../layouts/Deck.astro';
+import DeckSlide from '../../components/deck/DeckSlide.astro';
+import { SLIDE_LABEL, glyphWarnings, monchila, pad, type Deck as DeckData } from '../../lib/deck';
+
+export async function getStaticPaths() {
+  const decks = await getCollection('decks');
+  return decks
+    .filter((d) => import.meta.env.DEV || d.data.publish)
+    .map((d) => ({ params: { slug: d.id }, props: { deck: d.data } }));
+}
+
+interface Props { deck: DeckData }
+const { deck } = Astro.props;
+const total = deck.slides.length;
+const glyphs = glyphWarnings(deck.slides);
+if (glyphs.length) console.warn(`[decks] ${deck.title}: Monchila demo has no accents or ñ →\n  ${glyphs.join('\n  ')}`);
+---
+<Deck title={`${deck.title} · FlutterConf Perú`}>
+  <header class="deck-bar">
+    <div class="deck-id">
+      <p class="deck-kicker">Deck para patrocinadores</p>
+      <h1>{deck.title}</h1>
+    </div>
+    <div class="deck-actions">
+      <span class="deck-count" data-deck-count>{total} diapositivas</span>
+      <button class="deck-btn" type="button" data-deck="print">Exportar PDF</button>
+      <button class="deck-btn is-primary" type="button" data-deck="present">Presentar <kbd>P</kbd></button>
+    </div>
+  </header>
+
+  {(!monchila || glyphs.length > 0) && (
+    <div class="deck-warn" role="note">
+      {!monchila && <p>Monchila no está instalada: los titulares usan Bungee. Sigue los pasos de <code>brand/fonts/monchila/README.md</code>.</p>}
+      {glyphs.length > 0 && <p>Monchila no tiene tildes ni ñ. Cambia estos titulares: {glyphs.join(' · ')}</p>}
+    </div>
+  )}
+
+  <main class="deck-list" id="top">
+    {deck.slides.map((slide, i) => (
+      <figure class="deck-item" id={`s${i + 1}`}>
+        <DeckSlide slide={slide} n={i + 1} total={total} sponsor={deck.sponsor} />
+        <figcaption>{pad(i + 1)} · {SLIDE_LABEL[slide.type]}</figcaption>
+      </figure>
+    ))}
+  </main>
+  <p class="deck-help">Presentar: flechas o espacio para avanzar, Esc para salir. Exportar PDF: en el diálogo de impresión elige «Guardar como PDF», sin márgenes y con gráficos de fondo.</p>
+</Deck>

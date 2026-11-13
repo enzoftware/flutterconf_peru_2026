@@ -1,0 +1,108 @@
+---
+/**
+ * Renders one deck slide by `type`. To add a layout: add it to the `deckSlide` union in
+ * src/content.config.ts, add a label in SLIDE_LABEL (src/lib/deck.ts) and a branch here.
+ */
+import Frame from './Frame.astro';
+import Title from './Title.astro';
+import { dash } from '../../lib/art';
+import { ACCENT, lines, type DeckSlide } from '../../lib/deck';
+import event from '../../data/event.json';
+
+interface Props { slide: DeckSlide; n: number; total: number; sponsor: { name: string; logo?: string } }
+const { slide: s, n, total, sponsor } = Astro.props;
+const frame = { type: s.type, n, total, sponsor: sponsor.name };
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const ribbon = (items: string[]) => Array.from({ length: 4 }, () => items).flat();
+---
+{s.type === 'cover' && (
+  <Frame {...frame} foot={false} shape={{ name: 'cookie', class: 'is-cover' }}>
+    <Fragment slot="art">
+      <div class="s-dash is-cover" set:html={dash({ flag: true })} />
+      <div class="s-ribbon is-yellow" aria-hidden="true">{ribbon(s.ribbon).map((t) => <>{t}<i>★</i></>)}</div>
+    </Fragment>
+    <p class="s-kicker">{s.kicker}</p>
+    <h2 class="s-title is-cover" style="--fs:176">{lines(s.title).map((l, i) => <>{i > 0 && <br />}{l}</>)}</h2>
+    <p class="s-sub">{s.subtitle}</p>
+    <p class="s-meta">{event.dateLong} · {event.hours} · {event.venue}</p>
+    {sponsor.logo && <img class="s-logo" src={`${base}/${sponsor.logo.replace(/^\//, '')}`} alt={sponsor.name} />}
+  </Frame>
+)}
+
+{s.type === 'stats' && (
+  <Frame {...frame} shape={{ name: 'flower', class: 'is-stats' }}>
+    <Title kicker={s.kicker} title={s.title} tone="paper" />
+    <div class="s-stats">
+      {s.items.map((it) => (
+        <div class="s-stat">
+          <span class="s-num" style={`color:${ACCENT[it.color]}`}>{it.value}</span>
+          <span class="s-label">{it.label}</span>
+        </div>
+      ))}
+    </div>
+    {s.note && <p class="s-note">{s.note}</p>}
+  </Frame>
+)}
+
+{s.type === 'agenda' && (
+  <Frame {...frame}>
+    <Title kicker={s.kicker} title={s.title} />
+    <ol class="s-agenda" style={`--n:${s.slots.length}`}>
+      {s.slots.map((slot) => (
+        <li class:list={['s-slot', { 'is-hl': slot.highlight }]}>
+          <span class="s-time">{slot.time}</span>
+          <span class="s-what">{slot.label}</span>
+          {slot.tag && <span class="s-tag">{slot.tag}</span>}
+        </li>
+      ))}
+    </ol>
+    {s.note && <p class="s-note">{s.note}</p>}
+  </Frame>
+)}
+
+{s.type === 'spotlight' && (
+  <Frame {...frame} shape={{ name: 'burst', class: 'is-spot' }}>
+    <div class="s-split">
+      <div class="s-col">
+        <Title kicker={s.kicker} title={s.title} size={150} />
+        <p class="s-text">{s.text}</p>
+        {s.badge && <span class="s-badge">{s.badge}</span>}
+      </div>
+      <ul class="s-card">
+        {s.points.map((p) => <li>{p}</li>)}
+      </ul>
+    </div>
+  </Frame>
+)}
+
+{s.type === 'benefits' && (
+  <Frame {...frame} shape={{ name: 'sunny', class: 'is-ben' }}>
+    <Title kicker={s.kicker} title={s.title} />
+    <div class:list={['s-ben', { 'has-price': !!s.price }]}>
+      <ul class="s-items">{s.items.map((it) => <li>{it}</li>)}</ul>
+      {s.price && (
+        <div class="s-price">
+          <span class="s-kicker">{s.price.label}</span>
+          <span class="s-amount">{s.price.value}</span>
+          {s.price.note && <span class="s-pnote">{s.price.note}</span>}
+        </div>
+      )}
+    </div>
+  </Frame>
+)}
+
+{s.type === 'closing' && (
+  <Frame {...frame} foot={false} shape={{ name: 'clover', class: 'is-close' }}>
+    <Fragment slot="art">
+      <div class="s-dash is-close" set:html={dash({ flag: true })} />
+      <div class="s-ribbon is-green" aria-hidden="true">{ribbon([event.dateShort, event.venue.toUpperCase(), event.hashtag.toUpperCase()]).map((t) => <>{t}<i>★</i></>)}</div>
+    </Fragment>
+    <Title kicker={s.kicker} title={s.title} size={160} />
+    <p class="s-text is-narrow">{s.text}</p>
+    {s.contacts.length > 0 && (
+      <dl class="s-contacts">
+        {s.contacts.map((c) => <div><dt>{c.label}</dt><dd>{c.value}</dd></div>)}
+      </dl>
+    )}
+  </Frame>
+)}
