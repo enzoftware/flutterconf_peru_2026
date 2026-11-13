@@ -98,7 +98,8 @@
 }
 
 /* The outline grows .12em around each glyph: give the kicker room above it. */
-.lt-neon .s-head { gap: calc(40 * var(--u)) }
+.lt-neon .s-head { gap: calc(64 * var(--u)) }
+.lt-neon .s-cover .s-kicker { margin-bottom: calc(24 * var(--u)) }
 .lt-neon .s-cover .s-in { gap: calc(40 * var(--u)) }
 
 /* "classic": flat yellow (or paper) with a hard red shadow. */
