@@ -85,11 +85,14 @@
 .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap }
 
 /* "neon" (default): gradient fill, ink outline and a thin orange ring, like a chicha sticker. */
-.lt-neon .lt-o { color: var(--fc-naranja); -webkit-text-stroke: .23em var(--fc-naranja); z-index: 0 }
-.lt-neon .lt-k { color: var(--fc-negro); -webkit-text-stroke: .17em var(--fc-negro); z-index: 1 }
+/* Outline and ring use Monchila Silueta: the letters already grown by .085em and without holes,
+   so loops, counters and narrow channels fill solid ink and the ring follows the outer edge only. */
+.lt-neon .lt-o, .lt-neon .lt-k { font-family: "Monchila Silueta", var(--f-title) }
+.lt-neon .lt-o { color: var(--fc-naranja); -webkit-text-stroke: .07em var(--fc-naranja); z-index: 0 }
+.lt-neon .lt-k { color: var(--fc-negro); z-index: 1 }
 .lt-neon .lt-f {
   z-index: 2; color: transparent; -webkit-text-fill-color: transparent;
-  background: linear-gradient(180deg, var(--fc-amarillo) 4%, var(--yellow) 38%, var(--fc-naranja) 72%, var(--red) 100%);
+  background: linear-gradient(180deg, var(--fc-verde) 6%, var(--fc-amarillo) 34%, var(--yellow) 48%, var(--fc-naranja) 74%, var(--red) 100%);
   -webkit-background-clip: text; background-clip: text;
 }
 

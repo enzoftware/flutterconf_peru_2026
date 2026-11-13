@@ -24,13 +24,19 @@ export const SLIDE_LABEL: Record<DeckSlide['type'], string> = {
  * brand/fonts/monchila/ (see the README there). When it is missing, titles fall back to Bungee.
  */
 const FORMATS = { woff2: 'woff2', otf: 'opentype', ttf: 'truetype' } as const;
+type FontFile = { url: string; format: string };
 const found = import.meta.glob('../../brand/fonts/monchila/*.{woff2,otf,ttf}', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
-const pick = (Object.keys(FORMATS) as (keyof typeof FORMATS)[])
-  .map((ext) => Object.entries(found).find(([path]) => path.endsWith(`.${ext}`)))
-  .find(Boolean);
-export const monchila: { url: string; format: string } | null = pick
-  ? { url: pick[1], format: FORMATS[pick[0].split('.').pop() as keyof typeof FORMATS] }
-  : null;
+/** First file named `<stem>.<ext>`, preferring woff2, then otf, then ttf. */
+function font(stem: string): FontFile | null {
+  for (const ext of Object.keys(FORMATS) as (keyof typeof FORMATS)[]) {
+    const hit = Object.entries(found).find(([path]) => path.endsWith(`/${stem}.${ext}`));
+    if (hit) return { url: hit[1], format: FORMATS[ext] };
+  }
+  return null;
+}
+/** Regular Monchila (fill) and its hole-free silhouette (outline and ring of the neon lettering). */
+export const monchila = font('Monchila');
+export const monchilaSilueta = font('MonchilaSilueta');
 
 /** The Monchila demo has no accented letters or ñ. Lists the titles that would break. */
 const MISSING = /[áéíóúÁÉÍÓÚñÑüÜ]/;

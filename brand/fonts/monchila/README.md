@@ -19,6 +19,8 @@ The font file is **never committed**: this repository is public, and committing 
    python brand/tools/monchila/fix_overlaps.py ~/Downloads/Monchila.otf brand/fonts/monchila/Monchila.otf
    ```
 
+   This writes two files: `Monchila.otf` (titles) and `MonchilaSilueta.otf` (the same letters grown by 0.085 em and without holes, used for the ink outline and orange ring of the neon lettering).
+
 3. Run `npm run dev` and open `/decks/<slug>/`.
 
 Without the file, the decks still build and the titles fall back to Bungee. The deck page shows a red notice when that happens.
