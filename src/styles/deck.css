@@ -78,10 +78,11 @@
   margin: 0; display: grid; justify-self: start; isolation: isolate;
   font: 400 calc(var(--fs, 120) * var(--u))/1.02 var(--f-title);
 }
-/* Script glyphs overhang their box; the padding keeps the gradient and strokes from being clipped,
-   and the negative margin keeps the title where it was. */
-.s-title > [aria-hidden] { grid-area: 1 / 1; white-space: nowrap; padding: .14em .2em }
-.s-title { margin: -.14em -.2em }
+/* Monchila glyphs reach .94em above the baseline (tall letters like L) and .4em below, well past
+   the line box. The gradient fill only paints inside its box, so the padding must cover that
+   overhang (plus the .085em outline); the negative margin keeps the title where it was. */
+.s-title > [aria-hidden] { grid-area: 1 / 1; white-space: nowrap; padding: .34em .26em }
+.s-title { margin: -.34em -.26em }
 .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap }
 
 /* "neon" (default): gradient fill, ink outline and a thin orange ring, like a chicha sticker. */
@@ -142,7 +143,7 @@
 
 /* Cover */
 .s-cover .s-in { gap: calc(30 * var(--u)); padding-top: calc(120 * var(--u)) }
-.s-title.is-cover { margin-top: calc(10 * var(--u) - .14em) }
+.s-title.is-cover { margin-top: calc(10 * var(--u) - .34em) }
 .s-sub { margin: calc(10 * var(--u)) 0 0; font: 600 calc(42 * var(--u))/1.3 var(--f-body); color: var(--paper); max-width: calc(1080 * var(--u)) }
 .s-meta { margin: 0; font: 500 calc(30 * var(--u))/1.3 var(--f-body); color: var(--sky-light) }
 .s-logo { position: absolute; right: calc(120 * var(--u)); top: calc(96 * var(--u)); height: calc(80 * var(--u)); width: auto; max-width: calc(360 * var(--u)); object-fit: contain }
