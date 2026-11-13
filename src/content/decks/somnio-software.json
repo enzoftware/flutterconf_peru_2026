@@ -14,12 +14,19 @@
       "type": "stats",
       "kicker": "El evento",
       "title": "Flutter y Dart en Lima",
-      "note": "Sábado 19 de diciembre de 2026 · Bloom Tower, San Isidro",
+      "note": "Sábado 19 de diciembre de 2026 · Bloom Tower, Magdalena del Mar",
       "items": [
         { "value": "50", "label": "asistentes", "color": "yellow" },
         { "value": "6", "label": "horas, de 9:00 a 15:00", "color": "green" },
         { "value": "2", "label": "formatos: charlas y networking", "color": "red" }
       ]
+    },
+    {
+      "type": "venue",
+      "kicker": "El lugar",
+      "title": "Bloom Tower",
+      "address": ["Piso 16 · Flora Tristán 310", "Magdalena del Mar, Lima"],
+      "badge": "Sábado 19 de diciembre"
     },
     {
       "type": "agenda",
@@ -28,23 +35,21 @@
       "note": "Horarios referenciales; la agenda final sale con los ponentes confirmados.",
       "slots": [
         { "time": "9:00", "label": "Registro y bienvenida" },
-        { "time": "9:30", "label": "Charlas" },
-        { "time": "11:00", "label": "Coffee break", "tag": "Con Somnio Software", "highlight": true },
-        { "time": "11:30", "label": "Charlas" },
-        { "time": "13:30", "label": "Networking" },
-        { "time": "14:45", "label": "Cierre" }
+        { "time": "9:30", "label": "Coffee break y ronda de networking", "tag": "Con Somnio Software", "highlight": true },
+        { "time": "10:30", "label": "Charlas" },
+        { "time": "14:30", "label": "Cierre" }
       ]
     },
     {
       "type": "spotlight",
       "kicker": "La propuesta",
       "title": "El coffee break",
-      "text": "Es el momento en que los 50 asistentes salen de la sala, se sirven un café y conversan. Queremos que esa pausa lleve la marca de Somnio Software.",
+      "text": "Abre el día: los 50 asistentes llegan, se sirven un café y se conocen en la ronda de networking antes de la primera charla. Queremos que ese primer momento lleve la marca de Somnio Software.",
       "badge": "Patrocinio exclusivo",
       "points": [
+        "La primera impresión del día",
         "Toda la comunidad en un mismo espacio",
-        "30 minutos de conversación a media mañana",
-        "Las conversaciones siguen en el networking"
+        "Café y networking antes de las charlas"
       ]
     },
     {
@@ -52,12 +57,17 @@
       "kicker": "Lo que recibe Somnio Software",
       "title": "Tu marca en la pausa",
       "items": [
-        "Logo en la estación de café y en la señalética del break",
-        "Mención desde el escenario al abrir el coffee break",
+        "Logo en la estación de café y en la señalética del networking",
+        "Mención en la bienvenida, antes de la ronda de networking",
         "Logo en la pantalla del evento y en la web",
         "Post de agradecimiento en las redes de FlutterConf Perú",
         "Espacio para material de la marca en la zona de café"
       ]
+    },
+    {
+      "type": "team",
+      "kicker": "Quién organiza",
+      "title": "El equipo"
     },
     {
       "type": "closing",

@@ -16,7 +16,7 @@ export const ACCENT: Record<Accent, string> = {
 
 /** Spanish label for each slide type, shown under the slide in the review view. */
 export const SLIDE_LABEL: Record<DeckSlide['type'], string> = {
-  cover: 'Portada', stats: 'Cifras', agenda: 'Agenda', spotlight: 'Propuesta', benefits: 'Beneficios', closing: 'Cierre',
+  cover: 'Portada', stats: 'Cifras', agenda: 'Agenda', spotlight: 'Propuesta', benefits: 'Beneficios', venue: 'Lugar', team: 'Equipo', closing: 'Cierre',
 };
 
 /**

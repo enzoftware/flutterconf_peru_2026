@@ -5,8 +5,10 @@
  */
 import Frame from './Frame.astro';
 import Title from './Title.astro';
+import { Image } from 'astro:assets';
 import { dash } from '../../lib/art';
 import { ACCENT, lines, type DeckSlide } from '../../lib/deck';
+import { list } from '../../lib/content';
 import event from '../../data/event.json';
 
 interface Props { slide: DeckSlide; n: number; total: number; sponsor: { name: string; logo?: string } }
@@ -14,7 +16,45 @@ const { slide: s, n, total, sponsor } = Astro.props;
 const frame = { type: s.type, n, total, sponsor: sponsor.name };
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const ribbon = (items: string[]) => Array.from({ length: 4 }, () => items).flat();
+const organizers = s.type === 'team' ? await list('organizers') : [];
+const RING = ['yellow', 'green', 'red', 'sky'] as const;
 ---
+{s.type === 'venue' && (
+  <Frame {...frame} shape={{ name: 'gem', class: 'is-venue' }}>
+    <div class="s-venue">
+      <div class="s-col">
+        <Title kicker={s.kicker} title={s.title} size={140} />
+        <p class="s-address">{s.address.map((l, i) => <>{i > 0 && <br />}{l}</>)}</p>
+        {s.badge && <span class="s-badge is-yellow">{s.badge}</span>}
+      </div>
+      <figure class="s-photo">
+        {s.photo
+          ? <Image src={s.photo} alt={`${s.title}, ${s.address.join(', ')}`} widths={[960, 1440]} sizes="760px" loading="eager" />
+          : <div class="s-photo-ph"><span>Foto del venue</span><small>Agrega <code>photo</code> en el JSON del deck</small></div>}
+        {s.photoCredit && <figcaption>{s.photoCredit}</figcaption>}
+      </figure>
+    </div>
+  </Frame>
+)}
+
+{s.type === 'team' && (
+  <Frame {...frame} shape={{ name: 'flower', class: 'is-team' }}>
+    <Title kicker={s.kicker} title={s.title} />
+    {s.text && <p class="s-text">{s.text}</p>}
+    <ul class="s-team" style={`--n:${organizers.length}`}>
+      {organizers.map((o, i) => (
+        <li>
+          <span class="s-face" style={`--ring:${ACCENT[RING[i % RING.length]]}`}>
+            <Image src={o.photo} alt={o.name} widths={[360, 720]} sizes="360px" loading="eager" />
+          </span>
+          <span class="s-name">{o.name}</span>
+          {o.role && <span class="s-role">{o.role}</span>}
+        </li>
+      ))}
+    </ul>
+  </Frame>
+)}
+
 {s.type === 'cover' && (
   <Frame {...frame} foot={false} shape={{ name: 'cookie', class: 'is-cover' }}>
     <Fragment slot="art">

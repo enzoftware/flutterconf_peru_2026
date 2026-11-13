@@ -4,7 +4,7 @@ Guide for AI coding agents (Claude Code, Codex, Cursor, …) working on this rep
 
 ## What this is
 
-- **FlutterConf Perú 2026** landing page: one day of Flutter and Dart. Saturday 19 December 2026, 9:00–15:00, at Bloom Tower, San Isidro, Lima.
+- **FlutterConf Perú 2026** landing page: one day of Flutter and Dart. Saturday 19 December 2026, 9:00–15:00, at Bloom Tower (Flora Tristán 310, 16th floor), Magdalena del Mar, Lima.
 - **The Chicha Dash design system** in `brand/`: tokens, the FlutterChicha font, Dash and ornament SVGs, component guidelines and social media templates. It is also published as a page at `/brand/`, with live fonts, components and downloads.
 - Site copy is in **Spanish (Peru)** and uses "tú". Code, comments and these docs are in English.
 

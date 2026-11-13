@@ -3,7 +3,7 @@
  * Each file is an array; `id` sets the display order (entries are sorted by id).
  * The schemas below validate every entry at build time, so a typo fails `npm run build`.
  */
-import { defineCollection } from 'astro:content';
+import { defineCollection, type SchemaContext } from 'astro:content';
 import { file, glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
@@ -12,7 +12,7 @@ const link = z.string(); // absolute URL, "#anchor" or "" while it is not define
 /* Sponsor decks: one JSON file per sponsor in src/content/decks/. `slides` is an ordered list,
  * and `type` picks the layout (src/components/deck/). Titles are set in Monchila: "\n" breaks lines. */
 const accentColor = z.enum(['yellow', 'green', 'red', 'sky', 'paper']);
-const deckSlide = z.discriminatedUnion('type', [
+const deckSlide = (image: SchemaContext['image']) => z.discriminatedUnion('type', [
   z.object({
     type: z.literal('cover'), kicker: z.string(), title: z.string(), subtitle: z.string(),
     ribbon: z.array(z.string()).min(1),
@@ -35,6 +35,15 @@ const deckSlide = z.discriminatedUnion('type', [
     type: z.literal('benefits'), kicker: z.string(), title: z.string(),
     items: z.array(z.string()).min(1).max(6),
     price: z.object({ label: z.string(), value: z.string(), note: z.string().optional() }).optional(),
+  }),
+  z.object({
+    /* `photo` is a path relative to the deck JSON (e.g. "./images/bloom-tower.jpg"). Without it the slide shows a placeholder. */
+    type: z.literal('venue'), kicker: z.string(), title: z.string(), address: z.array(z.string()).min(1).max(3),
+    badge: z.string().optional(), photo: image().optional(), photoCredit: z.string().optional(),
+  }),
+  z.object({
+    /* Shows everyone in the `organizers` collection. */
+    type: z.literal('team'), kicker: z.string(), title: z.string(), text: z.string().optional(),
   }),
   z.object({
     type: z.literal('closing'), kicker: z.string(), title: z.string(), text: z.string(),
@@ -100,12 +109,17 @@ export const collections = {
    */
   decks: defineCollection({
     loader: glob({ pattern: '*.json', base: './src/content/decks' }),
-    schema: z.object({
+    schema: ({ image }) => z.object({
       sponsor: z.object({ name: z.string(), logo: z.string().optional() }),
       title: z.string(),
       publish: z.boolean().default(false),
-      slides: z.array(deckSlide).min(1),
+      slides: z.array(deckSlide(image)).min(1),
     }),
+  }),
+  /** Organizing team, shown on the deck "team" slide. `photo` is relative to this file (src/assets/organizers/). */
+  organizers: defineCollection({
+    loader: file('src/content/organizers.json'),
+    schema: ({ image }) => z.object({ name: z.string(), role: z.string().optional(), photo: image() }),
   }),
   /** Frequently asked questions. Team: Logística y Sponsors. */
   faq: defineCollection({
