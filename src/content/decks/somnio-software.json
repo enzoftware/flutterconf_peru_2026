@@ -36,21 +36,23 @@
       "note": "Horarios referenciales; la agenda final sale con los ponentes confirmados.",
       "slots": [
         { "time": "9:00", "label": "Registro y bienvenida" },
-        { "time": "9:30", "label": "Coffee break y ronda de networking", "tag": "Con Somnio Software", "highlight": true },
-        { "time": "10:30", "label": "Charlas" },
-        { "time": "14:30", "label": "Cierre" }
+        { "time": "9:30", "label": "Coffee break", "tag": "Con Somnio Software", "highlight": true },
+        { "time": "10:00", "label": "Charlas" },
+        { "time": "12:30", "label": "Almuerzo y ronda de networking" },
+        { "time": "13:30", "label": "Charlas" },
+        { "time": "14:45", "label": "Cierre" }
       ]
     },
     {
       "type": "spotlight",
       "kicker": "La propuesta",
       "title": "El coffee break",
-      "text": "Abre el día: los 50 asistentes llegan, se sirven un café y se conocen en la ronda de networking antes de la primera charla. Queremos que ese primer momento lleve la marca de Somnio Software.",
+      "text": "Abre el día: los 50 asistentes llegan, se sirven un café y conversan antes de la primera charla. Queremos que ese primer momento lleve la marca de Somnio Software.",
       "badge": "Patrocinio exclusivo",
       "points": [
         "La primera impresión del día",
         "Toda la comunidad en un mismo espacio",
-        "Café y networking antes de las charlas"
+        "El café que arranca la jornada"
       ]
     },
     {
@@ -58,8 +60,8 @@
       "kicker": "Lo que recibe Somnio Software",
       "title": "Tu marca en la pausa",
       "items": [
-        "Logo en la estación de café y en la señalética del networking",
-        "Mención en la bienvenida, antes de la ronda de networking",
+        "Logo en la estación de café y en la señalética del coffee break",
+        "Mención en la bienvenida, antes de la primera charla",
         "Logo en la pantalla del evento y en la web",
         "Post de agradecimiento en las redes de FlutterConf Perú",
         "Espacio para material de la marca en la zona de café"
