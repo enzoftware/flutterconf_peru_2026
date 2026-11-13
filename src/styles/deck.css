@@ -85,12 +85,13 @@
 .s-title { margin: -.34em -.26em }
 .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap }
 
-/* "neon" (default): gradient fill, ink outline and a thin orange ring, like a chicha sticker. */
-/* Outline and ring use Monchila Silueta: the letters already grown by .085em and without holes,
-   so loops, counters and narrow channels fill solid ink and the ring follows the outer edge only. */
-.lt-neon .lt-o, .lt-neon .lt-k { font-family: "Monchila Silueta", var(--f-title) }
-.lt-neon .lt-o { color: var(--fc-naranja); -webkit-text-stroke: .07em var(--fc-naranja); z-index: 0 }
-.lt-neon .lt-k { color: var(--fc-negro); z-index: 1 }
+/* "neon" (default): gradient fill over an ink outline with a thin orange ring, like a chicha sticker.
+   The outline uses Monchila Silueta (letters grown .085em, without holes), and the SVG filter in
+   Lettering.astro merges the letters into one shape and adds the ring (see deck.ts › fitLettering). */
+.lt-neon .lt-k { font-family: "Monchila Silueta", var(--f-title); color: var(--fc-negro); filter: var(--lt-filter); z-index: 1 }
+.lt-defs { position: absolute; width: 0; height: 0; overflow: hidden }
+.lt-ring { flood-color: var(--fc-naranja) }
+.lt-ink { flood-color: var(--fc-negro) }
 /* The fill gradient (fc-verde 6% → fc-amarillo 34% → yellow 48% → fc-naranja 74% → red 100%) is built
    from solid-color copies stacked top to bottom, each fading in with a mask over the previous one.
    background-clip: text would be simpler, but Chrome's PDF export draws the box edges as hairlines. */
@@ -109,7 +110,7 @@
 .lt-neon .s-cover .s-in { gap: calc(40 * var(--u)) }
 
 /* "classic": flat yellow (or paper) with a hard red shadow. */
-.lt-classic .lt-o, .lt-classic .lt-k { display: none }
+.lt-classic .lt-k { display: none }
 .lt-classic .lt-f { color: var(--yellow); text-shadow: calc(8 * var(--u)) calc(8 * var(--u)) 0 var(--red) }
 .lt-classic .s-title.is-paper .lt-f { color: var(--paper); text-shadow: calc(7 * var(--u)) calc(7 * var(--u)) 0 var(--red) }
 .s-text { margin: 0; font: 500 calc(36 * var(--u))/1.45 var(--f-body); max-width: calc(900 * var(--u)) }
