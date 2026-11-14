@@ -1,0 +1,11 @@
+---
+/** Slide heading: kicker in Bungee, title in Monchila ("\n" breaks lines). `tone="paper"` swaps yellow for paper in the classic lettering. */
+import Lettering from './Lettering.astro';
+
+interface Props { kicker: string; title: string; tone?: 'yellow' | 'paper'; size?: number }
+const { kicker, title, tone = 'yellow', size = 120 } = Astro.props;
+---
+<header class="s-head">
+  <p class="s-kicker">{kicker}</p>
+  <Lettering text={title} size={size} class={tone === 'paper' ? 'is-paper' : undefined} />
+</header>

@@ -4,7 +4,7 @@ Guide for AI coding agents (Claude Code, Codex, Cursor, …) working on this rep
 
 ## What this is
 
-- **FlutterConf Perú 2026** landing page: one day of Flutter and Dart. Saturday 19 December 2026, 9:00–15:00, at Bloom Tower, San Isidro, Lima.
+- **FlutterConf Perú 2026** landing page: one day of Flutter and Dart. Saturday 19 December 2026, 9:00–15:00, at Bloom Tower (Flora Tristán 310, 16th floor), Magdalena del Mar, Lima.
 - **The Chicha Dash design system** in `brand/`: tokens, the FlutterChicha font, Dash and ornament SVGs, component guidelines and social media templates. It is also published as a page at `/brand/`, with live fonts, components and downloads.
 - Site copy is in **Spanish (Peru)** and uses "tú". Code, comments and these docs are in English.
 
@@ -36,6 +36,7 @@ brand/                      Design system (source of truth for anything visual)
   tokens/tokens.css         GENERATED from tokens.json (never edit by hand)
   fonts/flutterchicha/      FlutterChicha, 5 stackable layers (TTF + WOFF2)
   fonts/archive/            Rejected explorations (ChichaV2), kept for history
+  fonts/monchila/           Monchila, the sponsor-deck title font (licensed, git-ignored; README only)
   assets/{dash,formas,ornamentos}/   SVG exports (Dash with and without the Peruvian flag)
   components/*.md           Usage rules per component (Chicha, Boton, CartaPonente, …)
   css/components.css        Standalone component classes for marketing pages and templates
@@ -45,12 +46,16 @@ brand/                      Design system (source of truth for anything visual)
   brand-book.md             Brand book (Spanish)
 src/
   content/*.json            Editable content: speakers, agenda, tickets, sponsors, FAQ…
+  content/decks/*.json      Sponsor decks, one file per sponsor (slug = file name)
   content.config.ts         Collection schemas (Zod)
   data/event.json           Event facts: date, hours, venue, links
   components/*.astro        One component per landing section + Chicha, Dash, Floater, Ribbon, KitLayers
   components/brand/         Pieces of the brand page
   pages/index.astro         The landing
   pages/brand/index.astro   Brand page: renders brand/ live (tokens, FlutterChicha, components, SVGs, templates)
+  pages/decks/[slug].astro  Sponsor deck viewer: review list, present mode (P), PDF export
+  components/deck/          Deck slide layouts (DeckSlide picks one by `type`), Frame, Title
+  layouts/Deck.astro        Deck layout (noindex, no scroll engine, loads Monchila if installed)
   pages/brand/files/     Serves brand/ files at build time (no copies in public/)
   pages/brand/downloads/    ZIP downloads built from brand/ at build time (src/lib/zip.ts)
   data/brand-demos.ts       HTML examples of the .fcp-* components shown on the brand page
@@ -60,6 +65,9 @@ src/
   lib/palette.ts            Accent rotation, speaker fan geometry, Forma viva clip polygon
   scripts/engine.ts         Scroll engine (reveals, parallax, pins, counters, Forma viva, Dash peeking)
   styles/landing.css        Page styles (ported from the approved prototype)
+  styles/deck.css           Sponsor deck styles (style A, "Afiche nocturno")
+  scripts/deck.ts           Deck viewer: present mode, keyboard, print
+  lib/deck.ts               Deck types, accent map, Monchila loader, glyph check
 ```
 
 ## Conventions
@@ -89,6 +97,19 @@ src/
 - Never make the Flutter logo the most prominent element, and never attach it to the event name. The event mark is the Dash icon plus "FlutterConf Perú".
 - Turn ligatures off wherever "Flutter" is set (already global).
 - Dash is the Flutter/Dart mascot. Don't distort, recolor or dress him, and don't use the flag alone as a logo.
+
+## Sponsor decks
+
+Each sponsor gets its own deck at `/decks/<slug>/`, built from `src/content/decks/<slug>.json`.
+
+- **New sponsor:** copy an existing JSON file, rename it (the file name is the URL slug), and edit `sponsor`, `title` and the slides. The schema in `src/content.config.ts` (`deckSlide`) lists every field per slide `type`: `cover`, `stats`, `agenda`, `spotlight`, `benefits`, `closing`. Reorder, remove or repeat slides freely.
+- **Privacy:** `publish` defaults to `false`, which keeps the deck out of the production build (`npm run dev` always shows it). Set it to `true` only if the deck may be public on GitHub Pages.
+- **Present:** open the deck in `npm run dev` and press `P` (arrows to move, Esc to leave).
+- **Export to PDF:** with `npm run dev` running, `npm run deck:pdf -- <slug>` (add `--base http://localhost:<port>/flutterconf_peru_2026` if dev is not on 4321) prints `exports/<slug>.pdf` with the local Chrome: one 1920×1080 page per slide. It fails if Monchila or an image did not load. `exports/` is git-ignored.
+- **Style:** option A, "Afiche nocturno", from the deck style exploration. Sizes inside a slide use `--u` (1/1920 of the slide width), so slides scale to any screen and print at 1920×1080.
+- **Lettering:** `lettering: "neon"` (default) stacks a gradient fill, an ink outline and an orange ring (`src/components/deck/Lettering.astro`); `"classic"` is flat yellow with a hard red shadow.
+- **Titles use Monchila**, a licensed font that is never committed. Follow `brand/fonts/monchila/README.md` to install it. The demo has no accents or ñ, so keep Monchila titles free of them; the deck page and the build log list any title that breaks.
+- **New layout:** add a branch to the `deckSlide` union, a label in `SLIDE_LABEL` (`src/lib/deck.ts`), the markup in `src/components/deck/DeckSlide.astro` and its styles in `src/styles/deck.css`.
 
 ## Not done yet (good next tasks)
 

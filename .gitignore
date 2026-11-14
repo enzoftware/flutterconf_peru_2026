@@ -25,3 +25,11 @@ __pycache__/
 
 # Claude Code local state
 .claude/scheduled_tasks.lock
+
+# Monchila is a licensed font (not redistributable): keep it local, see brand/fonts/monchila/README.md
+brand/fonts/monchila/*.otf
+brand/fonts/monchila/*.ttf
+brand/fonts/monchila/*.woff2
+
+# Exported sponsor decks (sponsor proposals stay out of the public repo)
+exports/

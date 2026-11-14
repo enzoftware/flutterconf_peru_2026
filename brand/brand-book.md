@@ -1,6 +1,6 @@
 FlutterConf Perú 2026 es un día entero de Flutter y Dart. El sistema mezcla la gráfica chicha de los afiches limeños con la paleta oficial de Flutter, y tiene a Dash como guía. Úsalo para la web, los posts, las historias, las diapositivas y el material impreso.
 
-**Datos del evento:** sábado 19 de diciembre de 2026, de 9:00 a 15:00, en Bloom Tower, San Isidro (Lima). Hashtag #FlutterConfPE. Los precios, ponentes y redes que aparecen en las plantillas son provisionales.
+**Datos del evento:** sábado 19 de diciembre de 2026, de 9:00 a 15:00, en Bloom Tower, piso 16 (Flora Tristán 310, Magdalena del Mar, Lima). Hashtag #FlutterConfPE. Los precios, ponentes y redes que aparecen en las plantillas son provisionales.
 
 ## Voz y contenido
 

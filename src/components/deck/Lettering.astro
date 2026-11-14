@@ -1,0 +1,32 @@
+---
+/**
+ * Monchila title, stacked in layers so it reads like a chicha sticker:
+ *   .lt-o  outer ring (fc-naranja stroke)  · Monchila Silueta (no holes)
+ *   .lt-k  ink outline (fc-negro fill)      · Monchila Silueta (grown .085em)
+ *   .lt-f  gradient fill                    · Monchila
+ *   .lt-b  the same fill for print, as bands
+ * On screen .lt-f carries the gradient with background-clip: text. In the PDF export that becomes a
+ * text clip (or a soft mask) that macOS Preview draws wrong: whole words flat red, or gradient
+ * rectangles over the slide. So print hides that gradient and stacks solid-color copies instead,
+ * each clipped to a horizontal band with clip-path: inset(); rectangle clips render the same in
+ * every PDF viewer.
+ * The deck's `lettering` option picks the look ("neon" stacks everything, "classic" shows only the
+ * first fill band as flat yellow with a hard red shadow). Screen readers get the text once from .vh.
+ */
+import { LETTERING_BANDS, lines } from '../../lib/deck';
+
+interface Props { text: string; size: number; class?: string }
+const { text, size, class: cls } = Astro.props;
+const rows = lines(text);
+const LAYERS: { class: string; style?: string }[] = [
+  { class: 'lt-o' },
+  { class: 'lt-k' },
+  ...LETTERING_BANDS.map((b, i) => ({ class: i === 0 ? 'lt-f' : 'lt-b', style: `--top:${b.top}%;--c:${b.color}` })),
+];
+---
+<h2 class:list={['s-title', cls]} style={`--fs:${size}`}>
+  <span class="vh">{rows.join(' ')}</span>
+  {LAYERS.map((layer) => (
+    <span class={layer.class} style={layer.style} aria-hidden="true">{rows.map((l, i) => <>{i > 0 && <br />}{l}</>)}</span>
+  ))}
+</h2>

@@ -3,11 +3,53 @@
  * Each file is an array; `id` sets the display order (entries are sorted by id).
  * The schemas below validate every entry at build time, so a typo fails `npm run build`.
  */
-import { defineCollection } from 'astro:content';
-import { file } from 'astro/loaders';
+import { defineCollection, type SchemaContext } from 'astro:content';
+import { file, glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
 const link = z.string(); // absolute URL, "#anchor" or "" while it is not defined yet
+
+/* Sponsor decks: one JSON file per sponsor in src/content/decks/. `slides` is an ordered list,
+ * and `type` picks the layout (src/components/deck/). Titles are set in Monchila: "\n" breaks lines. */
+const accentColor = z.enum(['yellow', 'green', 'red', 'sky', 'paper']);
+const deckSlide = (image: SchemaContext['image']) => z.discriminatedUnion('type', [
+  z.object({
+    type: z.literal('cover'), kicker: z.string(), title: z.string(), subtitle: z.string(),
+    ribbon: z.array(z.string()).min(1),
+  }),
+  z.object({
+    type: z.literal('stats'), kicker: z.string(), title: z.string(), note: z.string().optional(),
+    items: z.array(z.object({ value: z.string(), label: z.string(), color: accentColor })).min(1).max(3),
+  }),
+  z.object({
+    type: z.literal('agenda'), kicker: z.string(), title: z.string(), note: z.string().optional(),
+    slots: z.array(z.object({
+      time: z.string().regex(/^\d{1,2}:\d{2}$/), label: z.string(), tag: z.string().optional(), highlight: z.boolean().default(false),
+    })).min(2).max(7),
+  }),
+  z.object({
+    type: z.literal('spotlight'), kicker: z.string(), title: z.string(), text: z.string(),
+    badge: z.string().optional(), points: z.array(z.string()).min(1).max(4),
+  }),
+  z.object({
+    type: z.literal('benefits'), kicker: z.string(), title: z.string(),
+    items: z.array(z.string()).min(1).max(6),
+    price: z.object({ label: z.string(), value: z.string(), note: z.string().optional() }).optional(),
+  }),
+  z.object({
+    /* `photo` is a path relative to the deck JSON (e.g. "./images/bloom-tower.jpg"). Without it the slide shows a placeholder. */
+    type: z.literal('venue'), kicker: z.string(), title: z.string(), address: z.array(z.string()).min(1).max(3),
+    badge: z.string().optional(), photo: image().optional(), photoCredit: z.string().optional(),
+  }),
+  z.object({
+    /* Shows everyone in the `organizers` collection. */
+    type: z.literal('team'), kicker: z.string(), title: z.string(), text: z.string().optional(),
+  }),
+  z.object({
+    type: z.literal('closing'), kicker: z.string(), title: z.string(), text: z.string(),
+    contacts: z.array(z.object({ label: z.string(), value: z.string() })).max(3).default([]),
+  }),
+]);
 
 export const collections = {
   /** Big numbers under the hero (counted up when they appear). */
@@ -59,6 +101,27 @@ export const collections = {
       name: z.string(), slots: z.number().int().min(1), logoHeight: z.number(),
       sponsors: z.array(z.object({ name: z.string(), logo: z.string(), url: link })),
     }),
+  }),
+  /**
+   * Sponsor decks, one file per sponsor (the file name is the URL slug: /decks/<slug>/).
+   * `publish: false` keeps a deck out of the production build; `npm run dev` always shows it.
+   * Team: Logística y Sponsors.
+   */
+  decks: defineCollection({
+    loader: glob({ pattern: '*.json', base: './src/content/decks' }),
+    schema: ({ image }) => z.object({
+      sponsor: z.object({ name: z.string(), logo: z.string().optional() }),
+      title: z.string(),
+      publish: z.boolean().default(false),
+      /** Title look: "neon" (gradient + ink outline + orange ring) or "classic" (flat yellow, red shadow). */
+      lettering: z.enum(['neon', 'classic']).default('neon'),
+      slides: z.array(deckSlide(image)).min(1),
+    }),
+  }),
+  /** Organizing team, shown on the deck "team" slide. `photo` is relative to this file (src/assets/organizers/). */
+  organizers: defineCollection({
+    loader: file('src/content/organizers.json'),
+    schema: ({ image }) => z.object({ name: z.string(), role: z.string().optional(), photo: image() }),
   }),
   /** Frequently asked questions. Team: Logística y Sponsors. */
   faq: defineCollection({
