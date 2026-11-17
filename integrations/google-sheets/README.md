@@ -19,17 +19,54 @@ When you change `Code.gs`, use **Deploy → Manage deployments → Edit → Vers
 
 Check the deployment any time with `npm run check:keys`. It reports the deployed `Code.gs` version and probes the validations without writing any row.
 
-## What is stored
+## Sheet structure
 
-| Column | From |
+The script writes to a tab called **Registros**. It creates that tab and its header row on the first sign-up, and it never edits or deletes existing rows.
+
+| # | Column | Example | What it is | What it's for |
+| --- | --- | --- | --- | --- |
+| A | **Fecha (Lima)** | `2026-11-17 16:34:53` | Server time of the sign-up, Lima time (UTC−5) | Sign-ups per day and growth after each post |
+| B | **Nombre** | `Ana Quispe` | Name as typed: letters, accents, `'`, `.`, `-` | Personalizing emails |
+| C | **Correo** | `ana.quispe@gmail.com` | Email as typed, lowercased | Where the news goes |
+| D | **Perfil** | `dev-flutter` | Answer to "¿Cómo te describes?" (codes below) | Audience mix: tune talks and sponsor pitches |
+| E | **Ciudad** | `Lima` | Optional, as typed | How many come from outside Lima |
+| F | **Acepta correos** | `Sí` | Proof that the person ticked the consent box. Always `Sí`, because the form can't be sent without it | Legal record of consent for marketing email (Peru's Ley 29733). Keep it, even if it looks redundant |
+| G | **Fuente** | `instagram` | Where the visit came from: `?ref=`, else `utm_source`, else the referring site, else `directo` | Which channel brings sign-ups |
+| H | **UTM source** | `instagram` | `utm_source` from the link | Campaign attribution |
+| I | **UTM medium** | `social`, `story`, `email` | `utm_medium` from the link | Which format works |
+| J | **UTM campaign** | `lanzamiento` | `utm_campaign` from the link | Which campaign or post works |
+| K | **Página** | `/flutterconf_peru_2026/` | Path of the page where the form was sent | Today the site has one page, so it is always the same. It starts to matter when the full landing returns with more pages. Safe to ignore or hide |
+| L | **Clave correo** | `anaquispe@gmail.com` | Normalized email (lowercase, no `+tag`, Gmail without dots), used by the script to spot duplicates | Technical: the script reads it on every sign-up. **Don't edit or delete it**, but you can hide it (right-click column L → *Hide column*) |
+
+**Perfil codes:** `estudiante` (Estudiante), `dev-flutter` (Dev Flutter o Dart), `dev-otro` (Dev de otro stack), `diseno-producto` (Diseño o producto), `lider-empresa` (Líder o empresa), `otro` (Otro).
+
+**Rows with an empty "Clave correo"** were written by version 1 of the script, before the key column existed. Duplicate checks still catch them, through the **Correo** column.
+
+### Tagging links so the analytics columns fill in
+
+Columns G to J only fill in when the link people click carries the tags. Use one link per post:
+
+```
+https://enzoftware.github.io/flutterconf_peru_2026/?utm_source=instagram&utm_medium=story&utm_campaign=lanzamiento
+https://enzoftware.github.io/flutterconf_peru_2026/?utm_source=linkedin&utm_medium=post&utm_campaign=lanzamiento
+https://enzoftware.github.io/flutterconf_peru_2026/?ref=gdg-lima        # short form, fills only Fuente
+```
+
+Use lowercase and no spaces, and reuse the same words, so `instagram` and `Instagram` don't count as two sources. The share button on the success screen adds `?ref=share` by itself.
+
+### Handy formulas (in another tab)
+
+| What | Formula |
 | --- | --- |
-| Fecha (Lima) | Server time, America/Lima |
-| Nombre, Correo, Perfil, Ciudad | The form (the city is optional) |
-| Acepta correos | The required consent checkbox |
-| Fuente, UTM source, UTM medium, UTM campaign, Página | `?ref=` and `utm_*` from the landing URL, so you can see which post brought each person |
-| Clave correo | Normalized email used to detect duplicates (filled from version 2 on) |
+| Total sign-ups | `=COUNTA(Registros!C2:C)` |
+| Sign-ups today | `=COUNTIFS(Registros!A2:A, ">=" & TODAY(), Registros!A2:A, "<" & TODAY() + 1)` |
+| By profile | `=QUERY(Registros!A:L, "select D, count(C) where C is not null group by D order by count(C) desc", 1)` |
+| By source | `=QUERY(Registros!A:L, "select G, count(C) where C is not null group by G order by count(C) desc", 1)` |
+| By campaign | `=QUERY(Registros!A:L, "select J, count(C) where J is not null group by J order by count(C) desc", 1)` |
 
-To count interested people, use the row count, or add `=COUNTA(Registros!C2:C)` in another tab. PostHog also gets a `register_succeeded` event without personal data, so the funnel (page view → form started → sign-up) lives there.
+You can delete test rows by hand at any time. If you change the header row, the script restores it on the next sign-up. Insert extra columns only to the right of L.
+
+PostHog also gets a `register_succeeded` event without personal data, so the funnel (page view → form started → sign-up) lives there.
 
 ## Spam, duplicates and security
 
