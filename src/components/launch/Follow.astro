@@ -6,7 +6,6 @@ import Floater from '../Floater.astro';
 import { sparkle, flower } from '../../lib/art';
 import { accent } from '../../lib/palette';
 import { list } from '../../lib/content';
-import { url } from '../../data/site';
 import event from '../../data/event.json';
 const social = await list('social');
 ---
@@ -38,7 +37,6 @@ const social = await list('social');
       <span>{event.name} · Hecho por la comunidad</span>
       <nav aria-label="Pie de página">
         <a href="#sede">La sede</a><a href="#fecha">La fecha</a><a href="#registro">Registro</a>
-        <a href={url('brand/')}>Kit de marca</a>
       </nav>
     </footer>
   </div>

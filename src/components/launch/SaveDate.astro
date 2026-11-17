@@ -1,13 +1,10 @@
 ---
-/** "Guarda la fecha": a hand-painted calendar sheet, add-to-calendar buttons and what is coming next. */
+/** "Guarda la fecha": a hand-painted calendar sheet and what is coming next. */
 import Chicha from '../Chicha.astro';
 import Floater from '../Floater.astro';
 import { flower, sparkle } from '../../lib/art';
 import { accent, tilt } from '../../lib/palette';
-import { googleCalendarUrl } from '../../lib/calendar';
-import { url } from '../../data/site';
 import event from '../../data/event.json';
-const pageUrl = new URL(import.meta.env.BASE_URL, Astro.site).href;
 const [weekday, day, , month] = event.dateLong.split(' ');
 const SOON = ['Ponentes', 'Agenda', 'Entradas', 'Call for papers'];
 ---
@@ -25,10 +22,9 @@ const SOON = ['Ponentes', 'Agenda', 'Entradas', 'Call for papers'];
         <p class="cal-h">{event.start.replace(/^0/, '')} → {event.end}</p>
       </div>
       <div class="sdi">
-        <p data-r="up">Un solo día, de <b>9:00 a 15:00</b>, con charlas y talleres de Flutter y Dart. Agrégalo a tu calendario para que no se te cruce con nada.</p>
+        <p data-r="up">Un solo día, de <b>9:00 a 15:00</b>, con charlas y talleres de Flutter y Dart. Separa el día: los detalles llegan primero a quienes se registran.</p>
         <div class="ctas sdb" data-r="up">
-          <a class="bt" href={googleCalendarUrl(pageUrl)} target="_blank" rel="noopener" data-ev="calendar_add" data-ev-label="google">Google Calendar ↗</a>
-          <a class="bt alt" href={url('flutterconf-peru-2026.ics')} download data-ev="calendar_add" data-ev-label="ics">Apple / Outlook (.ics)</a>
+          <a class="bt" href="#registro" data-ev="cta_click" data-ev-label="date_register">Avísame primero</a>
         </div>
         <p class="soon-t" data-r="up">Lo que viene</p>
         <ul class="soon">

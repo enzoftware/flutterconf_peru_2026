@@ -8,6 +8,7 @@ import { sparkle, diamond, flower, rays } from '../../lib/art';
 import event from '../../data/event.json';
 const [day, , month] = event.dateLong.split(' ').slice(1); // "19", "de", "diciembre"
 const target = `${event.isoDate}T${event.start}:00-05:00`;
+const venueName = event.venue.split(',')[0].toUpperCase(); // BLOOM TOWER
 const daysLeft = Math.max(0, Math.ceil((Date.parse(target) - Date.now()) / 86400000)); // replaced live on the client
 ---
 <section class="z" id="top" style="--a:#021C3F;--b:#042B59">
@@ -24,36 +25,57 @@ const daysLeft = Math.max(0, Math.ceil((Date.parse(target) - Date.now()) / 86400
     <div class="hrow">
       <div class="tag" data-r="left" style="--d:.25s">SÁB {day}<small>{month.toUpperCase()}</small></div>
       <div class="spot" data-spot><div class="perched"><Dash /></div></div>
-      <div class="tag r" data-r="right" style="--d:.3s">9 → 15<small>UN SOLO DÍA</small></div>
+      <div class="tag r" data-r="right" style="--d:.3s">{venueName.split(' ').map((w, i) => <>{i > 0 && <br />}{w}</>)}<small>PISO 16</small></div>
     </div>
-    <p class="lead" data-r="up">Un día entero de Flutter y Dart en <b>{event.venue}</b>. Estamos armando los ponentes, la agenda y las entradas. Déjanos tu correo y te avisamos primero.</p>
+    <div class="cd" data-r="pop" style="--d:.35s" data-countdown={target} role="timer" aria-label={`Faltan ${daysLeft} días para FlutterConf Perú`}>
+      <p class="cd-k" aria-hidden="true">★ Cuenta regresiva ★</p>
+      <div class="cd-row" aria-hidden="true">
+        <div class="cdt" style="--k:#FFF275;--rt:-3deg"><b data-u="d">{daysLeft}</b><small>días</small></div>
+        <div class="cdt" style="--k:#1CDAC5;--rt:2deg"><b data-u="h">00</b><small>horas</small></div>
+        <div class="cdt" style="--k:#8FC2FF;--rt:-1.5deg"><b data-u="m">00</b><small>min</small></div>
+        <div class="cdt sec" style="--k:#F25D50;--rt:3deg"><b data-u="s">00</b><small>seg</small></div>
+      </div>
+      <p class="cd-f"><span>{event.dateLong.replace(' de 2026', '')}</span><span>Abrimos a las {event.start.replace(/^0/, '')}</span><span>{event.venue.split(',')[0]}, piso 16</span></p>
+      <p class="cd-w" aria-hidden="true" data-weeks></p>
+    </div>
+    <p class="lead" data-r="up">Un día entero de Flutter y Dart en Lima. Estamos armando los ponentes, la agenda y las entradas. Déjanos tu correo y te avisamos primero.</p>
     <div class="ctas" data-r="up" style="--d:.1s">
       <a class="bt" href="#registro" data-ev="cta_click" data-ev-label="hero_register">Avísame primero</a>
       <a class="bt alt" href="#sede" data-ev="cta_click" data-ev-label="hero_venue">Ver la sede</a>
     </div>
-    <div class="cd" data-r="pop" data-countdown={target} role="timer" aria-label={`Faltan ${daysLeft} días para FlutterConf Perú`}>
-      <div class="cdt" style="--k:#FFF275"><b data-u="d">{daysLeft}</b><small>días</small></div>
-      <div class="cdt" style="--k:#1CDAC5"><b data-u="h">00</b><small>horas</small></div>
-      <div class="cdt" style="--k:#F25D50"><b data-u="m">00</b><small>minutos</small></div>
-    </div>
   </div>
   <Ribbon dir={-1} items={['¡Flutter!', '¡Dart!', '19.12.2026', 'Muy pronto']} />
-  <Ribbon dir={1} items={['9:00 → 15:00', event.district, 'Piso 16', event.hashtag]} />
+  <Ribbon dir={1} items={['Bloom Tower', event.district, 'Piso 16', event.hashtag]} />
 </section>
 <script>
-  // Countdown to the opening (9:00 Lima). Ticks once a minute; after the start it switches to "¡Es hoy!".
+  // Countdown to the opening (9:00 Lima), ticking every second. The accessible label changes once a minute
+  // so screen readers are not flooded; the seconds tile pops on each tick (CSS, off with reduced motion).
   const cd = document.querySelector<HTMLElement>('[data-countdown]');
   if (cd) {
     const t = Date.parse(cd.dataset.countdown!);
-    const set = (u: string, v: number) => { const el = cd.querySelector(`[data-u="${u}"]`); if (el) el.textContent = u === 'd' ? String(v) : String(v).padStart(2, '0'); };
+    const el = (u: string) => cd.querySelector<HTMLElement>(`[data-u="${u}"]`)!;
+    const sec = cd.querySelector<HTMLElement>('.sec');
+    const weeks = cd.querySelector<HTMLElement>('[data-weeks]');
+    let lastMin = -1;
     const tick = () => {
       const s = Math.max(0, Math.floor((t - Date.now()) / 1000));
-      const d = Math.floor(s / 86400), h = Math.floor((s % 86400) / 3600), m = Math.floor((s % 3600) / 60);
-      set('d', d); set('h', h); set('m', m);
-      cd.setAttribute('aria-label', s > 0 ? `Faltan ${d} días, ${h} horas y ${m} minutos para FlutterConf Perú` : '¡FlutterConf Perú es hoy!');
-      if (s === 0) cd.classList.add('done');
+      const d = Math.floor(s / 86400), h = Math.floor((s % 86400) / 3600), m = Math.floor((s % 3600) / 60), x = s % 60;
+      el('d').textContent = String(d);
+      el('h').textContent = String(h).padStart(2, '0');
+      el('m').textContent = String(m).padStart(2, '0');
+      el('s').textContent = String(x).padStart(2, '0');
+      sec?.classList.remove('tick'); void sec?.offsetWidth; sec?.classList.add('tick');
+      if (m !== lastMin) {
+        lastMin = m;
+        const w = Math.floor(d / 7), r = d % 7;
+        if (weeks) weeks.textContent = s === 0 ? '¡Es hoy! Nos vemos en Bloom Tower'
+          : w > 0 ? `${w} ${w === 1 ? 'semana' : 'semanas'}${r ? ` y ${r} ${r === 1 ? 'día' : 'días'}` : ''} para el gran día`
+          : d > 0 ? `¡Ya es esta semana! ${d} ${d === 1 ? 'día' : 'días'} para el gran día` : '¡Menos de un día! Prepara tu laptop';
+        cd.setAttribute('aria-label', s > 0 ? `Faltan ${d} días, ${h} horas y ${m} minutos para FlutterConf Perú` : '¡FlutterConf Perú es hoy!');
+      }
+      if (s === 0) { cd.classList.add('done'); clearInterval(iv); }
     };
+    const iv = setInterval(tick, 1000);
     tick();
-    setInterval(tick, 30000);
   }
 </script>

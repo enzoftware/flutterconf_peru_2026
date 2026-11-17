@@ -13,7 +13,8 @@
     "build": "npm run tokens && astro check && astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "deck:pdf": "node scripts/deck-pdf.mjs"
+    "deck:pdf": "node scripts/deck-pdf.mjs",
+    "social": "node scripts/social-images.mjs"
   },
   "dependencies": {
     "astro": "7.4.2"

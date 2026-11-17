@@ -5,7 +5,7 @@ Guide for AI coding agents (Claude Code, Codex, Cursor, …) working on this rep
 ## What this is
 
 - **FlutterConf Perú 2026** landing page: one day of Flutter and Dart. Saturday 19 December 2026, 9:00–15:00, at Bloom Tower (Flora Tristán 310, 16th floor), Magdalena del Mar, Lima.
-- **Launch mode (since November 2026):** `/` is a short launch landing with only the confirmed facts (date and venue), a sign-up form ("Avísame primero") that writes to a Google Sheet, and social links. The full landing (speakers, agenda, tickets, FAQ) is kept at `/v1/` with `noindex` until that content is real. To switch back, move `src/pages/v1/index.astro` to `src/pages/index.astro` and drop the `noindex` prop.
+- **Launch mode (since November 2026):** `/` is a short launch landing with only the confirmed facts (date and venue), a sign-up form ("Avísame primero") that writes to a Google Sheet, and social links. `/` is the only page of the landing: nothing links to another path. The full landing (speakers, agenda, tickets, FAQ) is parked in `src/pages/_full-landing/`, which Astro never routes because of the `_` prefix. When that content is real, move it back to `src/pages/index.astro` and drop the `noindex` prop.
 - **The Chicha Dash design system** in `brand/`: tokens, the FlutterChicha font, Dash and ornament SVGs, component guidelines and social media templates. It is also published as a page at `/brand/`, with live fonts, components and downloads.
 - Site copy is in **Spanish (Peru)** and uses "tú". Code, comments and these docs are in English.
 
@@ -26,6 +26,7 @@ Guide for AI coding agents (Claude Code, Codex, Cursor, …) working on this rep
 | `npm run build` | Tokens → `astro check` (types) → static build in `dist/` |
 | `npm run preview` | Serve `dist/` |
 | `npm run tokens` | Regenerate `brand/tokens/tokens.css` from `brand/tokens/tokens.json` |
+| `npm run social` | Regenerate the link-preview images (`public/social/`, SVG + PNG) and the Dash icons from `src/data/event.json` (needs Chrome and internet for Bungee) |
 
 **Keys:** copy `.env.example` to `.env`. `PUBLIC_POSTHOG_KEY`, `PUBLIC_POSTHOG_HOST` and `PUBLIC_REGISTER_ENDPOINT` are optional and typed in `astro.config.mjs` (`env.schema`, read through `astro:env/client`). The deploy reads them from repository secrets. Never commit `.env`, and never put private keys (PostHog `phx_…`, Google service accounts) in a `PUBLIC_` variable, because they ship in the page.
 
@@ -56,8 +57,7 @@ src/
   components/*.astro        One component per landing section + Chicha, Dash, Floater, Ribbon, KitLayers
   components/brand/         Pieces of the brand page
   pages/index.astro         The launch landing (date, venue, sign-up, social)
-  pages/v1/index.astro      The full landing, parked (noindex) until speakers/agenda/tickets are real
-  pages/flutterconf-peru-2026.ics.ts   Calendar file for "Agrégalo a tu calendario"
+  pages/_full-landing/      The full landing, parked and not routed until speakers/agenda/tickets are real
   components/launch/        Launch landing sections (hero + countdown, venue fan, save the date, sign-up form, follow)
   content/venue.json        Venue photo cards (photos in src/content/venue/; placeholders until then)
   scripts/analytics.ts      PostHog loader (no npm dependency, loads when idle) and track() for custom events
@@ -125,5 +125,4 @@ Each sponsor gets its own deck at `/decks/<slug>/`, built from `src/content/deck
 
 - Real speakers, photos, sponsor logos, ticket and CFP links (placeholders today).
 - Subset the FlutterChicha WOFF2s to the glyphs used, and self-host Bungee and Rubik.
-- An Open Graph image (1200×630) built from the Post template.
 - A custom domain. Moving hosts only needs `SITE_URL` and `BASE_PATH` (see `astro.config.mjs`).
