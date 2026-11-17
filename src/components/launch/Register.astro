@@ -98,8 +98,10 @@ const ROLES = ROLE_IDS.map((r) => [r, LABELS[r]]);
       form.classList.add('done');
       ok.hidden = false;
     };
+    // Remembered from an earlier visit: mask it, the browser may be shared (lab, café).
+    const mask = (e: string) => e.replace(/^(.)[^@]*/, '$1***');
     const previous = store.get();
-    if (previous) showDone(previous, true);
+    if (previous) showDone(mask(previous), true);
 
     let started = false;
     form.addEventListener('input', () => {
@@ -151,9 +153,9 @@ const ROLES = ROLE_IDS.map((r) => [r, LABELS[r]]);
         const res = await fetch(PUBLIC_REGISTER_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
         const out = await res.json().catch(() => ({ ok: false, error: 'server' }));
         if (!out.ok) return fail(out.error ?? 'server');
-        track('register_succeeded', { role: v.data.role, has_city: Boolean(v.data.city), source: payload.source, duplicate: Boolean(out.duplicate) });
+        track('register_succeeded', { role: v.data.role, has_city: Boolean(v.data.city), source: payload.source });
         store.set(v.data.email);
-        showDone(v.data.email, Boolean(out.duplicate));
+        showDone(v.data.email, false);
         ok.focus();
       } catch {
         fail(navigator.onLine ? 'server' : 'offline');
@@ -177,7 +179,7 @@ const ROLES = ROLE_IDS.map((r) => [r, LABELS[r]]);
       const text = 'FlutterConf Perú 2026: sábado 19 de diciembre en Lima. Regístrate para que te avisen primero.';
       track('register_share');
       if (navigator.share) { try { await navigator.share({ title: 'FlutterConf Perú 2026', text, url: shareUrl }); } catch { /* cancelled */ } return; }
-      await navigator.clipboard?.writeText(`${text} ${shareUrl}`);
+      try { await navigator.clipboard.writeText(`${text} ${shareUrl}`); } catch { return; } // no clipboard (http) or denied
       const c = form.querySelector<HTMLElement>('[data-copied]');
       if (c) { c.hidden = false; setTimeout(() => (c.hidden = true), 2500); }
     });

@@ -34,7 +34,7 @@ const DISPOSABLE_DOMAINS = [
   'trashmail.com', 'yopmail.com',
 ];
 const NAME_RE = /^\p{L}[\p{L}\p{M}' .-]*$/u;
-const EMAIL_RE = /^[a-z0-9._%+-]+@[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}$/;
+const EMAIL_RE = /^[a-z0-9][a-z0-9._%+-]*@[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}$/;
 const LINK_RE = /https?:|www\.|\.(com|net|org|io|xyz|ru)\b|[<>]/i;
 
 function doPost(e) {
@@ -47,7 +47,7 @@ function doPost(e) {
 
     // Bots: answer ok so they move on, write nothing.
     if (body.website) return json({ ok: true });
-    if (typeof body.elapsed === 'number' && body.elapsed < MIN_FILL_MS) return json({ ok: true });
+    if (typeof body.elapsed !== 'number' || body.elapsed < MIN_FILL_MS) return json({ ok: true });
 
     const v = validate(body);
     if (!v.ok) return json({ ok: false, error: v.error });
@@ -55,7 +55,7 @@ function doPost(e) {
 
     const cache = CacheService.getScriptCache();
     const seen = 'em_' + data.emailKey;
-    if (cache.get(seen)) return json({ ok: true, duplicate: true });
+    if (cache.get(seen)) return json({ ok: true }); // same answer as a new sign-up: the URL can't reveal who is registered
 
     const lock = LockService.getScriptLock();
     lock.waitLock(10000);
@@ -65,7 +65,7 @@ function doPost(e) {
       const sheet = getSheet();
       if (isDuplicate(sheet, data)) {
         cache.put(seen, '1', EMAIL_COOLDOWN_S);
-        return json({ ok: true, duplicate: true });
+        return json({ ok: true });
       }
       const extra = (k, max) => safe(clean(body[k], max));
       sheet.appendRow([

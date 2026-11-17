@@ -25,7 +25,7 @@ export interface Signup { name: string; email: string; emailKey: string; role: R
 
 // Letters (any language), combining accents, spaces, apostrophes, dots and hyphens: "María José", "O'Brien", "Jr."
 const NAME_RE = /^\p{L}[\p{L}\p{M}' .-]*$/u;
-const EMAIL_RE = /^[a-z0-9._%+-]+@[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}$/;
+const EMAIL_RE = /^[a-z0-9][a-z0-9._%+-]*@[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}$/;
 const LINK_RE = /https?:|www\.|\.(com|net|org|io|xyz|ru)\b|[<>]/i;
 
 const str = (v: unknown, max: number): string =>

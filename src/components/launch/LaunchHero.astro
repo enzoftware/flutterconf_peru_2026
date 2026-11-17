@@ -68,7 +68,7 @@ const daysLeft = Math.max(0, Math.ceil((Date.parse(target) - Date.now()) / 86400
       if (m !== lastMin || s === 0) {
         lastMin = m;
         const w = Math.floor(d / 7), r = d % 7;
-        if (weeks) weeks.textContent = s === 0 ? '¡Es hoy! Nos vemos en Bloom Tower'
+        if (weeks) weeks.textContent = s === 0 ? (Date.now() - t > 6 * 3600e3 ? '¡Gracias por venir! Nos vemos en la próxima' : '¡Es hoy! Nos vemos en Bloom Tower')
           : w > 0 ? `${w} ${w === 1 ? 'semana' : 'semanas'}${r ? ` y ${r} ${r === 1 ? 'día' : 'días'}` : ''} para el gran día`
           : d > 0 ? `¡Ya es esta semana! ${d} ${d === 1 ? 'día' : 'días'} para el gran día` : '¡Menos de un día! Prepara tu laptop';
         cd.setAttribute('aria-label', s > 0 ? `Faltan ${d} días, ${h} horas y ${m} minutos para FlutterConf Perú` : '¡FlutterConf Perú es hoy!');

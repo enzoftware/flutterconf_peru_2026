@@ -77,13 +77,13 @@ test('time trap: sent 1 s after load answers ok, writes nothing', () => {
 test('duplicate: same inbox written differently is stored once', () => {
   s.post(person({ email: 'ana.quispe@gmail.com' }));
   s.cache.clear(); // past the 10-minute cooldown: the sheet lookup must still catch it
-  assert.deepEqual(s.post(person({ email: 'AnaQuispe+flutter@googlemail.com' })), { ok: true, duplicate: true });
+  assert.deepEqual(s.post(person({ email: 'AnaQuispe+flutter@googlemail.com' })), { ok: true });
   assert.equal(dataRows(s.sheet).length, 1);
 });
 
 test('duplicate: rows from version 1 (no key column) are still detected', () => {
   const v1 = load({ rows: [['Fecha (Lima)', 'Nombre', 'Correo'], ['2026-11-17', 'Ana', 'ana@example.com']] });
-  assert.deepEqual(v1.post(person()), { ok: true, duplicate: true });
+  assert.deepEqual(v1.post(person()), { ok: true });
   assert.equal(v1.sheet.rows[0][11], 'Clave correo', 'header row upgraded');
 });
 
@@ -99,7 +99,7 @@ test('a failed write stays retryable (no false "duplicate")', () => {
 
 test('cooldown: hammering the same email does not touch the sheet', () => {
   s.post(person());
-  for (let i = 0; i < 5; i++) assert.deepEqual(s.post(person()), { ok: true, duplicate: true });
+  for (let i = 0; i < 5; i++) assert.deepEqual(s.post(person()), { ok: true });
   assert.equal(dataRows(s.sheet).length, 1);
 });
 
@@ -115,6 +115,20 @@ test('formula injection is neutralized in free-text columns', () => {
   const [row] = dataRows(s.sheet);
   assert.ok(row[9].startsWith("'="));
   assert.ok(row[6].startsWith("'+"));
+});
+
+test('time trap: a body without elapsed is dropped too', () => {
+  const { elapsed, ...noElapsed } = person();
+  assert.deepEqual(s.post(noElapsed), { ok: true });
+  assert.deepEqual(s.post(person({ elapsed: '9000' })), { ok: true });
+  assert.equal(dataRows(s.sheet).length, 0);
+});
+
+test('duplicates get the same answer as new sign-ups (no way to probe who registered)', () => {
+  const first = s.post(person());
+  s.cache.clear();
+  assert.deepEqual(s.post(person()), first);
+  assert.equal(dataRows(s.sheet).length, 1);
 });
 
 test('bad requests', () => {

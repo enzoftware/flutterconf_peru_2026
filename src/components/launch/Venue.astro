@@ -30,7 +30,7 @@ const FAN = [[-24, -16, -3, -7, 4], [22, -20, 4, 6, 3], [-20, 22, 2, 4, 2], [24,
         <p class="vnl" data-r="up">Un piso entero frente al mar de Lima, para charlas, talleres y café con la comunidad.</p>
         <div data-r="up"><a class="bt alt" href={event.mapsUrl} target="_blank" rel="noopener" data-ev="venue_map_click">Cómo llegar ↗</a></div>
       </div>
-      <div class="pile" aria-label="Fotos de la sede">
+      <div class="pile" role="group" aria-label="Fotos de la sede">
         {photos.map((p, i) => {
           const [x, y, r0, r1, z] = FAN[i % FAN.length];
           return (

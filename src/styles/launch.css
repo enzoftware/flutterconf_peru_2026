@@ -126,7 +126,7 @@
 .ln .consent input{ flex:none; width:22px; height:22px; margin:0; accent-color:var(--rey) }
 .ln .hp{ position:absolute!important; left:-9999px; width:1px; height:1px; overflow:hidden }
 .ln .ferr{ margin:0; min-height:0; font-weight:700; font-size:15px; color:#B3261E }
-.ln .ferr:empty{ display:none }
+.ln .ferr:empty{ position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%) } /* stays rendered so role=alert announces */
 .ln .fcard.bad .ferr{ animation:shake .4s }
 .ln .fsub{ justify-content:center; width:100%; font-size:17px; cursor:pointer }
 .ln .fsub:disabled{ cursor:progress; opacity:.75 }
@@ -158,3 +158,5 @@
 .ln .fin{ padding-top:20px }
 .ln .fin-d{ margin:0 0 6px; font-family:Bungee; font-size:min(4.4cqw, 20px) }
 .ln footer{ border-top-color:var(--ye) }
+
+@media (prefers-reduced-motion: reduce){ .ln .ph{ --e:1 } } /* venue fan: already open, no scroll movement */

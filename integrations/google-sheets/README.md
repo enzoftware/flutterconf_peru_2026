@@ -16,7 +16,7 @@ sequenceDiagram
     Form->>GAS: POST text/plain JSON (no CORS preflight)
     GAS->>GAS: validate · honeypot · 60/min · lock · dedupe email · formula-escape
     GAS->>Sheet: appendRow(date, name, email, role, city, consent, utm…)
-    GAS-->>Form: {ok, duplicate?}
+    GAS-->>Form: {ok} (same for new and duplicate)
     Form->>PH: register_succeeded {role, source} (no name or email)
 ```
 
@@ -25,12 +25,12 @@ Inside `doPost`, each request goes through these checks in order:
 ```text
 doPost (Code.gs v3)
   body > 2 KB / not a JSON object        → too_large / bad_request
-  honeypot filled  or  elapsed < 2.5 s   → {ok:true}, nothing written (bots don't learn)
+  honeypot filled, elapsed < 2.5 s or missing → {ok:true}, nothing written (bots don't learn)
   validate()                             → name | email | email_disposable | role | city | consent
-  cache em_<key> (10 min)                → {ok:true, duplicate:true}, sheet untouched
+  cache em_<key> (10 min)                → {ok:true}, sheet untouched
   lock
     > 60 sign-ups this minute            → rate_limited
-    "Clave correo" or Correo exists      → {ok:true, duplicate:true}
+    "Clave correo" or Correo exists      → {ok:true}, nothing written
     appendRow (= + - @ escaped), then set the 10-min cache
 ```
 
@@ -114,7 +114,8 @@ The web app URL is public because the static page needs it, so every rule is enf
 | Hammering | The same inbox at most once every 10 minutes, and 60 sign-ups per minute overall |
 | Oversized or malformed requests | 2 KB body limit, JSON parsed inside try/catch, unknown roles refused, consent must be exactly `true` |
 | Formula injection | Values starting with `= + - @` are stored as text, so opening the sheet never runs them |
-| Concurrent writes | A script lock around the duplicate check and the append |
+| Concurrent writes | A script lock around the rate limit, the duplicate check and the append |
+| Probing who signed up | A duplicate gets exactly the same answer as a new sign-up, so the public URL can't tell whether an email is in the list |
 
 What it can't do: Apps Script doesn't expose the caller's IP or `Origin` header, so it can't block one client or one website. If spam gets through anyway, add Cloudflare Turnstile: a site key in the form, with the secret kept in the script's **Project Settings → Script properties**.
 
