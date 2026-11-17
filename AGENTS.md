@@ -26,6 +26,8 @@ Guide for AI coding agents (Claude Code, Codex, Cursor, …) working on this rep
 | `npm run build` | Tokens → `astro check` (types) → static build in `dist/` |
 | `npm run preview` | Serve `dist/` |
 | `npm run tokens` | Regenerate `brand/tokens/tokens.css` from `brand/tokens/tokens.json` |
+| `npm test` | Sign-up validation and `Code.gs` tests (Node test runner, no dependencies) |
+| `npm run check:keys` | Check the `.env` keys against PostHog and the Apps Script endpoint (prints no secrets, writes no rows) |
 | `npm run social` | Regenerate the link-preview images (`public/social/`, SVG + PNG) and the Dash icons from `src/data/event.json` (needs Chrome and internet for Bungee) |
 
 **Keys:** copy `.env.example` to `.env`. `PUBLIC_POSTHOG_KEY`, `PUBLIC_POSTHOG_HOST` and `PUBLIC_REGISTER_ENDPOINT` are optional and typed in `astro.config.mjs` (`env.schema`, read through `astro:env/client`). The deploy reads them from repository secrets. Never commit `.env`, and never put private keys (PostHog `phx_…`, Google service accounts) in a `PUBLIC_` variable, because they ship in the page.
@@ -60,6 +62,7 @@ src/
   pages/_full-landing/      The full landing, parked and not routed until speakers/agenda/tickets are real
   components/launch/        Launch landing sections (hero + countdown, venue fan, save the date, sign-up form, follow)
   content/venue.json        Venue photo cards (photos in src/content/venue/; placeholders until then)
+  lib/registration.ts       Sign-up validation shared by the form and mirrored in integrations/google-sheets/Code.gs
   scripts/analytics.ts      PostHog loader (no npm dependency, loads when idle) and track() for custom events
   styles/launch.css         Launch landing styles on top of landing.css
   pages/brand/index.astro   Brand page: renders brand/ live (tokens, FlutterChicha, components, SVGs, templates)

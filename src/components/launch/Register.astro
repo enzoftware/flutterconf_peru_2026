@@ -8,14 +8,12 @@ import Chicha from '../Chicha.astro';
 import Dash from '../Dash.astro';
 import Floater from '../Floater.astro';
 import { sparkle, diamond } from '../../lib/art';
-const ROLES = [
-  ['estudiante', 'Estudiante'],
-  ['dev-flutter', 'Dev Flutter o Dart'],
-  ['dev-otro', 'Dev de otro stack'],
-  ['diseno-producto', 'Diseño o producto'],
-  ['lider-empresa', 'Líder o empresa'],
-  ['otro', 'Otro'],
-];
+import { ROLES as ROLE_IDS } from '../../lib/registration';
+const LABELS: Record<(typeof ROLE_IDS)[number], string> = {
+  estudiante: 'Estudiante', 'dev-flutter': 'Dev Flutter o Dart', 'dev-otro': 'Dev de otro stack',
+  'diseno-producto': 'Diseño o producto', 'lider-empresa': 'Líder o empresa', otro: 'Otro',
+};
+const ROLES = ROLE_IDS.map((r) => [r, LABELS[r]]);
 ---
 <section class="z rg" id="registro" style="--a:#0553B1;--b:#FFF275;--fg:#021C3F">
   <Floater svg={sparkle('#F25D50')} x="5%" y="520px" w={44} spd={-220} rot={90} />
@@ -37,13 +35,14 @@ const ROLES = [
         <div class="fv-ok" hidden tabindex="-1">
           <div class="okd" aria-hidden="true"><Dash /></div>
           <p class="ok-t"><Chicha text="¡Listo!" /></p>
-          <p class="ok-m">Ya estás en la lista. Te escribiremos a <b data-ok-email></b> con cada novedad.</p>
+          <p class="ok-m" data-ok-msg>Ya estás en la lista. Te escribiremos a <b data-ok-email></b> con cada novedad.</p>
           <button type="button" class="bt alt" data-share>Pásale la voz a tu equipo</button>
           <p class="ok-c" data-copied hidden role="status">Enlace copiado</p>
+          <button type="button" class="ok-again" data-again>Registrar otro correo</button>
         </div>
         <div class="ff">
-          <label class="fl-f"><span>Nombre</span><input name="name" autocomplete="name" required minlength="2" maxlength="80" placeholder="¿Cómo te llamas?" /></label>
-          <label class="fl-f"><span>Correo</span><input name="email" type="email" autocomplete="email" inputmode="email" required maxlength="120" placeholder="tu@correo.com" /></label>
+          <label class="fl-f"><span>Nombre</span><input name="name" autocomplete="name" autocapitalize="words" required minlength="2" maxlength="80" placeholder="¿Cómo te llamas?" /></label>
+          <label class="fl-f"><span>Correo</span><input name="email" type="email" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" required maxlength="120" placeholder="tu@correo.com" /></label>
           <fieldset class="fl-f roles">
             <legend>¿Cómo te describes?</legend>
             <div>{ROLES.map(([v, l]) => <label class="role"><input type="radio" name="role" value={v} required /><span>{l}</span></label>)}</div>
@@ -61,77 +60,112 @@ const ROLES = [
 <script>
   import { PUBLIC_REGISTER_ENDPOINT } from 'astro:env/client';
   import { track, attribution } from '../../scripts/analytics';
+  import { validate, MIN_FILL_MS, type ErrorCode } from '../../lib/registration';
+
+  const loadedAt = performance.now();
+  const STORE = 'fcp-registro'; // remembers a successful sign-up on this browser, so people don't sign up twice
+  const store = {
+    get: (): string | null => { try { return localStorage.getItem(STORE); } catch { return null; } },
+    set: (v: string | null) => { try { v ? localStorage.setItem(STORE, v) : localStorage.removeItem(STORE); } catch { /* private mode */ } },
+  };
 
   const form = document.querySelector<HTMLFormElement>('#rf');
   if (form) {
     const err = form.querySelector<HTMLElement>('.ferr')!;
     const btn = form.querySelector<HTMLButtonElement>('.fsub')!;
     const ok = form.querySelector<HTMLElement>('.fv-ok')!;
-    const MSG: Record<string, string> = {
-      name: 'Escribe tu nombre.',
+    const okMsg = form.querySelector<HTMLElement>('[data-ok-msg]')!;
+    const FIELD: Partial<Record<string, string>> = { name: 'name', email: 'email', email_disposable: 'email', role: 'role', city: 'city', consent: 'consent' };
+    const MSG: Record<ErrorCode | string, string> = {
+      name: 'Escribe tu nombre (solo letras, sin enlaces).',
       email: 'Revisa tu correo, parece que le falta algo.',
+      email_disposable: 'Usa un correo que revises: los correos temporales no reciben nuestras novedades.',
       role: 'Elige la opción que mejor te describe.',
+      city: 'Escribe solo el nombre de tu ciudad.',
       consent: 'Marca la casilla para que podamos escribirte.',
       rate_limited: 'Hay muchas personas registrándose ahora. Intenta de nuevo en un minuto.',
       offline: 'No pudimos conectarnos. Revisa tu internet e intenta de nuevo.',
       disabled: 'El registro abre en unas horas. Vuelve pronto.',
       server: 'Algo falló de nuestro lado. Intenta de nuevo en un momento.',
     };
+
+    const showDone = (email: string, duplicate: boolean) => {
+      okMsg.innerHTML = '';
+      okMsg.append(duplicate ? 'Ya estabas en la lista con ' : 'Ya estás en la lista. Te escribiremos a ');
+      const b = document.createElement('b'); b.textContent = email; okMsg.append(b);
+      okMsg.append(duplicate ? '. No hace falta registrarte de nuevo.' : ' con cada novedad.');
+      form.classList.remove('bad');
+      form.classList.add('done');
+      ok.hidden = false;
+    };
+    const previous = store.get();
+    if (previous) showDone(previous, true);
+
     let started = false;
     form.addEventListener('input', () => {
       if (!started) { started = true; track('register_started'); }
       form.classList.remove('bad');
     }, { passive: true });
 
-    const fail = (code: string, field?: string) => {
+    const fail = (code: string) => {
       err.textContent = MSG[code] ?? MSG.server;
       form.classList.add('bad');
-      const target = field ? form.querySelector<HTMLElement>(`[name="${field}"]`) : null;
-      target?.focus();
-      if (!['name', 'email', 'role', 'consent'].includes(code)) track('register_failed', { reason: code });
+      const f = FIELD[code];
+      if (f) form.querySelector<HTMLElement>(`[name="${f}"]`)?.focus();
+      track(f ? 'register_invalid' : 'register_failed', { reason: code });
     };
 
+    let sending = false;
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (sending) return; // no double submits
       err.textContent = '';
       const fd = new FormData(form);
-      const data = {
-        name: String(fd.get('name') ?? '').trim(),
-        email: String(fd.get('email') ?? '').trim(),
-        role: String(fd.get('role') ?? ''),
-        city: String(fd.get('city') ?? '').trim(),
-        consent: fd.get('consent') === 'on',
-        website: String(fd.get('website') ?? ''),
-        page: location.pathname,
-        ...attribution(),
-      };
-      if (data.name.length < 2) return fail('name', 'name');
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(data.email)) return fail('email', 'email');
-      if (!data.role) return fail('role', 'role');
-      if (!data.consent) return fail('consent', 'consent');
+      const v = validate({
+        name: fd.get('name'), email: fd.get('email'), role: fd.get('role'), city: fd.get('city'), consent: fd.get('consent') === 'on',
+      });
+      if (!v.ok) return fail(v.error);
+      if (store.get() === v.data.email) return showDone(v.data.email, true);
       if (!PUBLIC_REGISTER_ENDPOINT) {
         console.warn('[registro] PUBLIC_REGISTER_ENDPOINT is empty. See integrations/google-sheets/README.md.');
         return fail('disabled');
       }
 
+      sending = true;
       btn.disabled = true;
       form.classList.add('sending');
       try {
-        const res = await fetch(PUBLIC_REGISTER_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(data) });
+        const payload = {
+          name: v.data.name, email: v.data.email, role: v.data.role, city: v.data.city, consent: true,
+          website: String(fd.get('website') ?? ''),
+          elapsed: Math.round(performance.now() - loadedAt),
+          page: location.pathname,
+          ...attribution(),
+        };
+        // Too fast to be a person: the server drops it silently too; don't even send it.
+        if (payload.elapsed < MIN_FILL_MS || payload.website) return showDone(v.data.email, false);
+        const res = await fetch(PUBLIC_REGISTER_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
         const out = await res.json().catch(() => ({ ok: false, error: 'server' }));
-        if (!out.ok) return fail(out.error ?? 'server', ['name', 'email', 'role', 'consent'].includes(out.error) ? out.error : undefined);
-        track('register_succeeded', { role: data.role, has_city: Boolean(data.city), source: data.source, duplicate: Boolean(out.duplicate) });
-        form.querySelector('[data-ok-email]')!.textContent = data.email;
-        form.classList.remove('bad');
-        form.classList.add('done');
-        ok.hidden = false;
+        if (!out.ok) return fail(out.error ?? 'server');
+        track('register_succeeded', { role: v.data.role, has_city: Boolean(v.data.city), source: payload.source, duplicate: Boolean(out.duplicate) });
+        store.set(v.data.email);
+        showDone(v.data.email, Boolean(out.duplicate));
         ok.focus();
       } catch {
         fail(navigator.onLine ? 'server' : 'offline');
       } finally {
+        sending = false;
         btn.disabled = false;
         form.classList.remove('sending');
       }
+    });
+
+    form.querySelector<HTMLButtonElement>('[data-again]')?.addEventListener('click', () => {
+      store.set(null);
+      form.reset();
+      form.classList.remove('done');
+      ok.hidden = true;
+      form.querySelector<HTMLInputElement>('[name="name"]')?.focus();
     });
 
     form.querySelector<HTMLButtonElement>('[data-share]')?.addEventListener('click', async () => {

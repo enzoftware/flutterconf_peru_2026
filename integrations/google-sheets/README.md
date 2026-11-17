@@ -17,6 +17,8 @@ The "Avísame primero" form on the landing posts to a Google Apps Script web app
 
 When you change `Code.gs`, use **Deploy → Manage deployments → Edit → Version: New version**. That keeps the same URL. A *new deployment* creates a new URL.
 
+Check the deployment any time with `npm run check:keys`. It reports the deployed `Code.gs` version and probes the validations without writing any row.
+
 ## What is stored
 
 | Column | From |
@@ -25,11 +27,30 @@ When you change `Code.gs`, use **Deploy → Manage deployments → Edit → Vers
 | Nombre, Correo, Perfil, Ciudad | The form (the city is optional) |
 | Acepta correos | The required consent checkbox |
 | Fuente, UTM source, UTM medium, UTM campaign, Página | `?ref=` and `utm_*` from the landing URL, so you can see which post brought each person |
+| Clave correo | Normalized email used to detect duplicates (filled from version 2 on) |
 
 To count interested people, use the row count, or add `=COUNTA(Registros!C2:C)` in another tab. PostHog also gets a `register_succeeded` event without personal data, so the funnel (page view → form started → sign-up) lives there.
 
-## Security notes
+## Spam, duplicates and security
 
-- The web app URL is public because the static page needs it. The script defends itself: field validation and length limits, a honeypot field for bots, one row per email, a global limit of 60 sign-ups per minute, a lock for concurrent writes, and protection against formula injection.
-- The sheet itself stays private. Only the script, running as you, can write to it, and nobody can read it through the URL.
-- The data is personal (name and email). Share the sheet only with the organizers, and use it only for what the form promises: news about FlutterConf Perú.
+The web app URL is public because the static page needs it, so every rule is enforced on the server (`Code.gs`). The form runs the same rules (`src/lib/registration.ts`) so people see the error right away.
+
+| Threat | Defense |
+| --- | --- |
+| Bots filling every field | Hidden honeypot field `website`. The server answers ok and writes nothing, so bots don't learn they were caught |
+| Bots submitting instantly | Time trap: anything sent less than 2.5 s after the page loaded is dropped the same way |
+| Link spam in free text | Names and cities accept only letters, accents, spaces, `'`, `.` and `-`. No digits, URLs, domains or `<>` |
+| Fake or throwaway emails | Strict email format, plus a blocklist of disposable inbox providers (mailinator, yopmail…) |
+| Duplicates | One row per inbox. The key ignores case, `+tags` and Gmail dots (`Ana.Q+pe@gmail.com` = `anaq@gmail.com`). It is stored in the **Clave correo** column. The browser also remembers a successful sign-up and says "ya estabas en la lista" |
+| Hammering | The same inbox at most once every 10 minutes, and 60 sign-ups per minute overall |
+| Oversized or malformed requests | 2 KB body limit, JSON parsed inside try/catch, unknown roles refused, consent must be exactly `true` |
+| Formula injection | Values starting with `= + - @` are stored as text, so opening the sheet never runs them |
+| Concurrent writes | A script lock around the duplicate check and the append |
+
+What it can't do: Apps Script doesn't expose the caller's IP or `Origin` header, so it can't block one client or one website. If spam gets through anyway, add Cloudflare Turnstile: a site key in the form, with the secret kept in the script's **Project Settings → Script properties**.
+
+Privacy: the sheet stays private, because only the script, running as you, can write to it, and nobody can read it through the URL. The data is personal (name and email). Share the sheet only with the organizers, and use it only for what the form promises: news about FlutterConf Perú.
+
+## Tests
+
+`npm test` runs `Code.test.mjs`, which loads `Code.gs` in Node with in-memory fakes of SpreadsheetApp, CacheService and LockService. It also runs the same validation cases against the form rules, so the two can't drift apart.
