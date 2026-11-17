@@ -53,7 +53,7 @@ let s;
 beforeEach(() => { s = load(); });
 
 test('health check reports the deployed version', () => {
-  assert.deepEqual(s.ctx.doGet(), { ok: true, service: 'flutterconf-peru-register', version: 2 });
+  assert.deepEqual(s.ctx.doGet(), { ok: true, service: 'flutterconf-peru-register', version: 3 });
 });
 
 test('valid sign-up appends one row with headers and attribution', () => {
@@ -85,6 +85,16 @@ test('duplicate: rows from version 1 (no key column) are still detected', () => 
   const v1 = load({ rows: [['Fecha (Lima)', 'Nombre', 'Correo'], ['2026-11-17', 'Ana', 'ana@example.com']] });
   assert.deepEqual(v1.post(person()), { ok: true, duplicate: true });
   assert.equal(v1.sheet.rows[0][11], 'Clave correo', 'header row upgraded');
+});
+
+test('a failed write stays retryable (no false "duplicate")', () => {
+  s.post(person({ email: 'seed@example.com' })); // creates the header row
+  const append = s.sheet.appendRow;
+  s.sheet.appendRow = () => { throw new Error('Sheets is down'); };
+  assert.deepEqual(s.post(person()), { ok: false, error: 'server' });
+  s.sheet.appendRow = append;
+  assert.deepEqual(s.post(person()), { ok: true });
+  assert.equal(dataRows(s.sheet).length, 2);
 });
 
 test('cooldown: hammering the same email does not touch the sheet', () => {

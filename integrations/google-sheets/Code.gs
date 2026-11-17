@@ -17,7 +17,7 @@
  * Keep the rules in sync with src/lib/registration.ts. `npm test` runs the same cases on both.
  */
 
-const VERSION = 2;
+const VERSION = 3;
 const SHEET_NAME = 'Registros';
 const HEADERS = ['Fecha (Lima)', 'Nombre', 'Correo', 'Perfil', 'Ciudad', 'Acepta correos', 'Fuente', 'UTM source', 'UTM medium', 'UTM campaign', 'Página', 'Clave correo'];
 const KEY_COL = 12; // "Clave correo": normalized email used for duplicates
@@ -54,15 +54,19 @@ function doPost(e) {
     const data = v.data;
 
     const cache = CacheService.getScriptCache();
-    if (cache.get('em_' + data.emailKey)) return json({ ok: true, duplicate: true });
-    if (!underRateLimit(cache)) return json({ ok: false, error: 'rate_limited' });
+    const seen = 'em_' + data.emailKey;
+    if (cache.get(seen)) return json({ ok: true, duplicate: true });
 
     const lock = LockService.getScriptLock();
     lock.waitLock(10000);
     try {
+      // Under the lock, so two requests can't both read 59 and let a 61st sign-up through.
+      if (!underRateLimit(cache)) return json({ ok: false, error: 'rate_limited' });
       const sheet = getSheet();
-      cache.put('em_' + data.emailKey, '1', EMAIL_COOLDOWN_S);
-      if (isDuplicate(sheet, data)) return json({ ok: true, duplicate: true });
+      if (isDuplicate(sheet, data)) {
+        cache.put(seen, '1', EMAIL_COOLDOWN_S);
+        return json({ ok: true, duplicate: true });
+      }
       const extra = (k, max) => safe(clean(body[k], max));
       sheet.appendRow([
         Utilities.formatDate(new Date(), 'America/Lima', 'yyyy-MM-dd HH:mm:ss'),
@@ -70,6 +74,8 @@ function doPost(e) {
         extra('source', 60), extra('utm_source', 60), extra('utm_medium', 60), extra('utm_campaign', 80), extra('page', 200),
         data.emailKey,
       ]);
+      // Only after the row exists: a failed write stays retryable instead of answering "duplicate".
+      cache.put(seen, '1', EMAIL_COOLDOWN_S);
     } finally {
       lock.releaseLock();
     }

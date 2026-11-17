@@ -166,6 +166,9 @@ export function boot(): void {
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', () => remeasure());
   lp.addEventListener('toggle', () => remeasure(300), true); // FAQ <details> change the page height
+  // Any other height change (sign-up form → success panel and back, late images) shifts cached offsets.
+  let lastH = lp.offsetHeight;
+  new ResizeObserver(() => { if (lp!.offsetHeight !== lastH) { lastH = lp!.offsetHeight; remeasure(); } }).observe(lp);
   window.addEventListener('load', () => remeasure(0));
   document.fonts?.ready.then(() => remeasure(0));
   measure();

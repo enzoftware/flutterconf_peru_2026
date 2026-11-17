@@ -65,7 +65,7 @@ const daysLeft = Math.max(0, Math.ceil((Date.parse(target) - Date.now()) / 86400
       el('m').textContent = String(m).padStart(2, '0');
       el('s').textContent = String(x).padStart(2, '0');
       sec?.classList.remove('tick'); void sec?.offsetWidth; sec?.classList.add('tick');
-      if (m !== lastMin) {
+      if (m !== lastMin || s === 0) {
         lastMin = m;
         const w = Math.floor(d / 7), r = d % 7;
         if (weeks) weeks.textContent = s === 0 ? '¡Es hoy! Nos vemos en Bloom Tower'

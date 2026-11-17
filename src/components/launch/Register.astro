@@ -135,15 +135,19 @@ const ROLES = ROLE_IDS.map((r) => [r, LABELS[r]]);
       btn.disabled = true;
       form.classList.add('sending');
       try {
+        const website = String(fd.get('website') ?? '');
+        // Honeypot filled: a bot. Pretend it worked (the server would drop it silently too).
+        if (website) return showDone(v.data.email, false);
+        // A fast person (autofill) would trip the server's time trap: wait it out, then send.
+        const wait = MIN_FILL_MS + 100 - (performance.now() - loadedAt);
+        if (wait > 0) await new Promise((r) => setTimeout(r, wait));
         const payload = {
           name: v.data.name, email: v.data.email, role: v.data.role, city: v.data.city, consent: true,
-          website: String(fd.get('website') ?? ''),
+          website,
           elapsed: Math.round(performance.now() - loadedAt),
           page: location.pathname,
           ...attribution(),
         };
-        // Too fast to be a person: the server drops it silently too; don't even send it.
-        if (payload.elapsed < MIN_FILL_MS || payload.website) return showDone(v.data.email, false);
         const res = await fetch(PUBLIC_REGISTER_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
         const out = await res.json().catch(() => ({ ok: false, error: 'server' }));
         if (!out.ok) return fail(out.error ?? 'server');

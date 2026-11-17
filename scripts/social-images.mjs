@@ -15,9 +15,9 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync, mkdtempSync, rmSync
 import { execFileSync } from 'node:child_process';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { pathToFileURL } from 'node:url';
+import { pathToFileURL, fileURLToPath } from 'node:url';
 
-const root = new URL('..', import.meta.url).pathname;
+const root = fileURLToPath(new URL('..', import.meta.url));
 const event = JSON.parse(readFileSync(join(root, 'src/data/event.json'), 'utf8'));
 const OUT = join(root, 'public/social');
 mkdirSync(OUT, { recursive: true });
@@ -35,7 +35,13 @@ const FC = {
   'FlutterChicha Amarillo': 'FlutterChichaAmarillo-Regular', 'FlutterChicha Naranja': 'FlutterChichaNaranja-Regular',
   'FlutterChicha Brillo': 'FlutterChichaBrillo-Regular',
 };
-const css = await (await fetch('https://fonts.googleapis.com/css2?family=Bungee&display=block', {
+/** fetch() that throws on HTTP errors, so an error page is never embedded as a font. */
+const get = async (url, init) => {
+  const res = await fetch(url, init);
+  if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+  return res;
+};
+const css = await (await get('https://fonts.googleapis.com/css2?family=Bungee&display=block', {
   headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130 Safari/537.36' },
 })).text();
 // Google serves Bungee in unicode-range subsets (latin, latin-ext, vietnamese): embed each one.
@@ -45,7 +51,7 @@ let bungee = '';
 for (const f of faces) {
   const src = /url\((https:[^)]+)\)/.exec(f)?.[1], range = /unicode-range:\s*([^;]+);/.exec(f)?.[1];
   if (!src) continue;
-  const data = Buffer.from(await (await fetch(src)).arrayBuffer()).toString('base64');
+  const data = Buffer.from(await (await get(src)).arrayBuffer()).toString('base64');
   bungee += `@font-face{font-family:"Bungee";src:url(data:font/woff2;base64,${data}) format("woff2")${range ? `;unicode-range:${range}` : ''}}`;
 }
 const FONTS = Object.entries(FC).map(([f, file]) => `@font-face{font-family:"${f}";src:url(data:font/woff2;base64,${b64(`brand/fonts/flutterchicha/${file}.woff2`)}) format("woff2")}`).join('') + bungee;

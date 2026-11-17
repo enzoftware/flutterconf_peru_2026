@@ -64,7 +64,7 @@ else if (!/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(EP)) {
     if (health?.ok && health.service === 'flutterconf-peru-register') {
       version = health.version ?? 1;
       ok(`health check answers (Code.gs version ${version})`);
-      if (version < 2) warn('the deployed script is version 1: paste the new Code.gs and use Deploy → Manage deployments → Edit → Version: New version');
+      if (version < 3) warn(`the deployed script is version ${version}, the repo has 3: paste the new Code.gs and use Deploy → Manage deployments → Edit → Version: New version`);
     } else if (/accounts\.google\.com|ServiceLogin/.test(text)) bad('Google asks to sign in: set "Who has access" to "Anyone" in the deployment');
     else bad(`health check did not answer as expected (HTTP ${res.status})`);
 

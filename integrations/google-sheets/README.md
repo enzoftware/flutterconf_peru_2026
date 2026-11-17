@@ -2,6 +2,38 @@
 
 The "Avísame primero" form on the landing posts to a Google Apps Script web app, and the script appends one row per person to a spreadsheet. You don't need a server, a Google Cloud project or a service-account key.
 
+## How a sign-up flows
+
+There is no server of our own: the static page posts straight to the Apps Script web app.
+
+```mermaid
+sequenceDiagram
+    participant Form as Register.astro
+    participant GAS as Apps Script (Code.gs)
+    participant Sheet as Google Sheet "Registros"
+    participant PH as PostHog
+    Form->>PH: register_started (anonymous)
+    Form->>GAS: POST text/plain JSON (no CORS preflight)
+    GAS->>GAS: validate · honeypot · 60/min · lock · dedupe email · formula-escape
+    GAS->>Sheet: appendRow(date, name, email, role, city, consent, utm…)
+    GAS-->>Form: {ok, duplicate?}
+    Form->>PH: register_succeeded {role, source} (no name or email)
+```
+
+Inside `doPost`, each request goes through these checks in order:
+
+```text
+doPost (Code.gs v3)
+  body > 2 KB / not a JSON object        → too_large / bad_request
+  honeypot filled  or  elapsed < 2.5 s   → {ok:true}, nothing written (bots don't learn)
+  validate()                             → name | email | email_disposable | role | city | consent
+  cache em_<key> (10 min)                → {ok:true, duplicate:true}, sheet untouched
+  lock
+    > 60 sign-ups this minute            → rate_limited
+    "Clave correo" or Correo exists      → {ok:true, duplicate:true}
+    appendRow (= + - @ escaped), then set the 10-min cache
+```
+
 ## Setup (about 5 minutes)
 
 1. Create a Google Sheet, for example "FlutterConf Perú 2026 · Registros", with the account that should own the data.
