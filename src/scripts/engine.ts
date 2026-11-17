@@ -18,7 +18,7 @@ interface Reveal extends Box { v: boolean | null; skip: boolean }
 
 const FORMA_SEQ: ShapeName[] = ['cookie', 'flower', 'sunny', 'clover', 'burst', 'gem', 'soft', 'pill'];
 const FORMA_COLORS = ['#1CDAC5', '#FFF275', '#F25D50', '#027DFD', '#6200EE'];
-const PEEK_LINES = ['¡Hola, causa! Sigue bajando', 'Psst… mira esto', '¡Esto se pone bueno!', '¡Ellos sí saben!',
+const PEEK_DEFAULT = ['¡Hola, causa! Sigue bajando', 'Psst… mira esto', '¡Esto se pone bueno!', '¡Ellos sí saben!',
   '¿Ya tienes tu entrada?', '¡Síguenos, pe!', '¡Un poquito más!', '¡Nos vemos el 19!'];
 
 const clamp = (v: number, a = 0, b = 1) => Math.max(a, Math.min(b, v));
@@ -46,6 +46,10 @@ export function boot(): void {
   const fvA = lp.querySelector<SVGSVGElement>('.fv.fa');
   const fvB = lp.querySelector<SVGSVGElement>('.fv.fb');
   const PK = [...lp.querySelectorAll<HTMLElement>('.pk')];
+  // A page can bring its own speech bubbles (data-lines on .pk-layer) and peek spacing (data-gap, in viewports).
+  const pkLayer = lp.querySelector<HTMLElement>('.pk-layer');
+  const PEEK_LINES: string[] = pkLayer?.dataset.lines ? JSON.parse(pkLayer.dataset.lines) : PEEK_DEFAULT;
+  const PEEK_GAP = Number(pkLayer?.dataset.gap ?? 0.9);
 
   let H = 0, W = 0, wide = false, raf = 0, triggers: number[] = [];
   let fvI = -1, fvE = -1;
@@ -151,7 +155,7 @@ export function boot(): void {
     if (PK.length) {
       const cand = [...Z.slice(1).map((o) => o.t), ...HD.map(docTop)].sort((a, b) => a - b);
       triggers = [];
-      for (const y of cand) if (y > H * 0.9 && (!triggers.length || y - triggers[triggers.length - 1] > H * 0.9)) triggers.push(y);
+      for (const y of cand) if (y > H * PEEK_GAP && (!triggers.length || y - triggers[triggers.length - 1] > H * PEEK_GAP)) triggers.push(y);
     }
     update(true);
   }

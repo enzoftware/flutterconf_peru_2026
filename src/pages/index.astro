@@ -1,29 +1,30 @@
 ---
+/**
+ * Launch landing (November 2026): only the confirmed facts (date and venue), the sign-up form and social links.
+ * The full landing with speakers, agenda and tickets lives at /v1/ (noindex) until that content is ready.
+ */
 import Base from '../layouts/Base.astro';
-import Nav from '../components/Nav.astro';
 import KitLayers from '../components/KitLayers.astro';
-import Hero from '../components/Hero.astro';
-import Topics from '../components/Topics.astro';
-import Speakers from '../components/Speakers.astro';
-import Agenda from '../components/Agenda.astro';
-import Tickets from '../components/Tickets.astro';
-import Community from '../components/Community.astro';
-import Sponsors from '../components/Sponsors.astro';
-import Faq from '../components/Faq.astro';
+import LaunchNav from '../components/launch/LaunchNav.astro';
+import LaunchHero from '../components/launch/LaunchHero.astro';
+import Venue from '../components/launch/Venue.astro';
+import SaveDate from '../components/launch/SaveDate.astro';
+import Register from '../components/launch/Register.astro';
+import Follow from '../components/launch/Follow.astro';
+import '../styles/launch.css';
+import event from '../data/event.json';
+const PEEK = ['¡Hola, causa! Sigue bajando', '¡Mira la vista, pe!', '¿Ya lo anotaste?', '¡Déjame tu correo!', '¡Síguenos, pe!', '¡Nos vemos el 19!'];
 ---
-<Base>
+<Base description={`${event.name}: un día entero de Flutter y Dart. ${event.dateLong}, ${event.hours}, ${event.venue}. Regístrate y te avisamos primero de ponentes y entradas.`}>
   <div class="sc">
-    <main class="lp t-m k-forma k-mixta" data-t="m">
-      <Nav />
-      <Hero />
-      <Topics />
-      <Speakers />
-      <Agenda />
-      <Tickets />
-      <Community />
-      <Sponsors />
-      <Faq />
-      <KitLayers />
+    <main class="lp t-m k-forma k-mixta ln" data-t="m">
+      <LaunchNav />
+      <LaunchHero />
+      <Venue />
+      <SaveDate />
+      <Register />
+      <Follow />
+      <KitLayers lines={PEEK} gap={0.7} />
     </main>
   </div>
 </Base>

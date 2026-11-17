@@ -1,0 +1,59 @@
+---
+/** Launch hero: the two confirmed facts (date and venue), a live countdown and the sign-up call to action. */
+import Chicha from '../Chicha.astro';
+import Dash from '../Dash.astro';
+import Floater from '../Floater.astro';
+import Ribbon from '../Ribbon.astro';
+import { sparkle, diamond, flower, rays } from '../../lib/art';
+import event from '../../data/event.json';
+const [day, , month] = event.dateLong.split(' ').slice(1); // "19", "de", "diciembre"
+const target = `${event.isoDate}T${event.start}:00-05:00`;
+const daysLeft = Math.max(0, Math.ceil((Date.parse(target) - Date.now()) / 86400000)); // replaced live on the client
+---
+<section class="z" id="top" style="--a:#021C3F;--b:#042B59">
+  <div class="rays" data-p style="transform:rotate(calc(var(--p,.5) * 40deg))" aria-hidden="true"><Fragment set:html={rays(['#1CDAC5', 'transparent', '#0553B1', 'transparent'])} /></div>
+  <Floater svg={sparkle('#FFF275')} x="6%" y="120px" w={46} spd={-260} rot={90} />
+  <Floater svg={sparkle('#1CDAC5')} x="88%" y="90px" w={34} spd={-180} rot={-120} />
+  <Floater svg={diamond('#F25D50', '#021C3F')} x="84%" y="520px" w={40} spd={-320} rot={30} />
+  <Floater svg={flower('#FFF275', '#F25D50', '#021C3F')} x="3%" y="560px" w={70} spd={-220} rot={180} />
+  <Floater svg={sparkle('#8FC2FF')} x="50%" y="30px" w={22} spd={-120} rot={60} />
+  <div class="wrap hero">
+    <span class="chip" data-r="drop">★ {event.city} · Perú ★</span>
+    <h1 data-r="pop" style="--d:.08s"><Chicha text={'¡Flutter\nConf Perú!'} /></h1>
+    <p class="yr" data-r="up" style="--d:.18s">2026</p>
+    <div class="hrow">
+      <div class="tag" data-r="left" style="--d:.25s">SÁB {day}<small>{month.toUpperCase()}</small></div>
+      <div class="spot" data-spot><div class="perched"><Dash /></div></div>
+      <div class="tag r" data-r="right" style="--d:.3s">9 → 15<small>UN SOLO DÍA</small></div>
+    </div>
+    <p class="lead" data-r="up">Un día entero de Flutter y Dart en <b>{event.venue}</b>. Estamos armando los ponentes, la agenda y las entradas. Déjanos tu correo y te avisamos primero.</p>
+    <div class="ctas" data-r="up" style="--d:.1s">
+      <a class="bt" href="#registro" data-ev="cta_click" data-ev-label="hero_register">Avísame primero</a>
+      <a class="bt alt" href="#sede" data-ev="cta_click" data-ev-label="hero_venue">Ver la sede</a>
+    </div>
+    <div class="cd" data-r="pop" data-countdown={target} role="timer" aria-label={`Faltan ${daysLeft} días para FlutterConf Perú`}>
+      <div class="cdt" style="--k:#FFF275"><b data-u="d">{daysLeft}</b><small>días</small></div>
+      <div class="cdt" style="--k:#1CDAC5"><b data-u="h">00</b><small>horas</small></div>
+      <div class="cdt" style="--k:#F25D50"><b data-u="m">00</b><small>minutos</small></div>
+    </div>
+  </div>
+  <Ribbon dir={-1} items={['¡Flutter!', '¡Dart!', '19.12.2026', 'Muy pronto']} />
+  <Ribbon dir={1} items={['9:00 → 15:00', event.district, 'Piso 16', event.hashtag]} />
+</section>
+<script>
+  // Countdown to the opening (9:00 Lima). Ticks once a minute; after the start it switches to "¡Es hoy!".
+  const cd = document.querySelector<HTMLElement>('[data-countdown]');
+  if (cd) {
+    const t = Date.parse(cd.dataset.countdown!);
+    const set = (u: string, v: number) => { const el = cd.querySelector(`[data-u="${u}"]`); if (el) el.textContent = u === 'd' ? String(v) : String(v).padStart(2, '0'); };
+    const tick = () => {
+      const s = Math.max(0, Math.floor((t - Date.now()) / 1000));
+      const d = Math.floor(s / 86400), h = Math.floor((s % 86400) / 3600), m = Math.floor((s % 3600) / 60);
+      set('d', d); set('h', h); set('m', m);
+      cd.setAttribute('aria-label', s > 0 ? `Faltan ${d} días, ${h} horas y ${m} minutos para FlutterConf Perú` : '¡FlutterConf Perú es hoy!');
+      if (s === 0) cd.classList.add('done');
+    };
+    tick();
+    setInterval(tick, 30000);
+  }
+</script>

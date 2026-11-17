@@ -6,10 +6,11 @@ import event from '../data/event.json';
 import fcBase from '../../brand/fonts/flutterchicha/FlutterChicha-Regular.woff2?url';
 import fcSombra from '../../brand/fonts/flutterchicha/FlutterChichaSombra-Regular.woff2?url';
 
-interface Props { title?: string; description?: string; jsonLd?: boolean }
+interface Props { title?: string; description?: string; jsonLd?: boolean; noindex?: boolean }
 const {
   title = `${event.name} · ${event.dateLong.split(' de 2026')[0]} · ${event.venue}`,
   jsonLd = true,
+  noindex = false,
   description = `Un día entero de Flutter y Dart en Lima: charlas, talleres y comunidad. ${event.dateLong}, ${event.hours}, ${event.venue}.`,
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -27,7 +28,7 @@ const ld = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
+    {noindex ? <meta name="robots" content="noindex, nofollow" /> : <link rel="canonical" href={canonical} />}
     <meta name="theme-color" content="#021C3F" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
@@ -50,7 +51,9 @@ const ld = {
     <slot />
     <script>
       import { boot } from '../scripts/engine';
+      import { initAnalytics } from '../scripts/analytics';
       boot();
+      initAnalytics();
     </script>
   </body>
 </html>

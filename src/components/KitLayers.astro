@@ -6,6 +6,9 @@
  * Both are driven by src/scripts/engine.ts.
  */
 import { SP, ptsD, dash } from '../lib/art';
+/** `lines`: Dash's speech bubbles in order (defaults live in the engine). `gap`: min distance between peeks, in viewports. */
+interface Props { lines?: string[]; gap?: number }
+const { lines, gap } = Astro.props;
 ---
 <div class="fv-layer" aria-hidden="true">
   <div class="fv-stick">
@@ -13,7 +16,7 @@ import { SP, ptsD, dash } from '../lib/art';
     <svg class="fv fb" viewBox="0 0 100 100"><path d={ptsD(SP.flower)} vector-effect="non-scaling-stroke" /></svg>
   </div>
 </div>
-<div class="pk-layer" aria-hidden="true">
+<div class="pk-layer" aria-hidden="true" data-lines={lines && JSON.stringify(lines)} data-gap={gap}>
   <div class="pk-stick">
     {['l', 'r', 'b'].map((e) => (
       <div class={`pk pk-${e}`}><div class="pkd"><Fragment set:html={dash()} /></div><span class="bub"></span></div>
