@@ -20,7 +20,7 @@ const ROLES = ROLE_IDS.map((r) => [r, LABELS[r]]);
   <Floater svg={diamond('#6200EE', '#021C3F')} x="90%" y="700px" w={36} spd={-260} rot={-60} />
   <div class="wrap rgg">
     <div class="rgi">
-      <span class="kick" data-r="up" style="--kc:#FFF275">Registro</span>
+      <span class="kick pill" data-r="up" style="--kc:#FFF275">Registro</span>
       <h2 data-r="pop"><Chicha text={'¡Avísame\nprimero!'} /></h2>
       <ul class="perks">
         <li data-r="left">Te escribimos apenas abran las <b>entradas</b>.</li>
@@ -50,7 +50,7 @@ const ROLES = ROLE_IDS.map((r) => [r, LABELS[r]]);
           <label class="fl-f"><span>Ciudad <small>(opcional)</small></span><input name="city" autocomplete="address-level2" maxlength="60" placeholder="Lima" /></label>
           <label class="hp" aria-hidden="true">Sitio web<input name="website" tabindex="-1" autocomplete="off" /></label>
           <label class="consent"><input type="checkbox" name="consent" required /><span>Acepto recibir correos sobre FlutterConf Perú y que guarden mis datos solo para eso.</span></label>
-          <p class="ferr" role="alert" aria-live="assertive"></p>
+          <p class="ferr" id="rf-err" role="alert" aria-live="assertive"></p>
           <button class="bt dk fsub" type="submit"><span>Quiero que me avisen</span></button>
         </div>
       </form>
@@ -104,16 +104,24 @@ const ROLES = ROLE_IDS.map((r) => [r, LABELS[r]]);
     if (previous) showDone(mask(previous), true);
 
     let started = false;
-    form.addEventListener('input', () => {
+    form.addEventListener('input', (e) => {
       if (!started) { started = true; track('register_started'); }
       form.classList.remove('bad');
+      const name = (e.target as HTMLInputElement).name;
+      form.querySelectorAll(`[name="${name}"][aria-invalid]`).forEach((x) => { x.removeAttribute('aria-invalid'); x.removeAttribute('aria-describedby'); });
     }, { passive: true });
 
     const fail = (code: string) => {
       err.textContent = MSG[code] ?? MSG.server;
       form.classList.add('bad');
       const f = FIELD[code];
-      if (f) form.querySelector<HTMLElement>(`[name="${f}"]`)?.focus();
+      form.querySelectorAll('[aria-invalid]').forEach((x) => { x.removeAttribute('aria-invalid'); x.removeAttribute('aria-describedby'); });
+      if (f) {
+        // Tie the message to the field, so screen readers say what is wrong when focus lands there.
+        const fields = form.querySelectorAll<HTMLInputElement>(`[name="${f}"]`);
+        fields.forEach((x) => { x.setAttribute('aria-invalid', 'true'); x.setAttribute('aria-describedby', 'rf-err'); });
+        fields[0]?.focus();
+      }
       track(f ? 'register_invalid' : 'register_failed', { reason: code });
     };
 

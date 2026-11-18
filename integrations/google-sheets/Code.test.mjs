@@ -131,6 +131,13 @@ test('duplicates get the same answer as new sign-ups (no way to probe who regist
   assert.equal(dataRows(s.sheet).length, 1);
 });
 
+test('over the quota, a cached email gets the same rate_limited as a new one', () => {
+  s.post(person({ email: 'known@example.com' })); // cached
+  for (let i = 0; i < 60; i++) s.post(person({ email: `q${i}@example.com` }));
+  assert.deepEqual(s.post(person({ email: 'known@example.com' })), { ok: false, error: 'rate_limited' });
+  assert.deepEqual(s.post(person({ email: 'new@example.com' })), { ok: false, error: 'rate_limited' });
+});
+
 test('bad requests', () => {
   assert.deepEqual(s.post('{not json'), { ok: false, error: 'bad_request' });
   assert.deepEqual(s.post('[1,2]'), { ok: false, error: 'bad_request' });

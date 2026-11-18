@@ -27,9 +27,9 @@ doPost (Code.gs v3)
   body > 2 KB / not a JSON object        → too_large / bad_request
   honeypot filled, elapsed < 2.5 s or missing → {ok:true}, nothing written (bots don't learn)
   validate()                             → name | email | email_disposable | role | city | consent
-  cache em_<key> (10 min)                → {ok:true}, sheet untouched
   lock
     > 60 sign-ups this minute            → rate_limited
+    cache em_<key> (10 min)              → {ok:true}, sheet untouched
     "Clave correo" or Correo exists      → {ok:true}, nothing written
     appendRow (= + - @ escaped), then set the 10-min cache
 ```

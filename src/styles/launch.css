@@ -114,7 +114,7 @@
 .ln .fl-f small{ font-family:Rubik; font-weight:600; letter-spacing:0; opacity:.7 }
 .ln .fl-f input{ font:500 17px/1.2 Rubik, system-ui, sans-serif; color:var(--ink); background:#fff; border:3px solid var(--ink); border-radius:14px; padding:13px 14px; box-shadow:inset 0 -4px 0 #021C3F14; width:100% }
 .ln .fl-f input::placeholder{ color:#4A5878 }
-.ln .fl-f input:focus-visible, .ln .role input:focus-visible + span, .ln .consent input:focus-visible{ outline:3px solid var(--cy); outline-offset:2px }
+.ln .fl-f input:focus-visible, .ln .role input:focus-visible + span, .ln .consent input:focus-visible{ outline:3px solid var(--focus, var(--cy)); outline-offset:2px }
 .ln .fl-f input:focus{ border-color:var(--rey) }
 .ln .roles > div{ display:flex; flex-wrap:wrap; gap:8px }
 .ln .role{ position:relative; cursor:pointer }
@@ -140,7 +140,7 @@
 .ln .ok-m b{ overflow-wrap:anywhere }
 .ln .ok-c{ margin:12px 0 0; font-weight:700; font-size:14px }
 .ln .ok-again{ display:block; margin:16px auto 0; background:none; border:0; padding:4px; font:600 14px Rubik, system-ui, sans-serif; color:var(--ink); text-decoration:underline; cursor:pointer }
-.ln .ok-again:focus-visible{ outline:3px solid var(--cy); outline-offset:2px; border-radius:6px }
+.ln .ok-again:focus-visible{ outline:3px solid var(--focus, var(--cy)); outline-offset:2px; border-radius:6px }
 @keyframes shake{ 20%,60%{ translate:-6px 0 } 40%,80%{ translate:6px 0 } }
 @keyframes dots{ from{ width:0 } to{ width:1.2em } }
 @container lp (max-width:759px){
@@ -160,3 +160,14 @@
 .ln footer{ border-top-color:var(--ye) }
 
 @media (prefers-reduced-motion: reduce){ .ln .ph{ --e:1 } } /* venue fan: already open, no scroll movement */
+
+/* ---------- accessibility (WCAG 2.2 AA) ---------- */
+/* The teal focus ring is ~1.5:1 on paper, yellow and red: use ink there (3:1 or more on every light stop). */
+.ln .fcard, .ln .rg, .ln #comunidad{ --focus:#021C3F }
+/* Text on red is ink (DESIGN.md): white on #F25D50 is 3.3:1. */
+.t-m.ln .chip, .ln .cal-top{ color:var(--ink) }
+/* Kicks that sit on the blue→yellow and yellow→red blends get an ink pill, so they read on any stop. */
+.ln .kick.pill{ width:fit-content; margin-inline:auto; background:var(--ink); padding:6px 14px; border-radius:999px }
+@container lp (min-width:900px){ .ln .rg .kick.pill{ margin-inline:0 } }
+/* "Lo que viene" sits on Flutter Blue, where teal is 4.1:1. */
+.ln .soon-t{ color:var(--ye) }

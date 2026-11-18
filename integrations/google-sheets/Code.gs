@@ -34,7 +34,7 @@ const DISPOSABLE_DOMAINS = [
   'trashmail.com', 'yopmail.com',
 ];
 const NAME_RE = /^\p{L}[\p{L}\p{M}' .-]*$/u;
-const EMAIL_RE = /^[a-z0-9][a-z0-9._%+-]*@[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}$/;
+const EMAIL_RE = /^[a-z0-9_][a-z0-9._%+-]*@[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}$/;
 const LINK_RE = /https?:|www\.|\.(com|net|org|io|xyz|ru)\b|[<>]/i;
 
 function doPost(e) {
@@ -55,13 +55,14 @@ function doPost(e) {
 
     const cache = CacheService.getScriptCache();
     const seen = 'em_' + data.emailKey;
-    if (cache.get(seen)) return json({ ok: true }); // same answer as a new sign-up: the URL can't reveal who is registered
 
     const lock = LockService.getScriptLock();
     lock.waitLock(10000);
     try {
       // Under the lock, so two requests can't both read 59 and let a 61st sign-up through.
       if (!underRateLimit(cache)) return json({ ok: false, error: 'rate_limited' });
+      // After the quota, so a cached email and a new one get the same answers: the URL can't reveal who is registered.
+      if (cache.get(seen)) return json({ ok: true });
       const sheet = getSheet();
       if (isDuplicate(sheet, data)) {
         cache.put(seen, '1', EMAIL_COOLDOWN_S);

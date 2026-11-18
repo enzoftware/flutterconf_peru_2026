@@ -16,6 +16,7 @@ export const CASES: [string, Record<string, unknown>, string | null][] = [
   ['email without domain', { email: 'ana@' }, 'email'],
   ['email without tld', { email: 'ana@localhost' }, 'email'],
   ['email with spaces', { email: 'ana quispe@example.com' }, 'email'],
+  ['email starting with an underscore', { email: '_ana@example.com' }, null],
   ['email starting with + (formula-like, empty dedupe key)', { email: '+x@gmail.com' }, 'email'],
   ['email over 120 chars', { email: 'a'.repeat(115) + '@x.com' }, 'email'],
   ['disposable inbox', { email: 'bot@mailinator.com' }, 'email_disposable'],
