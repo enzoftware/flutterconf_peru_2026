@@ -1,50 +1,58 @@
 [
   {
     "id": "01",
-    "short": "IG",
-    "network": "Instagram",
-    "handle": "@flutterconfpe",
-    "description": "Ponentes, stories y sorteos",
-    "url": "#"
+    "short": "FB",
+    "network": "Facebook",
+    "handle": "Flutter Perú",
+    "description": "Página oficial de la comunidad",
+    "url": "https://www.facebook.com/FlutterPeru/"
   },
   {
     "id": "02",
-    "short": "TT",
-    "network": "TikTok",
-    "handle": "@flutterconfpe",
-    "description": "Clips y detrás de cámaras",
-    "url": "#"
+    "short": "GR",
+    "network": "Grupo de Facebook",
+    "handle": "Flutter Perú",
+    "description": "Dudas, empleos y networking",
+    "url": "https://www.facebook.com/groups/flutterperu"
   },
   {
     "id": "03",
-    "short": "IN",
-    "network": "LinkedIn",
-    "handle": "FlutterConf Perú",
-    "description": "Novedades para equipos",
-    "url": "#"
+    "short": "X",
+    "network": "X",
+    "handle": "@FlutterPeru",
+    "description": "Novedades y anuncios",
+    "url": "https://x.com/FlutterPeru"
   },
   {
     "id": "04",
-    "short": "X",
-    "network": "X",
-    "handle": "@flutterconfpe",
-    "description": "Hilo en vivo el día del evento",
-    "url": "#"
+    "short": "YT",
+    "network": "YouTube",
+    "handle": "@flutterperu",
+    "description": "Meetups y charlas grabadas",
+    "url": "https://www.youtube.com/@flutterperu"
   },
   {
     "id": "05",
-    "short": "YT",
-    "network": "YouTube",
-    "handle": "@flutterconfperu",
-    "description": "Transmisión y grabaciones",
-    "url": "#"
+    "short": "LIM",
+    "network": "Meetup",
+    "handle": "Flutter Lima",
+    "description": "Meetups en Lima",
+    "url": "https://www.meetup.com/flutter-lima/"
   },
   {
     "id": "06",
-    "short": "DC",
-    "network": "Discord",
-    "handle": "Comunidad Flutter Perú",
-    "description": "Dudas, empleos y networking",
-    "url": "#"
+    "short": "AQP",
+    "network": "Meetup",
+    "handle": "Flutter Arequipa",
+    "description": "Meetups en Arequipa",
+    "url": "https://www.meetup.com/flutter-arequipa/"
+  },
+  {
+    "id": "07",
+    "short": "ICA",
+    "network": "Meetup",
+    "handle": "Flutter Ica",
+    "description": "Meetups en Ica",
+    "url": "https://www.meetup.com/flutter-ica/"
   }
 ]

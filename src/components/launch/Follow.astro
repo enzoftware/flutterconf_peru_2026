@@ -15,7 +15,7 @@ const social = await list('social');
   <div class="wrap">
     <span class="kick pill" data-r="up" style="--kc:#F25D50">Síguenos</span>
     <h2 class="hash" data-r="zoom"><Chicha text={event.hashtag} /></h2>
-    <p class="soc-l" data-r="up">Las novedades salen primero en redes: ponentes, sorteos y todo lo que vamos armando.</p>
+    <p class="soc-l" data-r="up">FlutterConf Perú es organizada por la comunidad <b>Flutter Perú</b>. Las novedades salen primero en sus redes: ponentes, sorteos y todo lo que vamos armando.</p>
     <div class="nets">
       {social.map((s, i) => (
         <a class="net" href={s.url} target="_blank" rel="noopener" data-r="pop" data-ev="social_click" data-ev-label={s.network} style={`--k:${accent(i)};--ad:${(i * 0.4).toFixed(1)}s;--d:${i * 0.06}s`}>
