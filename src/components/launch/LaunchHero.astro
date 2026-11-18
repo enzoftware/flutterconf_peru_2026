@@ -1,6 +1,6 @@
 ---
 /** Launch hero: the two confirmed facts (date and venue), a live countdown and the sign-up call to action. */
-import Chicha from '../Chicha.astro';
+import Neon from '../Neon.astro';
 import Dash from '../Dash.astro';
 import Floater from '../Floater.astro';
 import Ribbon from '../Ribbon.astro';
@@ -20,7 +20,7 @@ const daysLeft = Math.max(0, Math.ceil((Date.parse(target) - Date.now()) / 86400
   <Floater svg={sparkle('#8FC2FF')} x="50%" y="30px" w={22} spd={-120} rot={60} />
   <div class="wrap hero">
     <span class="chip" data-r="drop">★ {event.city} · Perú ★</span>
-    <h1 data-r="pop" style="--d:.08s"><Chicha text={'¡Flutter\nConf Perú!'} /></h1>
+    <h1 data-r="pop" style="--d:.08s"><Neon text={'¡Flutter\nConf Perú!'} /></h1>
     <p class="yr" data-r="up" style="--d:.18s">2026</p>
     <div class="hrow">
       <div class="tag" data-r="left" style="--d:.25s">SÁB {day}<small>{month.toUpperCase()}</small></div>

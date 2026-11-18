@@ -4,7 +4,7 @@
  * (integrations/google-sheets/). Sent as text/plain so the browser skips the CORS preflight Apps Script can't answer.
  * PostHog gets anonymous funnel events only: register_started, register_succeeded, register_failed.
  */
-import Chicha from '../Chicha.astro';
+import Neon from '../Neon.astro';
 import Dash from '../Dash.astro';
 import Floater from '../Floater.astro';
 import { sparkle, diamond } from '../../lib/art';
@@ -21,7 +21,7 @@ const ROLES = ROLE_IDS.map((r) => [r, LABELS[r]]);
   <div class="wrap rgg">
     <div class="rgi">
       <span class="kick pill" data-r="up" style="--kc:#FFF275">Registro</span>
-      <h2 data-r="pop"><Chicha text={'¡Avísame\nprimero!'} /></h2>
+      <h2 data-r="pop"><Neon text={'¡Avísame\nprimero!'} /></h2>
       <ul class="perks">
         <li data-r="left">Te escribimos apenas abran las <b>entradas</b>.</li>
         <li data-r="left" style="--d:.06s">Conoces a los <b>ponentes</b> antes que nadie.</li>
@@ -34,7 +34,7 @@ const ROLES = ROLE_IDS.map((r) => [r, LABELS[r]]);
       <form class="fcard" id="rf" novalidate>
         <div class="fv-ok" hidden tabindex="-1">
           <div class="okd" aria-hidden="true"><Dash /></div>
-          <p class="ok-t"><Chicha text="¡Listo!" /></p>
+          <p class="ok-t"><Neon text="¡Listo!" /></p>
           <p class="ok-m" data-ok-msg>Ya estás en la lista. Te escribiremos a <b data-ok-email></b> con cada novedad.</p>
           <button type="button" class="bt alt" data-share>Pásale la voz a tu equipo</button>
           <p class="ok-c" data-copied hidden role="status">Enlace copiado</p>

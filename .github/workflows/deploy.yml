@@ -24,6 +24,23 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      # Monchila is a licensed font and is never committed (brand/fonts/monchila/README.md). The two
+      # fixed WOFF2 files live base64-encoded in repository secrets; without them the landing headings
+      # fall back to FlutterChicha and the deploy still goes out.
+      - name: Install Monchila from secrets
+        env:
+          MONCHILA_WOFF2: ${{ secrets.MONCHILA_WOFF2 }}
+          MONCHILA_SILUETA_WOFF2: ${{ secrets.MONCHILA_SILUETA_WOFF2 }}
+        run: |
+          if [ -z "$MONCHILA_WOFF2" ] || [ -z "$MONCHILA_SILUETA_WOFF2" ]; then
+            echo "::warning::MONCHILA_WOFF2 / MONCHILA_SILUETA_WOFF2 are not set: headings fall back to FlutterChicha."
+            exit 0
+          fi
+          printf '%s' "$MONCHILA_WOFF2" | base64 -d > brand/fonts/monchila/Monchila.woff2
+          printf '%s' "$MONCHILA_SILUETA_WOFF2" | base64 -d > brand/fonts/monchila/MonchilaSilueta.woff2
+          for f in brand/fonts/monchila/*.woff2; do
+            [ "$(head -c 4 "$f")" = "wOF2" ] || { echo "::error::$f is not a WOFF2 file (check the secret)"; exit 1; }
+          done
       - run: npm run build
         env:
           # Optional keys (see .env.example). Add them as repository secrets; empty = feature off.
