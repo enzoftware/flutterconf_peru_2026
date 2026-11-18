@@ -171,3 +171,4 @@
 @container lp (min-width:900px){ .ln .rg .kick.pill{ margin-inline:0 } }
 /* "Lo que viene" sits on Flutter Blue, where teal is 4.1:1. */
 .ln .soon-t{ color:var(--ye) }
+.ln footer .ck-open{ background:none; border:0; padding:0; font:inherit; color:inherit; cursor:pointer }

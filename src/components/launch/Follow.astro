@@ -7,6 +7,7 @@ import { sparkle, flower } from '../../lib/art';
 import { accent } from '../../lib/palette';
 import { list } from '../../lib/content';
 import event from '../../data/event.json';
+import { PUBLIC_POSTHOG_KEY } from 'astro:env/client';
 const social = await list('social');
 ---
 <section class="z" id="comunidad" style="--a:#FFF275;--b:#F25D50;--fg:#021C3F">
@@ -37,6 +38,7 @@ const social = await list('social');
       <span>{event.name} · Hecho por la comunidad</span>
       <nav aria-label="Pie de página">
         <a href="#sede">La sede</a><a href="#fecha">La fecha</a><a href="#registro">Registro</a>
+        {PUBLIC_POSTHOG_KEY && <button type="button" class="ck-open" data-cookie-settings>Cookies</button>}
       </nav>
     </footer>
   </div>

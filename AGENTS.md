@@ -30,7 +30,7 @@ Guide for AI coding agents (Claude Code, Codex, Cursor, …) working on this rep
 | `npm run check:keys` | Check the `.env` keys against PostHog and the Apps Script endpoint (prints no secrets, writes no rows) |
 | `npm run social` | Regenerate the link-preview images (`public/social/`, SVG + PNG) and the Dash icons from `src/data/event.json` (needs Chrome and internet for Bungee) |
 
-**Keys:** copy `.env.example` to `.env`. `PUBLIC_POSTHOG_KEY`, `PUBLIC_POSTHOG_HOST` and `PUBLIC_REGISTER_ENDPOINT` are optional and typed in `astro.config.mjs` (`env.schema`, read through `astro:env/client`). The deploy reads them from repository secrets. Never commit `.env`, and never put private keys (PostHog `phx_…`, Google service accounts) in a `PUBLIC_` variable, because they ship in the page.
+**Keys:** copy `.env.example` to `.env`. `PUBLIC_POSTHOG_KEY`, `PUBLIC_POSTHOG_HOST` and `PUBLIC_REGISTER_ENDPOINT` are optional and typed in `astro.config.mjs` (`env.schema`, read through `astro:env/client`). The deploy reads them from repository secrets. Analytics ask first: `src/components/CookieBanner.astro` (Aceptar = PostHog with cookies, Rechazar = cookieless, no answer = nothing sent). Rejected visits only count if **Enable cookieless tracking** is on in PostHog (Settings → Project → Web analytics). Never commit `.env`, and never put private keys (PostHog `phx_…`, Google service accounts) in a `PUBLIC_` variable, because they ship in the page.
 
 Before you finish a change, run `npm run build`. It must end with `0 errors`.
 
@@ -63,7 +63,8 @@ src/
   components/launch/        Launch landing sections (hero + countdown, venue fan, save the date, sign-up form, follow)
   content/venue.json        Venue photo cards (photos in src/content/venue/; placeholders until then)
   lib/registration.ts       Sign-up validation shared by the form and mirrored in integrations/google-sheets/Code.gs
-  scripts/analytics.ts      PostHog loader (no npm dependency, loads when idle) and track() for custom events
+  scripts/analytics.ts      PostHog loader (no npm dependency, loads when idle), cookie consent and track() for custom events
+  components/CookieBanner.astro  Cookie consent banner (Aceptar / Rechazar); the footer "Cookies" link reopens it
   styles/launch.css         Launch landing styles on top of landing.css
   pages/brand/index.astro   Brand page: renders brand/ live (tokens, FlutterChicha, components, SVGs, templates)
   pages/decks/[slug].astro  Sponsor deck viewer: review list, present mode (P), PDF export

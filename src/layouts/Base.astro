@@ -3,6 +3,7 @@ import '../styles/global.css';
 import { DASH_DEFS } from '../lib/art';
 import { formaClipCss } from '../lib/palette';
 import event from '../data/event.json';
+import CookieBanner from '../components/CookieBanner.astro';
 import fcBase from '../../brand/fonts/flutterchicha/FlutterChicha-Regular.woff2?url';
 import fcSombra from '../../brand/fonts/flutterchicha/FlutterChichaSombra-Regular.woff2?url';
 
@@ -71,6 +72,7 @@ const ld = {
     <a class="skip" href="#top">Saltar al contenido</a>
     <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs set:html={DASH_DEFS} /></svg>
     <slot />
+    <CookieBanner />
     <script>
       import { boot } from '../scripts/engine';
       import { initAnalytics } from '../scripts/analytics';
