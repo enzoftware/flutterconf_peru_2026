@@ -1,15 +1,18 @@
 /**
  * Link-preview images and site icons for the launch landing. Run: `npm run social`.
  *
- * Writes to public/social/ (SVG sources with the fonts embedded, plus PNG exports, because
- * WhatsApp, Facebook, LinkedIn, X, Slack and Discord only accept raster og:images) and the icons to public/.
+ * Writes PNG cards to public/social/ (WhatsApp, Facebook, LinkedIn, X, Slack and Discord only accept raster
+ * og:images) and the icons to public/. The card SVGs are only rendered from a temp folder, never committed:
+ * they embed Monchila, a licensed font the public repo must not redistribute (brand/fonts/monchila/README.md).
  *
  *   og-1200x630    landscape card (Open Graph + X summary_large_image, WhatsApp, LinkedIn, Slack, Discord…)
  *   og-1200x1200   square card (WhatsApp/Telegram small previews, Instagram/LinkedIn posts)
  *   favicon.svg, favicon-32.png, apple-touch-icon.png (180), icon-512.png   Dash with the Peruvian flag
  *
- * Content comes from src/data/event.json. Fonts: FlutterChicha (brand/fonts) and Bungee (downloaded from
- * Google Fonts at generation time, embedded as base64). PNGs are rendered with the local Google Chrome.
+ * Content comes from src/data/event.json. The title uses the same neon Monchila lettering as the landing
+ * headings (src/components/Neon.astro); without the local Monchila files it falls back to FlutterChicha, like
+ * the landing, and the script warns. Bungee is downloaded from Google Fonts at generation time. Fonts are
+ * embedded as base64, and PNGs are rendered with the local Google Chrome.
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync, mkdtempSync, rmSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
@@ -54,7 +57,16 @@ for (const f of faces) {
   const data = Buffer.from(await (await get(src)).arrayBuffer()).toString('base64');
   bungee += `@font-face{font-family:"Bungee";src:url(data:font/woff2;base64,${data}) format("woff2")${range ? `;unicode-range:${range}` : ''}}`;
 }
-const FONTS = Object.entries(FC).map(([f, file]) => `@font-face{font-family:"${f}";src:url(data:font/woff2;base64,${b64(`brand/fonts/flutterchicha/${file}.woff2`)}) format("woff2")}`).join('') + bungee;
+// Monchila (fill) and Monchila Silueta (ink outline and ring): local, licensed, git-ignored files.
+const MONCHILA = { 'Monchila': 'Monchila', 'Monchila Silueta': 'MonchilaSilueta' };
+const monchilaFile = (stem) => ['woff2', 'ttf'].map((ext) => `brand/fonts/monchila/${stem}.${ext}`).find((p) => existsSync(join(root, p)));
+const hasMonchila = Object.values(MONCHILA).every(monchilaFile);
+if (!hasMonchila) console.warn('Monchila not found in brand/fonts/monchila/: the title falls back to FlutterChicha (see the README there).');
+const monchilaFaces = hasMonchila ? Object.entries(MONCHILA).map(([f, stem]) => {
+  const p = monchilaFile(stem);
+  return `@font-face{font-family:"${f}";src:url(data:font/${p.endsWith('woff2') ? 'woff2' : 'ttf'};base64,${b64(p)}) format("${p.endsWith('woff2') ? 'woff2' : 'truetype'}")}`;
+}).join('') : '';
+const FONTS = monchilaFaces + Object.entries(FC).map(([f, file]) => `@font-face{font-family:"${f}";src:url(data:font/woff2;base64,${b64(`brand/fonts/flutterchicha/${file}.woff2`)}) format("woff2")}`).join('') + bungee;
 
 /* ---------- Dash with the Peruvian flag (static: no <animate>, ids namespaced) ---------- */
 const dashSrc = readFileSync(join(root, 'brand/assets/dash/dash-bandera.svg'), 'utf8')
@@ -77,6 +89,26 @@ function chicha(lines, x, y, size, anchor = 'start') {
     t(`font-family="FlutterChicha Naranja" fill="#FF4D12"`),
     t(`font-family="FlutterChicha Brillo" fill="#fff" opacity=".8"`),
   ].join('');
+}
+/**
+ * Neon lettering, the SVG twin of Neon.astro (.nt in landing.css): an orange ring and an ink outline in
+ * Monchila Silueta under a Monchila fill with one green → red gradient across all lines.
+ * Falls back to chicha() without the local Monchila files.
+ */
+let neonIds = 0;
+function neon(lines, x, y, size, anchor = 'start') {
+  if (!hasMonchila) return chicha(lines, x, y, size, anchor);
+  const lh = size * 1.02, id = `neon${neonIds++}`;
+  // Same box as the CSS gradient: .36em above the first line box and .3em below the last one.
+  const top = y - size * 1.16, bottom = y + (lines.length - 1) * lh + size * 0.56;
+  const t = (attrs) => `<text x="${x}" y="${y}" font-size="${size}" text-anchor="${anchor}" ${attrs}>${lines.map((l, i) => `<tspan x="${x}" dy="${i ? lh : 0}">${esc(l)}</tspan>`).join('')}</text>`;
+  return `<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="0" y1="${top}" x2="0" y2="${bottom}">
+    <stop offset=".06" stop-color="#78EC0D"/><stop offset=".34" stop-color="#E6FF2B"/><stop offset=".48" stop-color="#FFF275"/>
+    <stop offset=".74" stop-color="#FF4D12"/><stop offset="1" stop-color="#F25D50"/></linearGradient>${[
+    t(`font-family="Monchila Silueta" fill="#FF4D12" stroke="#FF4D12" stroke-width="${size * 0.07}" stroke-linejoin="round"`),
+    t('font-family="Monchila Silueta" fill="#050507"'),
+    t(`font-family="Monchila" fill="url(#${id})"`),
+  ].join('')}`;
 }
 /** Sticker label with a hard offset shadow (Bungee). */
 function sticker({ x, y, text, sub, size, bg, shadow = '#F25D50', rot = 0, anchor = 'middle', padX = size * 0.7 }) {
@@ -126,15 +158,15 @@ const RIB = ['¡Flutter!', '¡Dart!', DATE, PLACE, event.hashtag];
 const og = svg(1200, 630, `
   ${rays(905, 300, 900)}
   ${sparkle(700, 470, 22, '#FFF275')}${sparkle(640, 46, 16, '#1CDAC5')}${sparkle(1150, 90, 20, '#8FC2FF')}
-  <g transform="rotate(-2 230 70)">
-    <rect x="66" y="48" width="290" height="46" rx="23" fill="#FFF275"/><rect x="60" y="42" width="290" height="46" rx="23" fill="#F25D50" stroke="#021C3F" stroke-width="4"/>
-    <text x="205" y="73" font-family="Bungee" font-size="19" letter-spacing="2.6" fill="#F3F8FF" text-anchor="middle" dominant-baseline="middle">★ LIMA · PERÚ ★</text>
+  <g transform="rotate(-2 230 60)">
+    <rect x="66" y="38" width="290" height="46" rx="23" fill="#FFF275"/><rect x="60" y="32" width="290" height="46" rx="23" fill="#F25D50" stroke="#021C3F" stroke-width="4"/>
+    <text x="205" y="63" font-family="Bungee" font-size="19" letter-spacing="2.6" fill="#F3F8FF" text-anchor="middle" dominant-baseline="middle">★ LIMA · PERÚ ★</text>
   </g>
-  ${chicha(['¡Flutter', 'Conf Perú!'], 56, 200, 112)}
-  <text x="66" y="402" font-family="Bungee" font-size="78" fill="#F25D50">2026</text>
-  <text x="60" y="396" font-family="Bungee" font-size="78" fill="#FFF275">2026</text>
-  ${sticker({ x: 330, y: 352, text: DATE, size: 30, bg: '#1CDAC5', rot: -3, anchor: 'start' })}
-  ${sticker({ x: 60, y: 432, text: PLACE, sub: PLACE_SUB, size: 34, bg: '#8FC2FF', rot: 2, anchor: 'start', shadow: '#FFF275' })}
+  ${neon(['¡Flutter', 'Conf Perú!'], 62, 194, 96)}
+  <text x="66" y="416" font-family="Bungee" font-size="78" fill="#F25D50">2026</text>
+  <text x="60" y="410" font-family="Bungee" font-size="78" fill="#FFF275">2026</text>
+  ${sticker({ x: 330, y: 364, text: DATE, size: 30, bg: '#1CDAC5', rot: -3, anchor: 'start' })}
+  ${sticker({ x: 60, y: 442, text: PLACE, sub: PLACE_SUB, size: 34, bg: '#8FC2FF', rot: 2, anchor: 'start', shadow: '#FFF275' })}
   ${dash(745, 92, 420)}
   ${ribbon(548, 1200, RIB, -2.5)}
 `);
@@ -147,12 +179,12 @@ const sq = svg(1200, 1200, `
     <rect x="463" y="74" width="290" height="50" rx="25" fill="#FFF275"/><rect x="455" y="66" width="290" height="50" rx="25" fill="#F25D50" stroke="#021C3F" stroke-width="4"/>
     <text x="600" y="93" font-family="Bungee" font-size="20" letter-spacing="2.8" fill="#F3F8FF" text-anchor="middle" dominant-baseline="middle">★ LIMA · PERÚ ★</text>
   </g>
-  ${chicha(['¡Flutter', 'Conf Perú!'], 600, 270, 138, 'middle')}
-  <text x="608" y="510" font-family="Bungee" font-size="96" fill="#F25D50" text-anchor="middle">2026</text>
-  <text x="600" y="502" font-family="Bungee" font-size="96" fill="#FFF275" text-anchor="middle">2026</text>
-  ${sticker({ x: 250, y: 640, text: `${weekday.slice(0, 3).toUpperCase()} ${day}`, sub: `${month.toUpperCase()} 2026`, size: 46, bg: '#1CDAC5', rot: -5 })}
-  ${sticker({ x: 950, y: 640, text: 'BLOOM', sub: 'TOWER · PISO 16', size: 46, bg: '#8FC2FF', rot: 5 })}
-  ${dash(420, 545, 360)}
+  ${neon(['¡Flutter', 'Conf Perú!'], 600, 282, 122, 'middle')}
+  <text x="608" y="566" font-family="Bungee" font-size="96" fill="#F25D50" text-anchor="middle">2026</text>
+  <text x="600" y="558" font-family="Bungee" font-size="96" fill="#FFF275" text-anchor="middle">2026</text>
+  ${sticker({ x: 250, y: 680, text: `${weekday.slice(0, 3).toUpperCase()} ${day}`, sub: `${month.toUpperCase()} 2026`, size: 46, bg: '#1CDAC5', rot: -5 })}
+  ${sticker({ x: 950, y: 680, text: 'BLOOM', sub: 'TOWER · PISO 16', size: 46, bg: '#8FC2FF', rot: 5 })}
+  ${dash(435, 600, 330)}
   <text x="600" y="980" font-family="Bungee" font-size="30" fill="#F3F8FF" text-anchor="middle">${esc(`${event.address.toUpperCase()} · ${PLACE_SUB}`)}</text>
   ${ribbon(1050, 1200, RIB, -2.5)}
 `);
@@ -162,8 +194,6 @@ const icon = (s, disc = true) => `<svg xmlns="http://www.w3.org/2000/svg" width=
 ${disc ? '<rect width="320" height="320" rx="72" fill="#1CDAC5"/>' : ''}
 <svg x="${disc ? 22 : 4}" y="${disc ? 14 : 2}" width="${disc ? 276 : 312}" height="${disc ? 292 : 316}" viewBox="0 -2 300 310" overflow="visible">${dashInner}</svg></svg>`;
 
-writeFileSync(join(OUT, 'og-1200x630.svg'), og);
-writeFileSync(join(OUT, 'og-1200x1200.svg'), sq);
 writeFileSync(join(root, 'public/favicon.svg'), icon(64, false).replace(/ width="64" height="64"/, ''));
 
 /* ---------- PNG exports with headless Chrome ---------- */
