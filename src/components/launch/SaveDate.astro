@@ -1,0 +1,36 @@
+---
+/** "Guarda la fecha": a hand-painted calendar sheet and what is coming next. */
+import Chicha from '../Chicha.astro';
+import Floater from '../Floater.astro';
+import { flower, sparkle } from '../../lib/art';
+import { accent, tilt } from '../../lib/palette';
+import event from '../../data/event.json';
+const [weekday, day, , month] = event.dateLong.split(' ');
+const SOON = ['Ponentes', 'Agenda', 'Entradas', 'Call for papers'];
+---
+<section class="z" id="fecha" style="--a:#3A0B91;--b:#0553B1">
+  <Floater svg={flower('#1CDAC5', '#FFF275', '#021C3F')} x="88%" y="120px" w={72} spd={-240} rot={160} />
+  <Floater svg={sparkle('#F25D50')} x="6%" y="420px" w={38} spd={-200} rot={90} />
+  <div class="wrap">
+    <span class="kick" data-r="up" style="--kc:#1CDAC5">Guarda la fecha</span>
+    <h2 data-r="pop"><Chicha text={'¡Anótalo\nya!'} /></h2>
+    <div class="sd">
+      <div class="cal" data-r="spin">
+        <div class="cal-top">{month.toUpperCase()} 2026</div>
+        <p class="cal-d">{day}</p>
+        <p class="cal-w">{weekday}</p>
+        <p class="cal-h">{event.start.replace(/^0/, '')} → {event.end}</p>
+      </div>
+      <div class="sdi">
+        <p data-r="up">Un solo día, de <b>9:00 a 15:00</b>, con charlas y talleres de Flutter y Dart. Separa el día: los detalles llegan primero a quienes se registran.</p>
+        <div class="ctas sdb" data-r="up">
+          <a class="bt" href="#registro" data-ev="cta_click" data-ev-label="date_register">Avísame primero</a>
+        </div>
+        <p class="soon-t" data-r="up">Lo que viene</p>
+        <ul class="soon">
+          {SOON.map((s, i) => <li data-r="pop" style={`--k:${accent(i + 1)};--rt:${tilt(i)};--d:${i * 0.07}s`}>{s}<em>Pronto</em></li>)}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,45 @@
+---
+/** Social links, the closing "¡Nos vemos en Lima!" with Dash landing, and the footer. */
+import Chicha from '../Chicha.astro';
+import Dash from '../Dash.astro';
+import Floater from '../Floater.astro';
+import { sparkle, flower } from '../../lib/art';
+import { accent } from '../../lib/palette';
+import { list } from '../../lib/content';
+import event from '../../data/event.json';
+import { PUBLIC_POSTHOG_KEY } from 'astro:env/client';
+const social = await list('social');
+---
+<section class="z" id="comunidad" style="--a:#FFF275;--b:#F25D50;--fg:#021C3F">
+  <Floater svg={flower('#6200EE', '#1CDAC5', '#021C3F')} x="88%" y="140px" w={70} spd={-240} rot={200} />
+  <Floater svg={sparkle('#0553B1')} x="5%" y="260px" w={40} spd={-200} rot={90} />
+  <div class="wrap">
+    <span class="kick pill" data-r="up" style="--kc:#F25D50">Síguenos</span>
+    <h2 class="hash" data-r="zoom"><Chicha text={event.hashtag} /></h2>
+    <p class="soc-l" data-r="up">FlutterConf Perú es organizada por la comunidad <b>Flutter Perú</b>. Las novedades salen primero en sus redes: ponentes, sorteos y todo lo que vamos armando.</p>
+    <div class="nets">
+      {social.map((s, i) => (
+        <a class="net" href={s.url} target="_blank" rel="noopener" data-r="pop" data-ev="social_click" data-ev-label={s.network} style={`--k:${accent(i)};--ad:${(i * 0.4).toFixed(1)}s;--d:${i * 0.06}s`}>
+          <i aria-hidden="true">{s.short}</i><span><b>{s.handle}</b><small>{s.network}</small></span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+<section class="z" style="--a:#F25D50;--b:#021C3F">
+  <div class="wrap">
+    <div class="fin">
+      <h2 data-r="pop"><Chicha text={'¡Nos vemos\nen Lima!'} /></h2>
+      <p class="fin-d" data-r="up">{event.dateLong} · {event.venue}</p>
+      <div class="spot" data-land data-r="pop"><div class="perched"><Dash /></div></div>
+      <div data-r="up"><a class="bt" href="#registro" data-ev="cta_click" data-ev-label="finale_register">Avísame primero</a></div>
+    </div>
+    <footer>
+      <span>{event.name} · Hecho por la comunidad</span>
+      <nav aria-label="Pie de página">
+        <a href="#sede">La sede</a><a href="#fecha">La fecha</a><a href="#registro">Registro</a>
+        {PUBLIC_POSTHOG_KEY && <button type="button" class="ck-open" data-cookie-settings>Cookies</button>}
+      </nav>
+    </footer>
+  </div>
+</section>

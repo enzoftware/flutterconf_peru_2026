@@ -1,50 +1,34 @@
 [
   {
     "id": "01",
-    "short": "IG",
-    "network": "Instagram",
-    "handle": "@flutterconfpe",
-    "description": "Ponentes, stories y sorteos",
-    "url": "#"
+    "short": "FB",
+    "network": "Facebook",
+    "handle": "Flutter Perú",
+    "description": "Página oficial de la comunidad",
+    "url": "https://www.facebook.com/FlutterPeru/"
   },
   {
     "id": "02",
-    "short": "TT",
-    "network": "TikTok",
-    "handle": "@flutterconfpe",
-    "description": "Clips y detrás de cámaras",
-    "url": "#"
+    "short": "X",
+    "network": "X",
+    "handle": "@FlutterPeru",
+    "description": "Novedades y anuncios",
+    "url": "https://x.com/FlutterPeru"
   },
   {
     "id": "03",
-    "short": "IN",
-    "network": "LinkedIn",
-    "handle": "FlutterConf Perú",
-    "description": "Novedades para equipos",
-    "url": "#"
+    "short": "YT",
+    "network": "YouTube",
+    "handle": "@flutterperu",
+    "description": "Meetups y charlas grabadas",
+    "url": "https://www.youtube.com/@flutterperu"
   },
   {
     "id": "04",
-    "short": "X",
-    "network": "X",
-    "handle": "@flutterconfpe",
-    "description": "Hilo en vivo el día del evento",
-    "url": "#"
-  },
-  {
-    "id": "05",
-    "short": "YT",
-    "network": "YouTube",
-    "handle": "@flutterconfperu",
-    "description": "Transmisión y grabaciones",
-    "url": "#"
-  },
-  {
-    "id": "06",
-    "short": "DC",
-    "network": "Discord",
-    "handle": "Comunidad Flutter Perú",
-    "description": "Dudas, empleos y networking",
-    "url": "#"
+    "short": "LIM",
+    "network": "Meetup",
+    "handle": "Flutter Lima",
+    "description": "Meetups en Lima",
+    "url": "https://www.meetup.com/flutter-lima/"
   }
 ]

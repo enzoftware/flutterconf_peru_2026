@@ -1,0 +1,13 @@
+---
+import Dash from '../Dash.astro';
+const LINKS = [
+  { href: '#sede', label: 'La sede' },
+  { href: '#fecha', label: 'La fecha' },
+  { href: '#comunidad', label: 'Síguenos' },
+];
+---
+<header class="nav">
+  <a class="logo" href="#top" aria-label="FlutterConf Perú, ir al inicio"><span class="logo-d"><Dash /></span><b>FlutterConf<span> Perú</span></b></a>
+  <nav class="nl" aria-label="Principal">{LINKS.map((l) => <a href={l.href}>{l.label}</a>)}</nav>
+  <a class="bt sm" href="#registro" data-ev="cta_click" data-ev-label="nav_register">Avísame</a>
+</header>

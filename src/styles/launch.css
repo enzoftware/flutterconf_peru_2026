@@ -1,0 +1,174 @@
+/* Launch landing (/): styles on top of landing.css (.t-m). Everything new is scoped under .ln. */
+
+/* ---------- nav: Dash with the flag as the logo ---------- */
+.ln .logo .logo-d{ display:block; width:42px; margin:-6px 0 -4px }
+.ln .logo .logo-d svg{ width:100%; height:auto; padding:0; background:none; border:0; border-radius:0; filter:drop-shadow(0 3px 4px rgba(0,0,0,.3)) }
+
+/* ---------- hero: fits the first screen down to the countdown ---------- */
+/* Sizes are capped by the viewport height (svh) so chip → title → year → Dash → countdown fit above the fold. */
+.ln .hero{ padding-top:2px; padding-bottom:10px }
+.ln .hero h1{ margin-top:6px; font-size:min(13.5cqw, 12.5svh, 132px) }
+.ln .yr{ font-size:min(15cqw, 8.6svh, 96px) }
+.ln .hrow{ margin:0 auto 4px }
+.ln .hrow .spot{ width:min(30cqw, 19svh, 210px) }
+.ln .tag{ font-size:min(4.2cqw, 2.7svh, 24px); text-align:center }
+.ln .tag small{ margin-top:4px }
+
+/* ---------- countdown: marquee board ---------- */
+.ln .cd{ position:relative; width:min(100%, 640px); margin:18px auto 30px; padding:22px min(3cqw, 18px) 12px; background:var(--ink);
+  border:4px solid var(--ye); border-radius:26px; box-shadow:8px 8px 0 var(--fu), inset 0 0 0 4px var(--ink), inset 0 0 0 6px color-mix(in srgb, var(--ye) 35%, transparent) }
+.ln .cd-k{ position:absolute; left:50%; top:0; translate:-50% -55%; margin:0; white-space:nowrap; font-family:Bungee; font-size:min(3.2cqw, 13px); letter-spacing:.14em; color:var(--pa); background:var(--fu); border:3px solid var(--ink); border-radius:999px; padding:6px 14px; box-shadow:3px 3px 0 var(--ye) }
+.ln .cd-row{ display:grid; grid-template-columns:repeat(4, 1fr); gap:min(2.4cqw, 14px) }
+.ln .cdt{ position:relative; padding:min(1.6svh, 12px) 4px min(1.2svh, 9px); background:var(--k); color:var(--ink); border:3px solid var(--ink); border-radius:16px; box-shadow:4px 4px 0 color-mix(in srgb, var(--k) 45%, var(--ink)); rotate:var(--rt,0deg); text-align:center }
+/* the split line of a flip clock */
+.ln .cdt::after{ content:""; position:absolute; left:0; right:0; top:calc(50% - 8px); height:2px; background:color-mix(in srgb, var(--ink) 22%, transparent) }
+.ln .cdt b{ display:block; font-family:Bungee, sans-serif; font-weight:400; font-size:min(8.4cqw, 5.8svh, 50px); line-height:1; font-variant-numeric:tabular-nums }
+.ln .cdt small{ display:block; margin-top:4px; font-family:Bungee; font-size:min(2.8cqw, 12px); letter-spacing:.1em; text-transform:uppercase }
+.ln .cdt.sec.tick b{ animation:tickpop .45s var(--spr) }
+.ln .cd-f{ display:flex; flex-wrap:wrap; justify-content:center; gap:4px 0; margin:12px 0 0; font-weight:700; font-size:min(3.4cqw, 14px); color:var(--pa) }
+.ln .cd-f span:not(:last-child)::after{ content:"★"; color:var(--ye); margin:0 .6em; font-size:.8em }
+.ln .cd-w{ margin:4px 0 0; font-weight:600; font-size:min(3.2cqw, 13px); color:var(--cy) }
+.ln .cd-w:empty{ display:none }
+.ln .cd.done .cdt{ opacity:.5 }
+@keyframes tickpop{ 0%{ scale:1.18; translate:0 -3px } 100%{ scale:1; translate:0 0 } }
+
+/* ---------- venue (pinned photo fan on desktop) ---------- */
+.ln .vn .vng{ display:grid; gap:40px; align-items:center }
+.ln .vn h2{ text-align:left; font-size:min(11cqw, 92px); margin-bottom:22px }
+.ln .vn .kick{ text-align:left }
+.ln .addr{ display:flex; gap:14px; align-items:center; background:var(--pa); color:var(--ink); border:4px solid var(--ink); border-radius:20px; padding:14px 18px; box-shadow:6px 6px 0 var(--fu); max-width:430px; rotate:-1.5deg }
+.ln .addr p{ margin:0; font-weight:600; line-height:1.3 }
+.ln .addr b{ display:block; font-family:Bungee; font-weight:400; font-size:18px }
+.ln .pin-ic{ flex:none; width:46px; height:46px; display:grid; place-items:center; border-radius:50% 50% 50% 8px; rotate:-45deg; background:var(--fu); color:var(--pa); border:3px solid var(--ink) }
+.ln .pin-ic svg{ width:24px; rotate:45deg }
+.ln .vnl{ max-width:440px; margin:22px 0 24px; font-size:18px; font-weight:500 }
+.ln .pile{ position:relative; display:grid; grid-template-columns:1fr 1fr; gap:18px 14px }
+.ln .ph{ margin:0; background:var(--pa); color:var(--ink); padding:10px 10px 0; border:4px solid var(--ink); border-radius:10px; box-shadow:7px 7px 0 var(--ink); rotate:calc(var(--r1) * 1deg) }
+.ln .ph img, .ln .ph-ph{ display:block; width:100%; aspect-ratio:4/5; object-fit:cover; border-radius:4px; border:3px solid var(--ink) }
+.ln .ph-ph{ display:grid; place-content:center; justify-items:center; gap:8px; color:var(--ink);
+  background:radial-gradient(circle at 30% 25%, #fff8, transparent 45%), repeating-linear-gradient(-45deg, var(--k) 0 14px, color-mix(in srgb, var(--k) 75%, #fff) 14px 28px) }
+.ln .ph-ph svg{ width:42px }
+.ln .ph-ph span{ font-family:Bungee; font-size:12px; letter-spacing:.06em; background:var(--ink); color:var(--k); padding:5px 9px; border-radius:999px }
+.ln .ph figcaption{ font-family:Bungee; font-size:15px; text-align:center; padding:9px 4px 10px }
+@container lp (min-width:760px){
+  .ln .vn{ height:calc(var(--vh,800px) * 1.9); padding:0 }
+  .ln .vn .stick{ display:grid; align-items:center }
+  .ln .vn .vng{ grid-template-columns:1fr 1.05fr }
+  .ln .pile{ display:block; height:min(560px, calc(var(--vh,800px) - 140px)) }
+  /* The pile opens as the section scrolls (--pp 0 → 1): cards slide from the centre to their fan spot. */
+  .ln .ph{ position:absolute; left:50%; top:50%; width:min(250px, 21cqw); --e:clamp(0, calc(var(--pp,0) * 1.6), 1);
+    translate:calc(-50% + var(--e) * var(--x) * 1%  * 2.2) calc(-50% + var(--e) * var(--y) * 1% * 2.6);
+    rotate:calc((1 - var(--e)) * var(--r0) * 1deg + var(--e) * var(--r1) * 1deg) }
+}
+@container lp (max-width:759px){
+  .ln .vn{ padding-top:84px }
+  .ln .vn .stick{ position:static; height:auto; overflow:visible }
+  .ln .vn h2, .ln .vn .kick{ text-align:center }
+  .ln .addr, .ln .vnl{ margin-inline:auto }
+  .ln .vnl{ text-align:center }
+  .ln .vni > div:last-child{ text-align:center }
+  .ln .pile{ max-width:520px; margin-inline:auto }
+  .ln .ph{ box-shadow:5px 5px 0 var(--ink) }
+  .ln .ph:nth-child(even){ margin-top:26px }
+}
+
+/* ---------- save the date ---------- */
+.ln #fecha{ padding-top:110px }
+.ln .sd{ display:grid; gap:44px; align-items:center; max-width:1000px; margin:0 auto }
+@container lp (min-width:760px){ .ln .sd{ grid-template-columns:auto 1fr } }
+.ln .cal{ justify-self:center; width:min(76cqw, 300px); background:var(--pa); color:var(--ink); border:4px solid var(--ink); border-radius:24px; box-shadow:10px 10px 0 var(--ye); overflow:hidden; text-align:center; rotate:-4deg; position:relative }
+.ln .cal::before, .ln .cal::after{ content:""; position:absolute; top:-10px; width:18px; height:34px; border-radius:999px; background:var(--ink); border:3px solid var(--pa) }
+.ln .cal::before{ left:26% } .ln .cal::after{ right:26% }
+.ln .cal-top{ background:var(--fu); color:var(--pa); font-family:Bungee; font-size:22px; letter-spacing:.06em; padding:24px 10px 12px; border-bottom:4px solid var(--ink) }
+.ln .cal-d{ margin:6px 0 0; font-family:'Bungee Shade', Bungee, sans-serif; font-size:150px; line-height:1; color:var(--rey) }
+.ln .cal-w{ margin:0; font-family:Bungee; font-size:24px; text-transform:uppercase }
+.ln .cal-h{ display:inline-block; margin:12px 0 20px; font-family:Bungee; font-size:15px; background:var(--cy); border:3px solid var(--ink); border-radius:999px; padding:6px 14px }
+.ln .sdi > p:first-child{ font-size:19px; font-weight:500; margin:0 0 24px; max-width:520px }
+.ln .sdi b{ color:var(--ye) }
+.ln .sdb{ justify-content:flex-start }
+.ln .soon-t{ margin:40px 0 14px; font-family:Bungee; font-size:14px; letter-spacing:.12em; color:var(--cy) }
+.ln .soon{ list-style:none; padding:0; margin:0; display:flex; flex-wrap:wrap; gap:14px }
+.ln .soon li{ position:relative; font-family:Bungee; font-size:16px; color:var(--ink); background:var(--k); border:3px solid var(--ink); border-radius:14px; padding:12px 16px; box-shadow:4px 4px 0 var(--ink); rotate:var(--rt) }
+.ln .soon em{ position:absolute; right:-10px; top:-12px; font-style:normal; font-size:10px; letter-spacing:.06em; background:var(--ink); color:var(--ye); border:2px solid var(--ye); padding:3px 7px; border-radius:999px; rotate:10deg }
+@container lp (max-width:759px){
+  .ln .sdi{ text-align:center } .ln .sdi > p:first-child{ margin-inline:auto }
+  .ln .sdb, .ln .soon{ justify-content:center }
+}
+
+/* ---------- register ---------- */
+.ln .rg{ padding-top:130px; padding-bottom:110px }
+.ln .rgg{ display:grid; gap:56px; align-items:center }
+@container lp (min-width:900px){ .ln .rgg{ grid-template-columns:1fr minmax(0, 520px) } .ln .rg h2, .ln .rg .kick{ text-align:left } }
+.ln .rg h2{ font-size:min(11cqw, 86px) }
+.ln .perks{ list-style:none; padding:0; margin:0 0 20px; display:grid; gap:12px; max-width:480px }
+.ln .perks li{ position:relative; padding:12px 16px 12px 52px; background:#fffc; border:3px solid var(--ink); border-radius:16px; font-weight:600; font-size:17px; box-shadow:4px 4px 0 var(--ink) }
+.ln .perks li::before{ content:"★"; position:absolute; left:14px; top:50%; translate:0 -50%; width:26px; height:26px; display:grid; place-items:center; border-radius:50%; background:var(--fu); color:var(--pa); font-size:14px }
+.ln .nospam{ margin:0; font-weight:600; font-size:14px; max-width:480px }
+.ln .fcard-w{ position:relative; padding-top:64px }
+.ln .fpeek{ position:absolute; right:34px; top:0; width:124px; z-index:0; animation:bob 3.4s ease-in-out infinite }
+.ln .fpeek .dash{ width:100%; height:auto }
+.ln .fcard{ position:relative; z-index:1; background:var(--pa); color:var(--ink); border:4px solid var(--ink); border-radius:28px; padding:28px 24px 26px; box-shadow:10px 10px 0 var(--fu) }
+.ln .ff{ display:grid; gap:18px }
+.ln .fl-f{ display:grid; gap:6px; margin:0; padding:0; border:0; min-width:0 }
+.ln .fl-f > span, .ln .fl-f legend{ font-family:Bungee; font-size:14px; letter-spacing:.04em; padding:0; margin-bottom:6px }
+.ln .fl-f small{ font-family:Rubik; font-weight:600; letter-spacing:0; opacity:.7 }
+.ln .fl-f input{ font:500 17px/1.2 Rubik, system-ui, sans-serif; color:var(--ink); background:#fff; border:3px solid var(--ink); border-radius:14px; padding:13px 14px; box-shadow:inset 0 -4px 0 #021C3F14; width:100% }
+.ln .fl-f input::placeholder{ color:#4A5878 }
+.ln .fl-f input:focus-visible, .ln .role input:focus-visible + span, .ln .consent input:focus-visible{ outline:3px solid var(--focus, var(--cy)); outline-offset:2px }
+.ln .fl-f input:focus{ border-color:var(--rey) }
+.ln .roles > div{ display:flex; flex-wrap:wrap; gap:8px }
+.ln .role{ position:relative; cursor:pointer }
+.ln .role input{ position:absolute; opacity:0; inset:0; margin:0; cursor:pointer }
+.ln .role span{ display:block; font-weight:700; font-size:14px; padding:8px 13px; border:3px solid var(--ink); border-radius:999px; background:#fff; transition:background .15s, translate .15s, box-shadow .15s }
+.ln .role:hover span{ translate:-1px -1px; box-shadow:3px 3px 0 var(--ink) }
+.ln .role input:checked + span{ background:var(--cy); box-shadow:3px 3px 0 var(--ink) }
+.ln .consent{ display:flex; gap:12px; align-items:flex-start; font-size:14px; font-weight:500; line-height:1.4; cursor:pointer }
+.ln .consent input{ flex:none; width:22px; height:22px; margin:0; accent-color:var(--rey) }
+.ln .hp{ position:absolute!important; left:-9999px; width:1px; height:1px; overflow:hidden }
+.ln .ferr{ margin:0; min-height:0; font-weight:700; font-size:15px; color:#B3261E }
+.ln .ferr:empty{ position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%) } /* stays rendered so role=alert announces */
+.ln .fcard.bad .ferr{ animation:shake .4s }
+.ln .fsub{ justify-content:center; width:100%; font-size:17px; cursor:pointer }
+.ln .fsub:disabled{ cursor:progress; opacity:.75 }
+.ln .fcard.sending .fsub span::after{ content:"…"; display:inline-block; animation:dots 1s steps(3) infinite; width:1.2em; text-align:left; overflow:hidden; vertical-align:bottom }
+.ln .fcard.done .ff{ display:none }
+.ln .fv-ok{ text-align:center; outline:none }
+.ln .okd{ width:150px; margin:-10px auto 0 }
+.ln .okd .dash{ width:100%; height:auto }
+.ln .ok-t{ margin:4px 0 6px; font-size:58px }
+.ln .ok-m{ margin:0 auto 20px; max-width:360px; font-weight:500; font-size:17px }
+.ln .ok-m b{ overflow-wrap:anywhere }
+.ln .ok-c{ margin:12px 0 0; font-weight:700; font-size:14px }
+.ln .ok-again{ display:block; margin:16px auto 0; background:none; border:0; padding:4px; font:600 14px Rubik, system-ui, sans-serif; color:var(--ink); text-decoration:underline; cursor:pointer }
+.ln .ok-again:focus-visible{ outline:3px solid var(--focus, var(--cy)); outline-offset:2px; border-radius:6px }
+@keyframes shake{ 20%,60%{ translate:-6px 0 } 40%,80%{ translate:6px 0 } }
+@keyframes dots{ from{ width:0 } to{ width:1.2em } }
+@container lp (max-width:759px){
+  .ln .rg{ padding-top:96px }
+  .ln .rg h2, .ln .rg .kick{ text-align:center }
+  .ln .perks, .ln .nospam{ margin-inline:auto }
+  .ln .nospam{ text-align:center }
+  .ln .fcard{ padding:24px 16px 22px; box-shadow:7px 7px 0 var(--fu) }
+  .ln .fpeek{ width:100px; right:18px }
+}
+
+/* ---------- follow + finale ---------- */
+.ln #comunidad{ padding-top:120px }
+.ln .net{ background:var(--ink) }
+.ln .fin{ padding-top:20px }
+.ln .fin-d{ margin:0 0 6px; font-family:Bungee; font-size:min(4.4cqw, 20px) }
+.ln footer{ border-top-color:var(--ye) }
+
+@media (prefers-reduced-motion: reduce){ .ln .ph{ --e:1 } } /* venue fan: already open, no scroll movement */
+
+/* ---------- accessibility (WCAG 2.2 AA) ---------- */
+/* The teal focus ring is ~1.5:1 on paper, yellow and red: use ink there (3:1 or more on every light stop). */
+.ln .fcard, .ln .rg, .ln #comunidad{ --focus:#021C3F }
+/* Text on red is ink (DESIGN.md): white on #F25D50 is 3.3:1. */
+.t-m.ln .chip, .ln .cal-top{ color:var(--ink) }
+/* Kicks that sit on the blue→yellow and yellow→red blends get an ink pill, so they read on any stop. */
+.ln .kick.pill{ width:fit-content; margin-inline:auto; background:var(--ink); padding:6px 14px; border-radius:999px }
+@container lp (min-width:900px){ .ln .rg .kick.pill{ margin-inline:0 } }
+/* "Lo que viene" sits on Flutter Blue, where teal is 4.1:1. */
+.ln .soon-t{ color:var(--ye) }
+.ln footer .ck-open{ background:none; border:0; padding:0; font:inherit; color:inherit; cursor:pointer }

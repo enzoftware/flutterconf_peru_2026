@@ -1,0 +1,51 @@
+---
+/**
+ * "La sede": pinned on desktop. The venue card stays on the left while the photo cards
+ * fan out of a pile as you scroll (--pp from the engine). On narrow screens it is a plain grid.
+ * Photos come from src/content/venue.json; cards without `photo` show a placeholder.
+ */
+import { Picture } from 'astro:assets';
+import Chicha from '../Chicha.astro';
+import Floater from '../Floater.astro';
+import { sparkle, diamond } from '../../lib/art';
+import { accent } from '../../lib/palette';
+import { list } from '../../lib/content';
+import event from '../../data/event.json';
+const photos = await list('venue');
+// Fan geometry per card: [x %, y %, start rotation, end rotation, z-order]
+const FAN = [[-24, -16, -3, -7, 4], [22, -20, 4, 6, 3], [-20, 22, 2, 4, 2], [24, 18, -5, -3, 1]];
+---
+<section class="z vn pin" id="sede" style="--a:#042B59;--b:#3A0B91">
+  <Floater svg={sparkle('#FFF275')} x="90%" y="160px" w={40} spd={-260} rot={120} />
+  <Floater svg={diamond('#1CDAC5', '#021C3F')} x="4%" y="300px" w={34} spd={-200} rot={-40} />
+  <div class="stick">
+    <div class="wrap vng">
+      <div class="vni">
+        <span class="kick" data-r="up" style="--kc:#FFF275">La sede</span>
+        <h2 data-r="pop"><Chicha text={'Bloom\nTower'} /></h2>
+        <div class="addr" data-r="up">
+          <span class="pin-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.6A2.6 2.6 0 1 1 12 6.4a2.6 2.6 0 0 1 0 5.2Z" fill="currentColor"/></svg></span>
+          <p><b>{event.address}</b>{event.district}, {event.city}</p>
+        </div>
+        <p class="vnl" data-r="up">Un piso entero frente al mar de Lima, para charlas, talleres y café con la comunidad.</p>
+        <div data-r="up"><a class="bt alt" href={event.mapsUrl} target="_blank" rel="noopener" data-ev="venue_map_click">Cómo llegar ↗</a></div>
+      </div>
+      <div class="pile" role="group" aria-label="Fotos de la sede">
+        {photos.map((p, i) => {
+          const [x, y, r0, r1, z] = FAN[i % FAN.length];
+          return (
+            <figure class="ph" style={`--k:${accent(i)};--x:${x};--y:${y};--r0:${r0};--r1:${r1};z-index:${z}`}>
+              {p.photo
+                ? <Picture src={p.photo} alt={p.alt} widths={[320, 480, 720]} sizes="(max-width: 759px) 45vw, 340px" formats={['avif', 'webp']} loading="lazy" />
+                : <div class="ph-ph" role="img" aria-label={`${p.alt} (foto próximamente)`}>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3 7.2 5H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3.2L15 3H9Zm3 4.5a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z" fill="currentColor"/></svg>
+                    <span>Foto pronto</span>
+                  </div>}
+              <figcaption>{p.caption}</figcaption>
+            </figure>
+          );
+        })}
+      </div>
+    </div>
+  </div>
+</section>

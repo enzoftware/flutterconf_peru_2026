@@ -52,6 +52,12 @@ const deckSlide = (image: SchemaContext['image']) => z.discriminatedUnion('type'
 ]);
 
 export const collections = {
+  /** Venue photo cards on the launch landing (`/`). `photo` is a path relative to this JSON file
+   * (e.g. "./venue/terraza.jpg", put the file in src/content/venue/). Without it the card shows a placeholder. */
+  venue: defineCollection({
+    loader: file('src/content/venue.json'),
+    schema: ({ image }) => z.object({ caption: z.string(), alt: z.string(), photo: image().optional() }),
+  }),
   /** Big numbers under the hero (counted up when they appear). */
   stats: defineCollection({
     loader: file('src/content/stats.json'),
