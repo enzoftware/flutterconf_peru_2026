@@ -10,4 +10,5 @@
 - The approved prototype is the reference for any visual regression. It lives as the "FlutterConf Perú" landing artifact (option ★ M · Chicha Dash).
 - The design system also exists as a claude.ai Design System artifact ("FlutterConf Perú Chicha"). When you change `brand/`, keep that artifact in sync, or note in the PR that it needs a sync.
 - Rebuilding FlutterChicha needs the Python tools venv. Follow the steps in `brand/README.md`.
+- After verifying a change, use the `pr-evidence` skill (`.claude/skills/pr-evidence/`): screenshots with `npm run evidence`, uploaded with `gh image` into the PR's `## Evidence` section.
 - Open PRs against `main` and end PR descriptions with the attribution line the session provides.
