@@ -1,21 +1,25 @@
 name: Deploy to GitHub Pages
 
+# Production is the root of the gh-pages branch. PR previews live next to it in
+# gh-pages:/pr-preview/pr-<n>/ (see preview.yml), so this deploy never touches that folder.
+# Settings → Pages must be "Deploy from a branch: gh-pages / (root)".
+
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
+# Not shared with preview.yml: a shared group would let a preview cancel a pending production
+# deploy. Pushes that race with a preview are rebased and retried by the deploy action.
 concurrency:
-  group: pages
+  group: pages-production
   cancel-in-progress: false
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -30,17 +34,12 @@ jobs:
           PUBLIC_POSTHOG_KEY: ${{ secrets.PUBLIC_POSTHOG_KEY }}
           PUBLIC_POSTHOG_HOST: ${{ secrets.PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com' }}
           PUBLIC_REGISTER_ENDPOINT: ${{ secrets.PUBLIC_REGISTER_ENDPOINT }}
-      - uses: actions/configure-pages@v6
-      - uses: actions/upload-pages-artifact@v5
+      # Branch deploys run Jekyll, which drops folders that start with "_" (Astro's _astro/).
+      - run: touch dist/.nojekyll
+      - uses: JamesIves/github-pages-deploy-action@v4
         with:
-          path: dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v5
+          branch: gh-pages
+          folder: dist
+          clean: true
+          clean-exclude: pr-preview/
+          force: false
