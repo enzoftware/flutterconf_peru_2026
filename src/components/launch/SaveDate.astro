@@ -1,6 +1,6 @@
 ---
 /** "Guarda la fecha": a hand-painted calendar sheet and what is coming next. */
-import Chicha from '../Chicha.astro';
+import Neon from '../Neon.astro';
 import Floater from '../Floater.astro';
 import { flower, sparkle } from '../../lib/art';
 import { accent, tilt } from '../../lib/palette';
@@ -13,7 +13,7 @@ const SOON = ['Ponentes', 'Agenda', 'Entradas', 'Call for papers'];
   <Floater svg={sparkle('#F25D50')} x="6%" y="420px" w={38} spd={-200} rot={90} />
   <div class="wrap">
     <span class="kick" data-r="up" style="--kc:#1CDAC5">Guarda la fecha</span>
-    <h2 data-r="pop"><Chicha text={'¡Anótalo\nya!'} /></h2>
+    <h2 data-r="pop"><Neon text={'¡Anótalo\nya!'} /></h2>
     <div class="sd">
       <div class="cal" data-r="spin">
         <div class="cal-top">{month.toUpperCase()} 2026</div>

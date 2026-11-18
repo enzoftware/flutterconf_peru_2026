@@ -37,9 +37,12 @@ The speaker section uses the **fan cards** taken from the "Máxima" exploration.
 
 ## Typography
 
+- **Monchila neon** is the heading lettering of the launch landing and the sponsor decks: the Monchila retro script with a green → yellow → orange → red gradient fill, an ink outline and a thin orange ring, like a chicha sticker (`<Neon>` on the web, `Lettering` in decks).
+  - Monchila is a commercial font, never committed. `brand/tools/monchila/fix_overlaps.py` fixes its outlines, composes the Spanish accents the demo lacks and builds the hole-free "Silueta" layer. Without the local files the landing falls back to FlutterChicha.
+  - Use it for headings from 28 px up, one neon phrase per view.
 - **FlutterChicha** is our own chicha font, drawn from the hand-painted alphabet in `brand/reference/`, whose rights FlutterConf Perú owns.
   - It comes as five stacked layers: Sombra, Base, Amarillo, Naranja and Brillo. The web adds an ink outline layer so headings stay readable on colored backgrounds.
-  - Use it for headings from 28 px up, one chicha phrase per view.
+  - It is the lettering of the brand page and the parked full landing, and the fallback of `<Neon>`.
 - **Bungee** is for UI labels: buttons, tags, chips, ribbons and kickers.
 - **Bungee Shade** is for the year and numerals.
 - **Rubik** (400–900) is for running text.

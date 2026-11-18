@@ -127,6 +127,19 @@
 .ch .y{ font-family:'FlutterChicha Amarillo', 'Bungee', sans-serif; color:var(--fc-y); z-index:3 }
 .ch .n{ font-family:'FlutterChicha Naranja', 'Bungee', sans-serif; color:var(--fc-o); z-index:4 }
 .ch .h{ font-family:'FlutterChicha Brillo', 'Bungee', sans-serif; color:#fff; opacity:.8; z-index:5 }
+/* neon lettering (Neon.astro): the Monchila titles of the sponsor decks, same layers and gradient as
+   .lt-neon in deck.css. Monchila (plus the .12em outline and ring) reaches about .36em above the line
+   box and .3em below it. The gradient only paints inside its box, and the page must leave room for
+   that ink so the title never covers the kicker above or the text below: the padding is real layout
+   space vertically. Sideways, swashes may overhang into the gutter (negative margin), as in decks. */
+.nt{ display:inline-grid; font-family:'Monchila', 'Bungee', sans-serif; font-weight:400; line-height:1.02; isolation:isolate; margin:0 -.26em; vertical-align:top }
+.nt > [aria-hidden]{ grid-area:1/1; white-space:nowrap; padding:.36em .26em .3em }
+.nt .nt-o, .nt .nt-k{ font-family:'Monchila Silueta', 'Monchila', 'Bungee', sans-serif }
+.nt .nt-o{ color:var(--fc-naranja); -webkit-text-stroke:.07em var(--fc-naranja); z-index:0 }
+.nt .nt-k{ color:var(--fc-negro); z-index:1 }
+.nt .nt-f{ z-index:2; color:transparent; -webkit-text-fill-color:transparent;
+  background:linear-gradient(180deg, var(--fc-verde) 6%, var(--fc-amarillo) 34%, var(--yellow) 48%, var(--fc-naranja) 74%, var(--red) 100%);
+  -webkit-background-clip:text; background-clip:text }
 .t-m h2{ margin:0 0 34px; text-align:center; font-size:min(11.5cqw, 96px); font-weight:400 }
 .t-m .kick{ display:block; text-align:center; font-family:Bungee; font-size:14px; letter-spacing:.12em; color:var(--kc, var(--cy)); margin:0 0 14px }
 /* hero */

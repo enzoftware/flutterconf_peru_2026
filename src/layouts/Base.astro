@@ -6,15 +6,23 @@ import event from '../data/event.json';
 import CookieBanner from '../components/CookieBanner.astro';
 import fcBase from '../../brand/fonts/flutterchicha/FlutterChicha-Regular.woff2?url';
 import fcSombra from '../../brand/fonts/flutterchicha/FlutterChichaSombra-Regular.woff2?url';
+import { fontFaceCss, hasMonchila, webFonts } from '../lib/monchila';
 
-interface Props { title?: string; description?: string; jsonLd?: boolean; noindex?: boolean }
+/** `lettering`: the heading font the page uses, so only that one is preloaded. "neon" (Monchila, see
+ * Neon.astro) falls back to "chicha" (FlutterChicha) when the local Monchila files are missing. */
+interface Props { title?: string; description?: string; jsonLd?: boolean; noindex?: boolean; lettering?: 'chicha' | 'neon' }
 const {
   title = `${event.name} · ${event.dateLong.split(' de 2026')[0]} · ${event.venue}`,
   jsonLd = true,
   noindex = false,
+  lettering = 'chicha',
   description = `Un día entero de Flutter y Dart en Lima: charlas, talleres y comunidad. ${event.dateLong}, ${event.hours}, ${event.venue}.`,
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const neon = lettering === 'neon' && hasMonchila;
+const preloads = neon
+  ? [webFonts.fill!, webFonts.silhouette!].map((f) => ({ href: f.url, type: `font/${f.format === 'truetype' ? 'ttf' : f.format}` }))
+  : [fcBase, fcSombra].map((href) => ({ href, type: 'font/woff2' }));
 /** Files under public/ (base-path aware); og:image needs absolute URLs. Images: `npm run social`. */
 const asset = (p: string) => `${import.meta.env.BASE_URL.replace(/\/$/, '')}/${p}`;
 const ogImage = new URL(asset('social/og-1200x630.png'), Astro.site).href;
@@ -60,12 +68,12 @@ const ld = {
     <link rel="icon" href={asset('favicon.svg')} type="image/svg+xml" />
     <link rel="icon" href={asset('favicon-32.png')} sizes="32x32" type="image/png" />
     <link rel="apple-touch-icon" href={asset('apple-touch-icon.png')} />
-    <link rel="preload" href={fcBase} as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href={fcSombra} as="font" type="font/woff2" crossorigin />
+    {preloads.map((f) => <link rel="preload" href={f.href} as="font" type={f.type} crossorigin />)}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Bungee+Shade&family=Rubik:wght@400;500;600;700;800;900&display=swap" />
     <style is:inline set:html={formaClipCss()}></style>
+    {hasMonchila && <style is:inline set:html={fontFaceCss(webFonts)}></style>}
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
   </head>
   <body>

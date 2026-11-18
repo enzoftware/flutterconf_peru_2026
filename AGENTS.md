@@ -15,7 +15,7 @@ Guide for AI coding agents (Claude Code, Codex, Cursor, …) working on this rep
 - Plain CSS. Brand tokens come from `brand/tokens/tokens.css`, and the page styles are in `src/styles/landing.css`.
 - All motion is one vanilla TypeScript scroll engine (`src/scripts/engine.ts`, about 3 KB gzipped).
 - Content lives in **content collections** (`src/content/*.json`), and Zod validates it at build time.
-- Deploy is GitHub Pages through GitHub Actions (`.github/workflows/deploy.yml`) on every push to `main`. PRs run `ci.yml` (type check, build, Lighthouse).
+- Deploy is GitHub Pages through GitHub Actions (`.github/workflows/deploy.yml`) on every push to `main`. It installs the licensed Monchila WOFF2s from the `MONCHILA_WOFF2` and `MONCHILA_SILUETA_WOFF2` secrets (see `brand/fonts/monchila/README.md`). PRs run `ci.yml` (type check, build, Lighthouse) without the font.
 
 ## Commands
 
@@ -43,7 +43,7 @@ brand/                      Design system (source of truth for anything visual)
   tokens/tokens.css         GENERATED from tokens.json (never edit by hand)
   fonts/flutterchicha/      FlutterChicha, 5 stackable layers (TTF + WOFF2)
   fonts/archive/            Rejected explorations (ChichaV2), kept for history
-  fonts/monchila/           Monchila, the sponsor-deck title font (licensed, git-ignored; README only)
+  fonts/monchila/           Monchila, the neon title font of the landing and decks (licensed, git-ignored; README only)
   assets/{dash,formas,ornamentos}/   SVG exports (Dash with and without the Peruvian flag)
   components/*.md           Usage rules per component (Chicha, Boton, CartaPonente, …)
   css/components.css        Standalone component classes for marketing pages and templates
@@ -56,7 +56,7 @@ src/
   content/decks/*.json      Sponsor decks, one file per sponsor (slug = file name)
   content.config.ts         Collection schemas (Zod)
   data/event.json           Event facts: date, hours, venue, links
-  components/*.astro        One component per landing section + Chicha, Dash, Floater, Ribbon, KitLayers
+  components/*.astro        One component per landing section + Neon, Chicha, Dash, Floater, Ribbon, KitLayers
   components/brand/         Pieces of the brand page
   pages/index.astro         The launch landing (date, venue, sign-up, social)
   pages/_full-landing/      The full landing, parked and not routed until speakers/agenda/tickets are real
@@ -81,14 +81,15 @@ src/
   styles/landing.css        Page styles (ported from the approved prototype)
   styles/deck.css           Sponsor deck styles (style A, "Afiche nocturno")
   scripts/deck.ts           Deck viewer: present mode, keyboard, print
-  lib/deck.ts               Deck types, accent map, Monchila loader, glyph check
+  lib/deck.ts               Deck types, accent map, glyph check
+  lib/monchila.ts           Monchila loader (deck TTF, web WOFF2), @font-face, glyph coverage
 ```
 
 ## Conventions
 
 - **Content changes go in `src/content/*.json` or `src/data/event.json`**, not in components. Entries are ordered by `id` (`"01"`, `"02"`, …), and the schema in `src/content.config.ts` lists every field.
 - **Visual values come from brand tokens.** Add a color or size to `brand/tokens/tokens.json` first, then run `npm run tokens`. Never introduce colors outside the Flutter brand palette plus its listed tints.
-- **Chicha headings** use `<Chicha text={'Line one\nline two'} />`. Never hand-write the six layer spans.
+- **Headings on the landing** use `<Neon text={'Line one\nline two'} />` (Monchila neon, the deck lettering; it falls back to FlutterChicha without the local font). The brand page and the parked full landing use `<Chicha text={…} />`. Never hand-write the layer spans. A page that uses `<Neon>` passes `lettering="neon"` to `Base` so Monchila is preloaded instead of FlutterChicha.
 - **Dash** is always `<Dash />` (or `dash()` from `src/lib/art.ts`) and is never redrawn or recolored. `flag` defaults to `true`. Pass `flag={false}` where many Dashes repeat, such as speaker photos and posts.
 - **Motion:** add `data-r="up|pop|left|right|drop|zoom|spin"` for reveal-on-scroll and `data-p` for parallax (`--p`). Animate only `transform`, `opacity`, `clip-path` and custom properties, and keep a single scroll listener (the engine). Everything must still read with `prefers-reduced-motion: reduce`, which the engine and CSS already handle.
 - **No new runtime dependencies** without a reason recorded in the PR. The JS budget is under 30 KB gzipped for the whole page.
@@ -122,7 +123,7 @@ Each sponsor gets its own deck at `/decks/<slug>/`, built from `src/content/deck
 - **Export to PDF:** with `npm run dev` running, `npm run deck:pdf -- <slug>` (add `--base http://localhost:<port>/flutterconf_peru_2026` if dev is not on 4321) prints `exports/<slug>.pdf` with the local Chrome: one 1920×1080 page per slide. It fails if Monchila or an image did not load. `exports/` is git-ignored.
 - **Style:** option A, "Afiche nocturno", from the deck style exploration. Sizes inside a slide use `--u` (1/1920 of the slide width), so slides scale to any screen and print at 1920×1080.
 - **Lettering:** `lettering: "neon"` (default) stacks a gradient fill, an ink outline and an orange ring (`src/components/deck/Lettering.astro`); `"classic"` is flat yellow with a hard red shadow.
-- **Titles use Monchila**, a licensed font that is never committed. Follow `brand/fonts/monchila/README.md` to install it. The demo has no accents or ñ, so keep Monchila titles free of them; the deck page and the build log list any title that breaks.
+- **Titles use Monchila**, a licensed font that is never committed. Follow `brand/fonts/monchila/README.md` to install it; the fix script composes á é í ó ú ñ ü. The deck page and the build log list any title with a character the installed file can't draw.
 - **New layout:** add a branch to the `deckSlide` union, a label in `SLIDE_LABEL` (`src/lib/deck.ts`), the markup in `src/components/deck/DeckSlide.astro` and its styles in `src/styles/deck.css`.
 
 ## Not done yet (good next tasks)

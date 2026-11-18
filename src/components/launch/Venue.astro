@@ -5,7 +5,7 @@
  * Photos come from src/content/venue.json; cards without `photo` show a placeholder.
  */
 import { Picture } from 'astro:assets';
-import Chicha from '../Chicha.astro';
+import Neon from '../Neon.astro';
 import Floater from '../Floater.astro';
 import { sparkle, diamond } from '../../lib/art';
 import { accent } from '../../lib/palette';
@@ -22,7 +22,7 @@ const FAN = [[-24, -16, -3, -7, 4], [22, -20, 4, 6, 3], [-20, 22, 2, 4, 2], [24,
     <div class="wrap vng">
       <div class="vni">
         <span class="kick" data-r="up" style="--kc:#FFF275">La sede</span>
-        <h2 data-r="pop"><Chicha text={'Bloom\nTower'} /></h2>
+        <h2 data-r="pop"><Neon text={'Bloom\nTower'} /></h2>
         <div class="addr" data-r="up">
           <span class="pin-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.6A2.6 2.6 0 1 1 12 6.4a2.6 2.6 0 0 1 0 5.2Z" fill="currentColor"/></svg></span>
           <p><b>{event.address}</b>{event.district}, {event.city}</p>

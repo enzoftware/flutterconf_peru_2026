@@ -3,12 +3,11 @@
 import '../styles/deck.css';
 import { DASH_DEFS } from '../lib/art';
 import { monchila, monchilaSilueta } from '../lib/deck';
+import { deckFonts, fontFaceCss } from '../lib/monchila';
 
 interface Props { title: string }
 const { title } = Astro.props;
-const face = (family: string, f: { url: string; format: string } | null) =>
-  f ? `@font-face{font-family:"${family}";src:url("${f.url}") format("${f.format}");font-weight:400;font-display:block}` : '';
-const fontFace = face('Monchila', monchila) + face('Monchila Silueta', monchilaSilueta);
+const fontFace = fontFaceCss(deckFonts);
 ---
 <!doctype html>
 <html lang="es">

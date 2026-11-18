@@ -1,9 +1,11 @@
 /**
  * Sponsor deck helpers: slide types, accent colors, the local Monchila font and a glyph check.
+ * Font loading lives in src/lib/monchila.ts (shared with the landing).
  * Decks live in src/content/decks/*.json and render at /decks/<slug>/.
  */
 import type { CollectionEntry } from 'astro:content';
 import tokens from '../../brand/tokens/tokens.json';
+import { deckFonts, missingGlyphs } from './monchila';
 
 export type Deck = CollectionEntry<'decks'>['data'];
 export type DeckSlide = Deck['slides'][number];
@@ -20,30 +22,16 @@ export const SLIDE_LABEL: Record<DeckSlide['type'], string> = {
   cover: 'Portada', stats: 'Cifras', agenda: 'Agenda', spotlight: 'Propuesta', benefits: 'Beneficios', venue: 'Lugar', team: 'Equipo', closing: 'Cierre',
 };
 
-/**
- * Monchila is licensed per seat and is NOT committed (the repo is public). Drop the licensed file in
- * brand/fonts/monchila/ (see the README there). When it is missing, titles fall back to Bungee.
- */
-// TrueType before OpenType/CFF: Chrome embeds TrueType in PDFs as a real font (see fix_overlaps.py).
-const FORMATS = { woff2: 'woff2', ttf: 'truetype', otf: 'opentype' } as const;
-type FontFile = { url: string; format: string };
-const found = import.meta.glob('../../brand/fonts/monchila/*.{woff2,otf,ttf}', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
-/** First file named `<stem>.<ext>`, preferring woff2, then ttf, then otf. */
-function font(stem: string): FontFile | null {
-  for (const ext of Object.keys(FORMATS) as (keyof typeof FORMATS)[]) {
-    const hit = Object.entries(found).find(([path]) => path.endsWith(`/${stem}.${ext}`));
-    if (hit) return { url: hit[1], format: FORMATS[ext] };
-  }
-  return null;
-}
-/** Regular Monchila (fill) and its hole-free silhouette (outline and ring of the neon lettering). */
-export const monchila = font('Monchila');
-export const monchilaSilueta = font('MonchilaSilueta');
+/** Monchila for the deck titles (TrueType first, for the PDF export). Null when it isn't installed. */
+export const monchila = deckFonts.fill;
+export const monchilaSilueta = deckFonts.silhouette;
 
-/** The Monchila demo has no accented letters or ñ. Lists the titles that would break. */
-const MISSING = /[áéíóúÁÉÍÓÚñÑüÜ]/;
+/** Titles with characters the installed Monchila can't draw. */
 export function glyphWarnings(slides: DeckSlide[]): string[] {
-  return slides.flatMap((s, i) => (MISSING.test(s.title) ? [`Diapositiva ${i + 1}: «${s.title.replace(/\n/g, ' ')}»`] : []));
+  return slides.flatMap((s, i) => {
+    const missing = missingGlyphs(s.title);
+    return missing.length ? [`Diapositiva ${i + 1}: «${s.title.replace(/\n/g, ' ')}» (${missing.join(' ')})`] : [];
+  });
 }
 
 /** "Line one\nline two" → lines. */

@@ -1,0 +1,29 @@
+---
+/**
+ * Neon lettering for landing headings: the Monchila title of the sponsor decks, stacked in layers so
+ * it reads like a chicha sticker (see src/components/deck/Lettering.astro for the deck version):
+ *   .nt-o  outer ring (fc-naranja stroke)  · Monchila Silueta (letters grown .085em, no holes)
+ *   .nt-k  ink outline (fc-negro fill)      · Monchila Silueta
+ *   .nt-f  gradient fill                    · Monchila
+ * `text` may contain "\n" for line breaks. Screen readers get the text once from .vh.
+ * Without the local Monchila files (brand/fonts/monchila/README.md) it renders <Chicha> instead.
+ */
+import Chicha from './Chicha.astro';
+import { hasMonchila, missingGlyphs } from '../lib/monchila';
+
+interface Props { text: string; style?: string }
+const { text, style } = Astro.props;
+const lines = text.split('\n');
+const missing = missingGlyphs(text);
+if (missing.length) console.warn(`[neon] Monchila can't draw ${missing.join(' ')} in «${text.replace(/\n/g, ' ')}»`);
+---
+{hasMonchila ? (
+  <span class="nt" style={style}>
+    <span class="vh">{lines.join(' ')}</span>
+    {['nt-o', 'nt-k', 'nt-f'].map((c) => (
+      <span class={c} aria-hidden="true">{lines.map((l, i) => <>{i > 0 && <br />}{l}</>)}</span>
+    ))}
+  </span>
+) : (
+  <Chicha text={text} style={style} />
+)}

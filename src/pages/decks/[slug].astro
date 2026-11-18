@@ -20,7 +20,7 @@ interface Props { deck: DeckData }
 const { deck } = Astro.props;
 const total = deck.slides.length;
 const glyphs = glyphWarnings(deck.slides);
-if (glyphs.length) console.warn(`[decks] ${deck.title}: Monchila demo has no accents or ñ →\n  ${glyphs.join('\n  ')}`);
+if (glyphs.length) console.warn(`[decks] ${deck.title}: Monchila can't draw these titles →\n  ${glyphs.join('\n  ')}`);
 ---
 <Deck title={`${deck.title} · FlutterConf Perú`}>
   <header class="deck-bar">
@@ -38,7 +38,7 @@ if (glyphs.length) console.warn(`[decks] ${deck.title}: Monchila demo has no acc
   {(!monchila || glyphs.length > 0) && (
     <div class="deck-warn" role="note">
       {!monchila && <p>Monchila no está instalada: los titulares usan Bungee. Sigue los pasos de <code>brand/fonts/monchila/README.md</code>.</p>}
-      {glyphs.length > 0 && <p>Monchila no tiene tildes ni ñ. Cambia estos titulares: {glyphs.join(' · ')}</p>}
+      {glyphs.length > 0 && <p>Monchila no tiene algunas letras de estos titulares (instala la versión corregida o cámbialos): {glyphs.join(' · ')}</p>}
     </div>
   )}
 

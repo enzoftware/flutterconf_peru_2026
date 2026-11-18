@@ -5,12 +5,13 @@
 .ln .logo .logo-d svg{ width:100%; height:auto; padding:0; background:none; border:0; border-radius:0; filter:drop-shadow(0 3px 4px rgba(0,0,0,.3)) }
 
 /* ---------- hero: fits the first screen down to the countdown ---------- */
-/* Sizes are capped by the viewport height (svh) so chip → title → year → Dash → countdown fit above the fold. */
+/* Sizes are capped by the viewport height (svh) so chip → title → year → Dash → countdown fit above the fold.
+   The neon title reserves room for its ink above and below (see .nt in landing.css), so its cap is lower. */
 .ln .hero{ padding-top:2px; padding-bottom:10px }
-.ln .hero h1{ margin-top:6px; font-size:min(13.5cqw, 12.5svh, 132px) }
-.ln .yr{ font-size:min(15cqw, 8.6svh, 96px) }
+.ln .hero h1{ margin-top:6px; font-size:min(13.5cqw, 10.6svh, 132px) }
+.ln .yr{ font-size:min(15cqw, 7.6svh, 96px) }
 .ln .hrow{ margin:0 auto 4px }
-.ln .hrow .spot{ width:min(30cqw, 19svh, 210px) }
+.ln .hrow .spot{ width:min(30cqw, 16.5svh, 210px) }
 .ln .tag{ font-size:min(4.2cqw, 2.7svh, 24px); text-align:center }
 .ln .tag small{ margin-top:4px }
 
