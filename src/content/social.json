@@ -9,14 +9,6 @@
   },
   {
     "id": "02",
-    "short": "GR",
-    "network": "Grupo de Facebook",
-    "handle": "Flutter Perú",
-    "description": "Dudas, empleos y networking",
-    "url": "https://www.facebook.com/groups/flutterperu"
-  },
-  {
-    "id": "03",
     "short": "X",
     "network": "X",
     "handle": "@FlutterPeru",
@@ -24,7 +16,7 @@
     "url": "https://x.com/FlutterPeru"
   },
   {
-    "id": "04",
+    "id": "03",
     "short": "YT",
     "network": "YouTube",
     "handle": "@flutterperu",
@@ -32,27 +24,11 @@
     "url": "https://www.youtube.com/@flutterperu"
   },
   {
-    "id": "05",
+    "id": "04",
     "short": "LIM",
     "network": "Meetup",
     "handle": "Flutter Lima",
     "description": "Meetups en Lima",
     "url": "https://www.meetup.com/flutter-lima/"
-  },
-  {
-    "id": "06",
-    "short": "AQP",
-    "network": "Meetup",
-    "handle": "Flutter Arequipa",
-    "description": "Meetups en Arequipa",
-    "url": "https://www.meetup.com/flutter-arequipa/"
-  },
-  {
-    "id": "07",
-    "short": "ICA",
-    "network": "Meetup",
-    "handle": "Flutter Ica",
-    "description": "Meetups en Ica",
-    "url": "https://www.meetup.com/flutter-ica/"
   }
 ]
