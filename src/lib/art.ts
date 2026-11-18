@@ -55,9 +55,9 @@ export function dash(o: DashOptions = {}): string {
   <path d="M86,122 C92,104 106,97 122,97 M174,96 C196,94 214,104 220,118" stroke="#B5F6FF" stroke-opacity=".75" stroke-width="3" fill="none" stroke-linecap="round"/>
   <g class="d-eye"><ellipse cx="107.8" cy="137.8" rx="16.9" ry="21.6" fill="url(#dg-eye)" stroke="#19B874" stroke-width="2.8"/><circle cx="112.6" cy="125" r="4.3" fill="#fff"/></g>
   <g class="d-eye"><ellipse cx="188.7" cy="137.8" rx="18" ry="22.6" fill="url(#dg-eye)" stroke="#19B874" stroke-width="2.8"/><circle cx="192" cy="125" r="4.7" fill="#fff"/></g>
-  <path class="ol" d="M124,160 C124,150 136,145 148,147 C160,149 166,158 162,168 C158,176 150,180 144,184 C140,190 134,196 130,194 C125,192 127,184 126,178 C124,172 123,166 124,160Z" fill="url(#dg-beak)"/>
-  <path d="M130,181 C138,182 148,180 156,174" stroke="#33200F" stroke-opacity=".7" stroke-width="2.4" fill="none" stroke-linecap="round"/>
-  <ellipse cx="141" cy="155" rx="9" ry="4.5" fill="#fff" opacity=".28" transform="rotate(-12 141 155)"/>
+  <path class="ol" d="M157,145 C167,147 172,158 167,168 C162,177 150,180 138,178 C129,177 122,175 118,172 C120,167 127,162 134,157 C141,151 148,144 157,145Z" fill="url(#dg-beak)"/>
+  <path d="M122,172 C135,173 151,171 163,165" stroke="#33200F" stroke-opacity=".7" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <ellipse cx="152" cy="153" rx="8" ry="3.6" fill="#fff" opacity=".3" transform="rotate(-24 152 153)"/>
   <g class="d-wl">
     ${o.flag === false ? '' : FLAG}
     <path class="ol" d="M72,110 C60,92 42,80 27,84 C15,88 15,100 25,106 C11,106 3,118 7,128 C10,135 17,137 23,136 C11,144 9,158 19,163 C31,169 51,166 68,164 C76,148 78,128 72,110Z" fill="url(#dg-wing)"/>
