@@ -15,7 +15,10 @@ Guide for AI coding agents (Claude Code, Codex, Cursor, …) working on this rep
 - Plain CSS. Brand tokens come from `brand/tokens/tokens.css`, and the page styles are in `src/styles/landing.css`.
 - All motion is one vanilla TypeScript scroll engine (`src/scripts/engine.ts`, about 3 KB gzipped).
 - Content lives in **content collections** (`src/content/*.json`), and Zod validates it at build time.
-- Deploy is GitHub Pages through GitHub Actions (`.github/workflows/deploy.yml`) on every push to `main`. PRs run `ci.yml` (type check, build, Lighthouse).
+- Deploy is GitHub Pages served from the `gh-pages` branch:
+  - Every push to `main` builds the site and publishes it at the branch root (`.github/workflows/deploy.yml`).
+  - Every PR from this repository gets a preview at `/flutterconf_peru_2026/pr-preview/pr-<n>/` with a sticky link comment (`.github/workflows/preview.yml`). Closing the PR removes the preview. Previews build without the PostHog and sign-up keys and with `PREVIEW_BUILD=true`, which makes every page noindex. PRs from forks get no preview.
+  - PRs also run `ci.yml` (tests, type check, build, Lighthouse).
 
 ## Commands
 

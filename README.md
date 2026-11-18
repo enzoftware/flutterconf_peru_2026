@@ -30,4 +30,4 @@ Speaker photos and sponsor logos go in `public/` (for example `public/speakers/a
 
 ## Deploy
 
-Every push to `main` builds and publishes to GitHub Pages (`.github/workflows/deploy.yml`). PRs run the type check, the build and Lighthouse (`.github/workflows/ci.yml`). To move to another host or a custom domain, set `SITE_URL` and `BASE_PATH` (for example `BASE_PATH=/`) in the build environment.
+Every push to `main` builds and publishes to the `gh-pages` branch, which GitHub Pages serves (`.github/workflows/deploy.yml`). Every PR gets a preview at `https://enzoftware.github.io/flutterconf_peru_2026/pr-preview/pr-<n>/`, linked in a PR comment and removed when the PR closes (`.github/workflows/preview.yml`). PRs also run the type check, the build and Lighthouse (`.github/workflows/ci.yml`). To move to another host or a custom domain, set `SITE_URL` and `BASE_PATH` (for example `BASE_PATH=/`) in the build environment.

@@ -16,6 +16,8 @@ export default defineConfig({
       PUBLIC_POSTHOG_KEY: envField.string({ context: 'client', access: 'public', optional: true }),
       PUBLIC_POSTHOG_HOST: envField.string({ context: 'client', access: 'public', url: true, default: 'https://us.i.posthog.com' }),
       PUBLIC_REGISTER_ENDPOINT: envField.string({ context: 'client', access: 'public', optional: true }),
+      // Set by the PR preview workflow (.github/workflows/preview.yml): every page becomes noindex.
+      PREVIEW_BUILD: envField.boolean({ context: 'server', access: 'public', default: false }),
     },
   },
 });
