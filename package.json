@@ -18,6 +18,7 @@
     "check": "astro check",
     "deck:pdf": "node scripts/deck-pdf.mjs",
     "social": "node scripts/social-images.mjs",
+    "evidence": "node scripts/evidence.mjs",
     "test": "node --test src/lib/registration.test.ts integrations/google-sheets/Code.test.mjs",
     "check:keys": "node scripts/check-keys.mjs"
   },

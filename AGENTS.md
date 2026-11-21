@@ -31,11 +31,14 @@ Guide for AI coding agents (Claude Code, Codex, Cursor, …) working on this rep
 | `npm run tokens` | Regenerate `brand/tokens/tokens.css` from `brand/tokens/tokens.json` |
 | `npm test` | Sign-up validation and `Code.gs` tests (Node test runner, no dependencies) |
 | `npm run check:keys` | Check the `.env` keys against PostHog and the Apps Script endpoint (prints no secrets, writes no rows) |
-| `npm run social` | Regenerate the link-preview images (`public/social/`, SVG + PNG) and the Dash icons from `src/data/event.json` (needs Chrome and internet for Bungee) |
+| `npm run evidence -- --at "top,#registro"` | Screenshot sections of a running preview at desktop and 390 px into `exports/evidence/`, for PR evidence (scrolls so the engine reveals them) |
+| `npm run social` | Regenerate the link-preview PNGs (`public/social/`) and the Dash icons from `src/data/event.json`. The title uses the neon Monchila lettering, so install Monchila first (`brand/fonts/monchila/README.md`); without it the title falls back to FlutterChicha. Needs Chrome and internet for Bungee |
 
 **Keys:** copy `.env.example` to `.env`. `PUBLIC_POSTHOG_KEY`, `PUBLIC_POSTHOG_HOST` and `PUBLIC_REGISTER_ENDPOINT` are optional and typed in `astro.config.mjs` (`env.schema`, read through `astro:env/client`). The deploy reads them from repository secrets. Analytics ask first: `src/components/CookieBanner.astro` (Aceptar = PostHog with cookies, Rechazar = cookieless, no answer = nothing sent). Rejected visits only count if **Enable cookieless tracking** is on in PostHog (Settings → Project → Web analytics). Never commit `.env`, and never put private keys (PostHog `phx_…`, Google service accounts) in a `PUBLIC_` variable, because they ship in the page.
 
 Before you finish a change, run `npm run build`. It must end with `0 errors`.
+
+**Evidence:** every PR that changes something visible or usable carries screenshots of the agent's own test run, uploaded with `gh image` (never committed). Follow `.claude/skills/pr-evidence/SKILL.md`: capture with `npm run evidence`, check each image, upload, and add an `## Evidence` section to the PR body.
 
 ## Map
 
@@ -54,6 +57,8 @@ brand/                      Design system (source of truth for anything visual)
   tools/flutterchicha/      Font generator (Python, see brand/README.md)
   tools/tokens/             tokens.json → tokens.css
   brand-book.md             Brand book (Spanish)
+scripts/                    Node tools: social-images (link previews), evidence (PR screenshots), deck-pdf, check-keys
+.claude/skills/pr-evidence/ How agents capture and upload PR evidence with gh image
 src/
   content/*.json            Editable content: speakers, agenda, tickets, sponsors, FAQ…
   content/decks/*.json      Sponsor decks, one file per sponsor (slug = file name)
@@ -105,6 +110,7 @@ src/
 - **Fonts:** FlutterChicha is generated, never edited in a font editor. Change `brand/tools/flutterchicha/build.py`, rebuild, and commit the TTF and WOFF2 outputs together.
 - **Brand page:** `/brand/` reads `brand/` at build time, so a change in `brand/` shows up there on the next build with no extra step. To publish a new folder or file type, add it to `PUBLISHED` in `src/lib/brand.ts`. A new component in `brand/css/components.css` also needs a demo in `src/data/brand-demos.ts`.
 - **Commits:** small and descriptive (`feat:`, `fix:`, `docs:`, `chore:`, `brand:`). Open a PR to `main`; never push directly to `main`.
+- **PR evidence:** if you tested it, show it. Screenshots (before/after for visual changes, desktop and 390 px) go in the PR's `## Evidence` section through `gh image`, following `.claude/skills/pr-evidence/SKILL.md`. Never upload secrets, real sign-up data, Monchila files or unpublished sponsor decks.
 
 ## Brand guardrails (from flutter.dev/brand)
 
