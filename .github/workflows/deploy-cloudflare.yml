@@ -1,0 +1,61 @@
+name: Deploy to flutterperu.com (Cloudflare Worker)
+
+# Every published GitHub release builds the release tag and deploys it to the `flutterconf-peru-2026` Worker
+# (wrangler.jsonc). Run it by hand from the Actions tab to redeploy without a new release.
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # The Cloudflare token lives in this environment, so only this job can read it. Restrict the
+    # environment to release tags in Settings → Environments → cloudflare → Deployment branches and tags.
+    environment:
+      name: cloudflare
+      url: https://flutterperu.com
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      # Monchila is a licensed font and is never committed (brand/fonts/monchila/README.md). Only the two
+      # fixed WOFF2 files are installed; without them the headings fall back to FlutterChicha.
+      - name: Install Monchila from secrets
+        env:
+          MONCHILA_WOFF2: ${{ secrets.MONCHILA_WOFF2 }}
+          MONCHILA_SILUETA_WOFF2: ${{ secrets.MONCHILA_SILUETA_WOFF2 }}
+        run: |
+          if [ -z "$MONCHILA_WOFF2" ] || [ -z "$MONCHILA_SILUETA_WOFF2" ]; then
+            echo "::warning::MONCHILA_WOFF2 / MONCHILA_SILUETA_WOFF2 are not set: headings fall back to FlutterChicha."
+            exit 0
+          fi
+          printf '%s' "$MONCHILA_WOFF2" | base64 -d > brand/fonts/monchila/Monchila.woff2
+          printf '%s' "$MONCHILA_SILUETA_WOFF2" | base64 -d > brand/fonts/monchila/MonchilaSilueta.woff2
+          for f in brand/fonts/monchila/*.woff2; do
+            [ "$(head -c 4 "$f")" = "wOF2" ] || { echo "::error::$f is not a WOFF2 file (check the secret)"; exit 1; }
+          done
+      - run: npm run build:cf
+        env:
+          PUBLIC_POSTHOG_KEY: ${{ secrets.PUBLIC_POSTHOG_KEY }}
+          PUBLIC_POSTHOG_HOST: ${{ secrets.PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com' }}
+          PUBLIC_REGISTER_ENDPOINT: ${{ secrets.PUBLIC_REGISTER_ENDPOINT }}
+      # The sign-up form is the point of the launch landing: refuse to ship a build where it is switched off.
+      - name: Check the sign-up endpoint is in the build
+        run: |
+          grep -rqs 'script.google.com' dist/index.html dist/_astro || { echo "::error::PUBLIC_REGISTER_ENDPOINT is missing: the sign-up form would be disabled."; exit 1; }
+      - name: Deploy to Cloudflare
+        run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}

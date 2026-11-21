@@ -1,0 +1,22 @@
+// Cloudflare Worker that serves the static build (`dist/`) at flutterperu.com.
+// It has no script: Workers Static Assets serves every file, so requests cost no Worker invocations.
+// Build with `npm run build:cf` first (root base path and the flutterperu.com site URL).
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "flutterconf-peru-2026",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist",
+    // Astro writes /brand/index.html, so /brand redirects to /brand/ and /brand/ serves the page.
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "none"
+  },
+  // Custom domains: Cloudflare creates the DNS records and the certificate on the first deploy.
+  "routes": [
+    { "pattern": "flutterperu.com", "custom_domain": true },
+    { "pattern": "www.flutterperu.com", "custom_domain": true }
+  ],
+  "workers_dev": false,
+  "preview_urls": false,
+  "observability": { "enabled": true }
+}

@@ -25,6 +25,9 @@ Guide for AI coding agents (Claude Code, Codex, Cursor, …) working on this rep
 | `npm run dev` | Regenerate tokens, start the dev server at `http://localhost:4321/flutterconf_peru_2026/` |
 | `npm run build` | Tokens → `astro check` (types) → static build in `dist/` |
 | `npm run preview` | Serve `dist/` |
+| `npm run build:cf` | Build for flutterperu.com (`SITE_URL=https://flutterperu.com`, `BASE_PATH=/`) |
+| `npm run preview:cf` | Serve `dist/` with the Cloudflare Worker runtime at `http://localhost:8787/` (run `build:cf` first) |
+| `npm run deploy:cf` | `build:cf`, then `wrangler deploy` to the `flutterconf-peru-2026` Worker (needs `npx wrangler login`). CI does this on every published GitHub release (`deploy-cloudflare.yml`) |
 | `npm run tokens` | Regenerate `brand/tokens/tokens.css` from `brand/tokens/tokens.json` |
 | `npm test` | Sign-up validation and `Code.gs` tests (Node test runner, no dependencies) |
 | `npm run check:keys` | Check the `.env` keys against PostHog and the Apps Script endpoint (prints no secrets, writes no rows) |
@@ -130,4 +133,3 @@ Each sponsor gets its own deck at `/decks/<slug>/`, built from `src/content/deck
 
 - Real speakers, photos, sponsor logos, ticket and CFP links (placeholders today).
 - Subset the FlutterChicha WOFF2s to the glyphs used, and self-host Bungee and Rubik.
-- A custom domain. Moving hosts only needs `SITE_URL` and `BASE_PATH` (see `astro.config.mjs`).
