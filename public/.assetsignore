@@ -1,0 +1,5 @@
+# Files in dist/ that the Cloudflare Worker must never serve (wrangler.jsonc).
+# Monchila is licensed: a local build with the TTF/OTF installed emits them to _astro/ even though no page
+# uses them (src/lib/monchila.ts globs every format). Only the WOFF2 files may ship.
+_astro/Monchila*.ttf
+_astro/Monchila*.otf

@@ -31,3 +31,5 @@ Speaker photos and sponsor logos go in `public/` (for example `public/speakers/a
 ## Deploy
 
 Every push to `main` builds and publishes to GitHub Pages (`.github/workflows/deploy.yml`). PRs run the type check, the build and Lighthouse (`.github/workflows/ci.yml`). To move to another host or a custom domain, set `SITE_URL` and `BASE_PATH` (for example `BASE_PATH=/`) in the build environment.
+
+**flutterperu.com** is a Cloudflare Worker that serves `dist/` as static assets (`wrangler.jsonc`, response headers in `public/_headers`). Every published GitHub release deploys it (`.github/workflows/deploy-cloudflare.yml`, which needs the `CLOUDFLARE_API_TOKEN` secret and the `CLOUDFLARE_ACCOUNT_ID` variable); it can also run by hand from the Actions tab. To deploy from your machine: `npx wrangler login` once, then `npm run deploy:cf`. `npm run build:cf && npm run preview:cf` serves the same build locally at `http://localhost:8787/`.
