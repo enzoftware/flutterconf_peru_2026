@@ -11,12 +11,17 @@
  *
  * Personal data (name, email) is never sent to PostHog: sign-ups are counted as anonymous events.
  *
- * Consent (CookieBanner.astro): PostHog runs with `cookieless_mode: 'on_reject'`.
- *  - no answer yet  → PostHog sends nothing and stores nothing
+ * Consent (CookieBanner.astro): PostHog runs with `cookieless_mode: 'on_reject'` and
+ * `opt_out_capturing_by_default`, so a visit counts even if the banner is never answered:
+ *  - no answer yet  → cookieless events (server-side daily hash), nothing stored on the device
  *  - "Aceptar"      → opt_in_capturing(): events with a cookie and a persistent anonymous id
- *  - "Rechazar"     → opt_out_capturing(): events keep coming, cookieless (server-side daily hash)
- * Needs "Enable cookieless tracking" on in PostHog (Settings → Project → Web analytics), or rejected
- * visits are discarded. The choice is also kept under `fcp-cookies` so the banner knows not to come back.
+ *  - "Rechazar"     → opt_out_capturing(): cookieless events, as before the answer
+ * Needs "Enable cookieless tracking" on in PostHog (Settings → Project → Web analytics), or every visit
+ * without "Aceptar" is discarded. The choice is also kept under `fcp-cookies` so the banner knows not to
+ * come back.
+ *
+ * On flutterperu.com PUBLIC_POSTHOG_HOST is the /ingest reverse proxy (worker/index.js), so ad blockers
+ * that block *.posthog.com don't drop the visit.
  */
 import { PUBLIC_POSTHOG_HOST, PUBLIC_POSTHOG_KEY } from 'astro:env/client';
 
@@ -68,6 +73,7 @@ export function attribution(): { source: string; utm_source: string; utm_medium:
 export function initAnalytics(): void {
   if (!PUBLIC_POSTHOG_KEY || window.posthog) return;
   const host = PUBLIC_POSTHOG_HOST.replace(/\/$/, '');
+  const proxied = !/\.i\.posthog\.com$/.test(new URL(host).hostname);
 
   // Stub: every method pushes [name, ...args]; array.js replays the queue when it loads.
   const ph = [] as unknown as PostHogStub;
@@ -76,10 +82,12 @@ export function initAnalytics(): void {
   for (const m of METHODS) ph[m] = (...args: unknown[]) => { ph.push([m, ...args]); };
   ph._i.push([PUBLIC_POSTHOG_KEY, {
     api_host: host,
+    ...(proxied && { ui_host: 'https://us.posthog.com' }), // toolbar and app links (the proxy only forwards to US)
     defaults: '2025-05-24',              // pageviews + page leaves on SPA-style history changes, sane autocapture
     person_profiles: 'identified_only',  // anonymous visitors don't create person profiles
     respect_dnt: true,
-    cookieless_mode: 'on_reject',       // nothing before the banner is answered; cookieless if rejected
+    cookieless_mode: 'on_reject',       // cookieless unless the visitor clicks "Aceptar"
+    opt_out_capturing_by_default: true, // no answer yet counts as rejected: cookieless instead of nothing
     disable_session_recording: true,    // turn on from PostHog if you ever want replays (inputs are masked by default)
   }, 'posthog']);
   ph.__SV = 1;

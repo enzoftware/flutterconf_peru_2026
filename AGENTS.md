@@ -34,7 +34,7 @@ Guide for AI coding agents (Claude Code, Codex, Cursor, …) working on this rep
 | `npm run evidence -- --at "top,#registro"` | Screenshot sections of a running preview at desktop and 390 px into `exports/evidence/`, for PR evidence (scrolls so the engine reveals them) |
 | `npm run social` | Regenerate the link-preview PNGs (`public/social/`) and the Dash icons from `src/data/event.json`. The title uses the neon Monchila lettering, so install Monchila first (`brand/fonts/monchila/README.md`); without it the title falls back to FlutterChicha. Needs Chrome and internet for Bungee |
 
-**Keys:** copy `.env.example` to `.env`. `PUBLIC_POSTHOG_KEY`, `PUBLIC_POSTHOG_HOST` and `PUBLIC_REGISTER_ENDPOINT` are optional and typed in `astro.config.mjs` (`env.schema`, read through `astro:env/client`). The deploy reads them from repository secrets. Analytics ask first: `src/components/CookieBanner.astro` (Aceptar = PostHog with cookies, Rechazar = cookieless, no answer = nothing sent). Rejected visits only count if **Enable cookieless tracking** is on in PostHog (Settings → Project → Web analytics). Never commit `.env`, and never put private keys (PostHog `phx_…`, Google service accounts) in a `PUBLIC_` variable, because they ship in the page.
+**Keys:** copy `.env.example` to `.env`. `PUBLIC_POSTHOG_KEY`, `PUBLIC_POSTHOG_HOST` and `PUBLIC_REGISTER_ENDPOINT` are optional and typed in `astro.config.mjs` (`env.schema`, read through `astro:env/client`). The deploy reads them from repository secrets. Cookies need consent: `src/components/CookieBanner.astro` (Aceptar = PostHog with cookies, Rechazar or no answer = cookieless, nothing stored on the device). Visits without Aceptar only count if **Enable cookieless tracking** is on in PostHog (Settings → Project → Web analytics). On flutterperu.com, `build:cf` points `PUBLIC_POSTHOG_HOST` at `/ingest`, a reverse proxy to PostHog US in `worker/index.js`, so ad blockers don't drop visits. Never commit `.env`, and never put private keys (PostHog `phx_…`, Google service accounts) in a `PUBLIC_` variable, because they ship in the page.
 
 Before you finish a change, run `npm run build`. It must end with `0 errors`.
 
@@ -58,6 +58,7 @@ brand/                      Design system (source of truth for anything visual)
   tools/tokens/             tokens.json → tokens.css
   brand-book.md             Brand book (Spanish)
 scripts/                    Node tools: social-images (link previews), evidence (PR screenshots), deck-pdf, check-keys
+worker/index.js             Cloudflare Worker script: the /ingest PostHog reverse proxy (everything else is static assets)
 .claude/skills/pr-evidence/ How agents capture and upload PR evidence with gh image
 src/
   content/*.json            Editable content: speakers, agenda, tickets, sponsors, FAQ…
