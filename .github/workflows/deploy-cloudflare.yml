@@ -45,10 +45,10 @@ jobs:
           for f in brand/fonts/monchila/*.woff2; do
             [ "$(head -c 4 "$f")" = "wOF2" ] || { echo "::error::$f is not a WOFF2 file (check the secret)"; exit 1; }
           done
+      # build:cf sets PUBLIC_POSTHOG_HOST to the /ingest proxy of worker/index.js, so it is not read from secrets.
       - run: npm run build:cf
         env:
           PUBLIC_POSTHOG_KEY: ${{ secrets.PUBLIC_POSTHOG_KEY }}
-          PUBLIC_POSTHOG_HOST: ${{ secrets.PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com' }}
           PUBLIC_REGISTER_ENDPOINT: ${{ secrets.PUBLIC_REGISTER_ENDPOINT }}
       # The sign-up form is the point of the launch landing: refuse to ship a build where it is switched off.
       - name: Check the sign-up endpoint is in the build

@@ -26,19 +26,21 @@ try { host = new URL(HOST); } catch { bad(`PUBLIC_POSTHOG_HOST is not a URL: ${H
 if (host) {
   if (/^(us|eu)\.i\.posthog\.com$/.test(host.hostname)) ok(`host ${host.origin}`);
   else if (/^(app|us|eu)\.posthog\.com$/.test(host.hostname)) warn(`host ${host.origin} is the app UI; use the ingestion host (us.i.posthog.com or eu.i.posthog.com)`);
-  else warn(`custom host ${host.origin} (reverse proxy?)`);
+  else warn(`custom host ${host.href} (reverse proxy?)`);
 }
+// Keeps the path of a proxy host such as https://flutterperu.com/ingest.
+const at = (path) => host.href.replace(/\/$/, '') + path;
 if (KEY && host && !KEY.startsWith('phx_')) {
   try {
     // Feature-flags endpoint: authenticates the project key without creating any event.
-    const res = await fetch(new URL('/flags/?v=2', host), {
+    const res = await fetch(at('/flags/?v=2'), {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ api_key: KEY, distinct_id: 'flutterconf-key-check' }),
     });
     if (res.ok) ok(`key accepted by ${host.hostname} (HTTP ${res.status})`);
     else if (res.status === 401) bad(`key rejected by ${host.hostname} (HTTP 401): wrong key, or the project lives in the other region (US/EU)`);
     else bad(`unexpected answer from ${host.hostname}: HTTP ${res.status}`);
-    const asset = await fetch(host.origin.replace('.i.posthog.com', '-assets.i.posthog.com') + '/static/array.js', { method: 'HEAD' });
+    const asset = await fetch(at('/static/array.js').replace('.i.posthog.com', '-assets.i.posthog.com'), { method: 'HEAD' });
     asset.ok ? ok('library (array.js) reachable') : bad(`array.js not reachable: HTTP ${asset.status}`);
   } catch (e) { bad(`could not reach PostHog: ${e.message}`); }
 }

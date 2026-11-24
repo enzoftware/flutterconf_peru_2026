@@ -1,12 +1,16 @@
 // Cloudflare Worker that serves the static build (`dist/`) at flutterperu.com.
-// It has no script: Workers Static Assets serves every file, so requests cost no Worker invocations.
-// Build with `npm run build:cf` first (root base path and the flutterperu.com site URL).
+// Workers Static Assets serves every page and file, so those requests cost no Worker invocations.
+// The script (worker/index.js) only runs for /ingest/*, the PostHog reverse proxy.
+// Build with `npm run build:cf` first (root base path, the flutterperu.com site URL and the proxy host).
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "flutterconf-peru-2026",
   "compatibility_date": "2026-11-01",
+  "main": "./worker/index.js",
   "assets": {
     "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": ["/ingest/*"],
     // Astro writes /brand/index.html, so /brand redirects to /brand/ and /brand/ serves the page.
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "none"

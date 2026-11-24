@@ -12,7 +12,7 @@
     "dev": "npm run tokens && astro dev",
     "build": "npm run tokens && astro check && astro build",
     "preview": "astro preview",
-    "build:cf": "SITE_URL=https://flutterperu.com BASE_PATH=/ npm run build",
+    "build:cf": "SITE_URL=https://flutterperu.com BASE_PATH=/ PUBLIC_POSTHOG_HOST=https://flutterperu.com/ingest npm run build",
     "preview:cf": "wrangler dev",
     "deploy:cf": "npm run build:cf && wrangler deploy",
     "check": "astro check",
