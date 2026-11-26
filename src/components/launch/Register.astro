@@ -2,7 +2,20 @@
 /**
  * "Avísame primero": sign-up form. Posts JSON to the Google Apps Script web app in PUBLIC_REGISTER_ENDPOINT
  * (integrations/google-sheets/). Sent as text/plain so the browser skips the CORS preflight Apps Script can't answer.
- * PostHog gets anonymous funnel events only: register_started, register_succeeded, register_failed.
+ *
+ * PostHog gets an anonymous funnel, with field names and error codes but never what was typed:
+ *  register_viewed     the form scrolled into view (once per page): `via` url | cta | scroll, `cta` label,
+ *                      `already_registered` (this browser signed up before)
+ *  register_started    first keystroke or click in the form
+ *  register_invalid    the form refused it: `reason` is the field (name, email, email_disposable, role, city, consent)
+ *  register_failed     the sign-up didn't go through: `reason` (rate_limited, offline, disabled, server, …)
+ *  register_succeeded  `role`, `has_city`, `source`, `resumed` (came back after register_abandoned)
+ *  register_duplicate  the email was already signed up on this browser
+ *  register_abandoned  left or hid the page after starting, without signing up: `last_field`,
+ *                      `fields_filled` (0–5), `last_error`, `seconds` since register_started
+ *  register_share      the share button: `method` native | clipboard | manual, `result`, `error`
+ * The server answers a repeated inbox exactly like a new one (so the public URL can't tell who is
+ * registered), which means register_succeeded can include people who were already on the list.
  */
 import Neon from '../Neon.astro';
 import Dash from '../Dash.astro';
@@ -103,11 +116,35 @@ const ROLES = ROLE_IDS.map((r) => [r, LABELS[r]]);
     const previous = store.get();
     if (previous) showDone(mask(previous), true);
 
+    // How the visitor reached the form: a link to #registro, an "Avísame" button, or scrolling down.
+    let via = location.hash === '#registro' ? 'url' : 'scroll';
+    let cta: string | undefined;
+    document.addEventListener('click', (e) => {
+      const a = (e.target as Element | null)?.closest<HTMLAnchorElement>('a[href="#registro"]');
+      if (a) { via = 'cta'; cta = a.dataset.evLabel; }
+    });
+    if ('IntersectionObserver' in window) {
+      // A quarter of the form is enough: on phones the whole form is taller than the screen.
+      const io = new IntersectionObserver((entries) => {
+        if (!entries.some((x) => x.isIntersecting)) return;
+        io.disconnect();
+        track('register_viewed', { via, cta, already_registered: Boolean(previous) });
+      }, { threshold: 0.25 });
+      io.observe(form);
+    }
+
+    const FIELDS = ['name', 'email', 'role', 'city', 'consent'];
     let started = false;
+    let startedAt = 0;
+    let lastField = '';
+    let lastError = '';
+    let done = Boolean(previous);
+    let abandoned = false;
     form.addEventListener('input', (e) => {
-      if (!started) { started = true; track('register_started'); }
-      form.classList.remove('bad');
       const name = (e.target as HTMLInputElement).name;
+      if (FIELDS.includes(name)) lastField = name;
+      if (!started) { started = true; startedAt = performance.now(); track('register_started'); }
+      form.classList.remove('bad');
       form.querySelectorAll(`[name="${name}"][aria-invalid]`).forEach((x) => { x.removeAttribute('aria-invalid'); x.removeAttribute('aria-describedby'); });
     }, { passive: true });
 
@@ -122,10 +159,27 @@ const ROLES = ROLE_IDS.map((r) => [r, LABELS[r]]);
         fields.forEach((x) => { x.setAttribute('aria-invalid', 'true'); x.setAttribute('aria-describedby', 'rf-err'); });
         fields[0]?.focus();
       }
+      lastError = code;
       track(f ? 'register_invalid' : 'register_failed', { reason: code });
     };
 
     let sending = false;
+    // Leaving after starting, without signing up. Sent once, by beacon so it survives the page closing.
+    // visibilitychange also catches a phone switching apps; if they come back and finish,
+    // register_succeeded says `resumed`.
+    const leave = () => {
+      if (!started || done || sending || abandoned) return;
+      abandoned = true;
+      const fd = new FormData(form);
+      track('register_abandoned', {
+        last_field: lastField,
+        fields_filled: FIELDS.filter((f) => String(fd.get(f) ?? '').trim()).length,
+        last_error: lastError || undefined,
+        seconds: Math.round((performance.now() - startedAt) / 1000),
+      }, { transport: 'sendBeacon' });
+    };
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') leave(); });
+    window.addEventListener('pagehide', leave);
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (sending) return; // no double submits
@@ -135,7 +189,11 @@ const ROLES = ROLE_IDS.map((r) => [r, LABELS[r]]);
         name: fd.get('name'), email: fd.get('email'), role: fd.get('role'), city: fd.get('city'), consent: fd.get('consent') === 'on',
       });
       if (!v.ok) return fail(v.error);
-      if (store.get() === v.data.email) return showDone(v.data.email, true);
+      if (store.get() === v.data.email) {
+        done = true;
+        track('register_duplicate');
+        return showDone(v.data.email, true);
+      }
       if (!PUBLIC_REGISTER_ENDPOINT) {
         console.warn('[registro] PUBLIC_REGISTER_ENDPOINT is empty. See integrations/google-sheets/README.md.');
         return fail('disabled');
@@ -161,7 +219,8 @@ const ROLES = ROLE_IDS.map((r) => [r, LABELS[r]]);
         const res = await fetch(PUBLIC_REGISTER_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
         const out = await res.json().catch(() => ({ ok: false, error: 'server' }));
         if (!out.ok) return fail(out.error ?? 'server');
-        track('register_succeeded', { role: v.data.role, has_city: Boolean(v.data.city), source: payload.source });
+        done = true;
+        track('register_succeeded', { role: v.data.role, has_city: Boolean(v.data.city), source: payload.source, resumed: abandoned });
         store.set(v.data.email);
         showDone(v.data.email, false);
         ok.focus();
@@ -176,20 +235,46 @@ const ROLES = ROLE_IDS.map((r) => [r, LABELS[r]]);
 
     form.querySelector<HTMLButtonElement>('[data-again]')?.addEventListener('click', () => {
       store.set(null);
+      // A second sign-up from this browser is a new run through the funnel.
+      started = done = abandoned = false;
+      lastField = lastError = '';
       form.reset();
       form.classList.remove('done');
       ok.hidden = true;
       form.querySelector<HTMLInputElement>('[name="name"]')?.focus();
     });
 
+    // Never fail silently: one iPhone tapped this button 54 times in a minute with nothing happening.
+    // The native sheet first; if it errors, copy the link; if that is blocked too, show the link to copy by hand.
+    let sharing = false;
     form.querySelector<HTMLButtonElement>('[data-share]')?.addEventListener('click', async () => {
+      if (sharing) return; // the native sheet is still open: a second share() call would only throw
+      sharing = true;
       const shareUrl = location.origin + location.pathname + '?ref=share';
       const text = 'FlutterConf Perú 2026: sábado 19 de diciembre en Lima. Regístrate para que te avisen primero.';
-      track('register_share');
-      if (navigator.share) { try { await navigator.share({ title: 'FlutterConf Perú 2026', text, url: shareUrl }); } catch { /* cancelled */ } return; }
-      try { await navigator.clipboard.writeText(`${text} ${shareUrl}`); } catch { return; } // no clipboard (http) or denied
       const c = form.querySelector<HTMLElement>('[data-copied]');
-      if (c) { c.hidden = false; setTimeout(() => (c.hidden = true), 2500); }
+      try {
+        let error: string | undefined;
+        if (navigator.share) {
+          try {
+            await navigator.share({ title: 'FlutterConf Perú 2026', text, url: shareUrl });
+            return track('register_share', { method: 'native', result: 'shared' });
+          } catch (e) {
+            error = (e as Error)?.name || 'Error';
+            if (error === 'AbortError') return track('register_share', { method: 'native', result: 'cancelled' });
+          }
+        }
+        try {
+          await navigator.clipboard.writeText(`${text} ${shareUrl}`);
+          track('register_share', { method: 'clipboard', result: 'copied', error });
+          if (c) { c.textContent = 'Enlace copiado'; c.hidden = false; setTimeout(() => (c.hidden = true), 2500); }
+        } catch {
+          track('register_share', { method: 'manual', result: 'shown', error });
+          if (c) { c.textContent = `Copia este enlace: ${shareUrl}`; c.hidden = false; }
+        }
+      } finally {
+        sharing = false;
+      }
     });
   }
 </script>

@@ -26,11 +26,13 @@
 import { PUBLIC_POSTHOG_HOST, PUBLIC_POSTHOG_KEY } from 'astro:env/client';
 
 type Props = Record<string, string | number | boolean | undefined>;
+/** `sendBeacon` survives the page being closed, for events sent while the visitor leaves. */
+type CaptureOptions = { transport?: 'sendBeacon' };
 interface PostHogStub extends Array<unknown> {
   _i: unknown[];
   __SV?: number;
   __loaded?: boolean;
-  capture?: (event: string, props?: Props) => void;
+  capture?: (event: string, props?: Props, options?: CaptureOptions) => void;
   opt_in_capturing?: () => void;
   opt_out_capturing?: () => void;
   [method: string]: unknown;
@@ -55,8 +57,8 @@ export function setConsent(v: Consent): void {
   (v === 'yes' ? ph?.opt_in_capturing : ph?.opt_out_capturing)?.call(ph);
 }
 
-export function track(event: string, props: Props = {}): void {
-  window.posthog?.capture?.(event, props);
+export function track(event: string, props: Props = {}, options?: CaptureOptions): void {
+  window.posthog?.capture?.(event, props, options);
 }
 
 /** UTM parameters and ?ref= from the current URL (also sent with the sign-up form). */

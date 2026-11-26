@@ -139,7 +139,7 @@
 .ln .ok-t{ margin:4px 0 6px; font-size:58px }
 .ln .ok-m{ margin:0 auto 20px; max-width:360px; font-weight:500; font-size:17px }
 .ln .ok-m b{ overflow-wrap:anywhere }
-.ln .ok-c{ margin:12px 0 0; font-weight:700; font-size:14px }
+.ln .ok-c{ margin:12px 0 0; font-weight:700; font-size:14px; overflow-wrap:anywhere; user-select:all }
 .ln .ok-again{ display:block; margin:16px auto 0; background:none; border:0; padding:4px; font:600 14px Rubik, system-ui, sans-serif; color:var(--ink); text-decoration:underline; cursor:pointer }
 .ln .ok-again:focus-visible{ outline:3px solid var(--focus, var(--cy)); outline-offset:2px; border-radius:6px }
 @keyframes shake{ 20%,60%{ translate:-6px 0 } 40%,80%{ translate:6px 0 } }
