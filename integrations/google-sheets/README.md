@@ -98,7 +98,7 @@ Use lowercase and no spaces, and reuse the same words, so `instagram` and `Insta
 
 You can delete test rows by hand at any time. If you change the header row, the script restores it on the next sign-up. Insert extra columns only to the right of L.
 
-PostHog also gets a `register_succeeded` event without personal data, so the funnel (page view → form started → sign-up) lives there.
+PostHog gets the funnel without personal data: `register_viewed` → `register_started` → `register_invalid` / `register_failed` → `register_succeeded`, or `register_abandoned` with the last field touched. `src/components/launch/Register.astro` lists every event and property. The sheet stays the source of truth for the number of sign-ups: the script answers a repeated inbox like a new one, so `register_succeeded` also counts people who were already on the list.
 
 ## Spam, duplicates and security
 
